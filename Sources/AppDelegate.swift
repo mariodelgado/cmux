@@ -905,7 +905,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
     }()
     private static let didInstallApplicationAccessibilitySwizzle: Void = {
         let targetClass: AnyClass = NSApplication.self
-        let originalSelector = #selector(NSApplication.accessibilityAttributeValue(_:))
+        let originalSelector = NSSelectorFromString("accessibilityAttributeValue:")
         let swizzledSelector = #selector(NSApplication.cmux_accessibilityAttributeValue(_:))
         guard let originalMethod = class_getInstanceMethod(targetClass, originalSelector),
               let swizzledMethod = class_getInstanceMethod(targetClass, swizzledSelector) else {
@@ -1468,7 +1468,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
                     self.openNewMainWindow(nil)
                 }
                 self.moveUITestWindowToTargetDisplayIfNeeded()
-                NSRunningApplication.current.activate(options: [.activateAllWindows, .activateIgnoringOtherApps])
+                NSRunningApplication.current.activate(options: [.activateAllWindows])
                 // On headless CI runners, activate() silently fails (no GUI session).
                 // Force windows visible so the terminal surface starts rendering.
                 for window in NSApp.windows {
@@ -3319,9 +3319,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
            let primaryWindow = mainWindow(for: primaryWindowId) {
             primaryWindow.makeKeyAndOrderFront(nil)
             setActiveMainWindow(primaryWindow)
-            NSRunningApplication.current.activate(
-                options: [.activateAllWindows, .activateIgnoringOtherApps]
-            )
+            NSRunningApplication.current.activate(options: [.activateAllWindows])
         }
 
         return true
@@ -8734,7 +8732,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
             SettingsWindowPresenter.show(navigationTarget: target)
         },
         activateApplication: @MainActor () -> Void = {
-            NSRunningApplication.current.activate(options: [.activateAllWindows, .activateIgnoringOtherApps])
+            NSRunningApplication.current.activate(options: [.activateAllWindows])
         }
     ) {
 #if DEBUG
@@ -15526,7 +15524,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
             if !app.isTerminated {
                 _ = app.forceTerminate()
             }
-            NSRunningApplication.current.activate(options: [.activateAllWindows, .activateIgnoringOtherApps])
+            NSRunningApplication.current.activate(options: [.activateAllWindows])
         }
     }
 

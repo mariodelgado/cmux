@@ -92,7 +92,13 @@ enum TerminalDirectoryOpenTarget: String, CaseIterable {
             homeDirectoryPath: FileManager.default.homeDirectoryForCurrentUser.path,
             fileExistsAtPath: { FileManager.default.fileExists(atPath: $0) },
             isExecutableFileAtPath: { FileManager.default.isExecutableFile(atPath: $0) },
-            applicationPathForName: { NSWorkspace.shared.fullPath(forApplication: $0) }
+            applicationPathForName: { applicationName in
+                guard let bundleIdentifier = TerminalDirectoryOpenTarget.bundleIdentifier(forApplicationName: applicationName),
+                      let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier: bundleIdentifier) else {
+                    return nil
+                }
+                return url.path
+            }
         )
     }
 
@@ -238,6 +244,43 @@ enum TerminalDirectoryOpenTarget: String, CaseIterable {
                 URL(fileURLWithPath: $0).deletingPathExtension().lastPathComponent
             }
         )
+    }
+
+    private static func bundleIdentifier(forApplicationName applicationName: String) -> String? {
+        switch applicationName {
+        case "Android Studio":
+            return "com.google.android.studio"
+        case "Antigravity":
+            return "com.google.antigravity"
+        case "Cursor", "Cursor Preview", "Cursor Nightly":
+            return "com.todesktop.230313mzl4w4u92"
+        case "Devin":
+            return "ai.cognition.devin"
+        case "Finder":
+            return "com.apple.finder"
+        case "Ghostty":
+            return "com.mitchellh.ghostty"
+        case "IntelliJ IDEA":
+            return "com.jetbrains.intellij"
+        case "iTerm", "iTerm2":
+            return "com.googlecode.iterm2"
+        case "Terminal":
+            return "com.apple.Terminal"
+        case "Tower":
+            return "com.fournova.Tower3"
+        case "Visual Studio Code", "Code":
+            return "com.microsoft.VSCode"
+        case "Warp":
+            return "dev.warp.Warp-Stable"
+        case "Windsurf":
+            return "com.exafunction.windsurf"
+        case "Xcode":
+            return "com.apple.dt.Xcode"
+        case "Zed", "Zed Preview", "Zed Nightly":
+            return "dev.zed.Zed"
+        default:
+            return nil
+        }
     }
 
     private var applicationBundlePathCandidates: [String] {

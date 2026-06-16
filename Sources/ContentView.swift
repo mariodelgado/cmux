@@ -1095,7 +1095,7 @@ struct ContentView: View {
     }
 
     static func tmuxWorkspacePaneExactRect(
-        for panel: Panel,
+        for panel: any Panel,
         in contentView: NSView
     ) -> CGRect? {
         let targetView: NSView?
@@ -1963,7 +1963,7 @@ struct ContentView: View {
                 }
             }
         }
-        .onChange(of: fileExplorerState.width) { newValue in
+        .onChange(of: fileExplorerState.width) { _, newValue in
             if fileExplorerDragStartWidth == nil {
                 let sanitized = normalizedRightSidebarWidth(newValue)
                 if abs(newValue - sanitized) > 0.5 {
@@ -2578,7 +2578,7 @@ struct ContentView: View {
             }
         })
 
-        view = AnyView(view.onChange(of: tabManager.selectedTabId) { newValue in
+        view = AnyView(view.onChange(of: tabManager.selectedTabId) { _, newValue in
 #if DEBUG
             if let snapshot = tabManager.debugCurrentWorkspaceSwitchSnapshot() {
                 let dtMs = (CACurrentMediaTime() - snapshot.startedAt) * 1000
@@ -2605,16 +2605,16 @@ struct ContentView: View {
             AppDelegate.shared?.syncBonsplitTabShortcutHintEligibility(in: observedWindow)
         })
 
-        view = AnyView(view.onChange(of: selectedTabIds) { _ in
+        view = AnyView(view.onChange(of: selectedTabIds) { _, _ in
             syncSidebarSelectedWorkspaceIds()
         })
 
         // File explorer: keep the Combine subscription stable across body re-evaluations.
-        view = AnyView(view.onChange(of: selectedWorkspaceDirectoryObserver.directoryChangeGeneration) { _ in
+        view = AnyView(view.onChange(of: selectedWorkspaceDirectoryObserver.directoryChangeGeneration) { _, _ in
             syncFileExplorerDirectory()
         })
 
-        view = AnyView(view.onChange(of: tabManager.isWorkspaceCycleHot) { _ in
+        view = AnyView(view.onChange(of: tabManager.isWorkspaceCycleHot) { _, _ in
 #if DEBUG
             if let snapshot = tabManager.debugCurrentWorkspaceSwitchSnapshot() {
                 let dtMs = (CACurrentMediaTime() - snapshot.startedAt) * 1000
@@ -2628,7 +2628,7 @@ struct ContentView: View {
             reconcileMountedWorkspaceIds()
         })
 
-        view = AnyView(view.onChange(of: retiringWorkspaceId) { _ in
+        view = AnyView(view.onChange(of: retiringWorkspaceId) { _, _ in
             reconcileMountedWorkspaceIds()
         })
 
@@ -2971,11 +2971,11 @@ struct ContentView: View {
             overlayController.update(isVisible: isCommandPalettePresented) { AnyView(commandPaletteOverlay) }
         }))
 
-        view = AnyView(view.onChange(of: bgGlassTintHex) { _ in
+        view = AnyView(view.onChange(of: bgGlassTintHex) { _, _ in
             updateWindowGlassTint()
         })
 
-        view = AnyView(view.onChange(of: bgGlassTintOpacity) { _ in
+        view = AnyView(view.onChange(of: bgGlassTintOpacity) { _, _ in
             updateWindowGlassTint()
         })
 
@@ -3014,7 +3014,7 @@ struct ContentView: View {
             updateSidebarResizerBandState()
         })
 
-        view = AnyView(view.onChange(of: sidebarWidth) { _ in
+        view = AnyView(view.onChange(of: sidebarWidth) { _, _ in
             let sanitized = normalizedSidebarWidth(sidebarWidth)
             if abs(sidebarWidth - sanitized) > 0.5 {
                 sidebarWidth = sanitized
@@ -3029,12 +3029,12 @@ struct ContentView: View {
             updateSidebarResizerBandState()
         })
 
-        view = AnyView(view.onChange(of: sidebarMinimumWidthSetting) { _ in
+        view = AnyView(view.onChange(of: sidebarMinimumWidthSetting) { _, _ in
             clampSidebarWidthIfNeeded()
             updateSidebarResizerBandState()
         })
 
-        view = AnyView(view.onChange(of: titlebarControlsStyleRawValue) { _ in
+        view = AnyView(view.onChange(of: titlebarControlsStyleRawValue) { _, _ in
             clampSidebarWidthIfNeeded()
             updateSidebarResizerBandState()
         })
@@ -3049,7 +3049,7 @@ struct ContentView: View {
             syncTrafficLightInset()
         })
 
-        view = AnyView(view.onChange(of: fileExplorerState.isVisible) { isVisible in
+        view = AnyView(view.onChange(of: fileExplorerState.isVisible) { _, isVisible in
             if !isVisible {
                 _ = AppDelegate.shared?.restoreTerminalFocusAfterRightSidebarHidden(in: observedWindow)
             }
@@ -3065,7 +3065,7 @@ struct ContentView: View {
             syncFileExplorerDirectory()
         })
 
-        view = AnyView(view.onChange(of: sidebarMatchTerminalBackground) { _ in
+        view = AnyView(view.onChange(of: sidebarMatchTerminalBackground) { _, _ in
             tabManager.applyWindowBackdropModeForAllTabs(reason: "sidebarMatchTerminalBackgroundChanged")
             guard sidebarState.isVisible,
                   sidebarBlendMode == SidebarBlendModeOption.withinWindow.rawValue else { return }
@@ -3090,11 +3090,11 @@ struct ContentView: View {
             applyTitlebarDebugChromeChange()
         })
 
-        view = AnyView(view.onChange(of: tabManager.tabs.map(\.id)) { _ in
+        view = AnyView(view.onChange(of: tabManager.tabs.map(\.id)) { _, _ in
             syncTrafficLightInset()
         })
 
-        view = AnyView(view.onChange(of: sidebarState.persistedWidth) { newValue in
+        view = AnyView(view.onChange(of: sidebarState.persistedWidth) { _, newValue in
             let sanitized = normalizedSidebarWidth(newValue)
             if abs(newValue - sanitized) > 0.5 {
                 sidebarState.persistedWidth = sanitized
@@ -3369,7 +3369,7 @@ struct ContentView: View {
 
         if let storedColor = objc_getAssociatedObject(view, &Self.unifiedTitlebarLayerColorKey),
            !(storedColor is NSNull) {
-            view.layer?.backgroundColor = storedColor as! CGColor
+            view.layer?.backgroundColor = (storedColor as! CGColor)
         } else {
             view.layer?.backgroundColor = nil
         }
@@ -3698,7 +3698,7 @@ struct ContentView: View {
             updateCommandPaletteScrollTarget(resultCount: commandPaletteVisibleResults.count, animated: false)
             syncCommandPaletteDebugStateForObservedWindow()
         }
-        .onChange(of: commandPaletteCurrentSearchFingerprint) { _ in
+        .onChange(of: commandPaletteCurrentSearchFingerprint) { _, _ in
             Task { @MainActor in
                 // Let the query-state transition settle first so the forced corpus refresh
                 // cannot rebuild the old command list after deleting the ">" prefix.
@@ -3711,7 +3711,7 @@ struct ContentView: View {
                 syncCommandPaletteDebugStateForObservedWindow()
             }
         }
-        .onChange(of: commandPaletteResultsRevision) { _ in
+        .onChange(of: commandPaletteResultsRevision) { _, _ in
             let resultIDs = cachedCommandPaletteResults.map(\.id)
             commandPaletteSelectedResultIndex = Self.commandPaletteResolvedSelectionIndex(
                 preferredCommandID: commandPaletteSelectionAnchorCommandID,
@@ -3724,7 +3724,7 @@ struct ContentView: View {
             syncCommandPaletteOverlayCommandListState()
             syncCommandPaletteDebugStateForObservedWindow()
         }
-        .onChange(of: commandPaletteSelectedResultIndex) { _ in
+        .onChange(of: commandPaletteSelectedResultIndex) { _, _ in
             updateCommandPaletteScrollTarget(resultCount: commandPaletteVisibleResults.count, animated: true)
             syncCommandPaletteOverlayCommandListState()
             syncCommandPaletteDebugStateForObservedWindow()
@@ -10743,7 +10743,7 @@ struct VerticalTabsSidebar: View {
                 frozenShortcutHintsValue = false
             }
         }
-        .onChange(of: dragState.draggedTabId) { newDraggedTabId in
+        .onChange(of: dragState.draggedTabId) { _, newDraggedTabId in
             SidebarDragLifecycleNotification().postStateDidChange(
                 tabId: newDraggedTabId,
                 reason: "drag_state_change"
@@ -10776,7 +10776,7 @@ struct VerticalTabsSidebar: View {
 #endif
             dragState.clearDrag()
         }
-        .onChange(of: tabManager.tabs.map(\.id)) { tabIds in
+        .onChange(of: tabManager.tabs.map(\.id)) { _, tabIds in
             guard let frozenTabId = frozenShortcutHintsTabId,
                   !tabIds.contains(frozenTabId) else { return }
             frozenShortcutHintsTabId = nil
@@ -13453,7 +13453,7 @@ struct TabItemView: View, Equatable {
                 .onAppear {
                     rowHeight = max(proxy.size.height, 1)
                 }
-                .onChange(of: proxy.size.height) { newHeight in
+                .onChange(of: proxy.size.height) { _, newHeight in
                     rowHeight = max(newHeight, 1)
                 }
         }
@@ -13953,7 +13953,7 @@ struct TabItemView: View, Equatable {
 #endif
             refreshWorkspaceSnapshot()
         }
-        .onChange(of: settings) { _ in
+        .onChange(of: settings) { _, _ in
             refreshWorkspaceSnapshot(force: true)
         }
         .onDrag(onDragStart)
@@ -15119,7 +15119,7 @@ private struct SidebarWorkspaceDescriptionText: View {
             )
 #endif
         }
-        .onChange(of: markdown) { newValue in
+        .onChange(of: markdown) { _, newValue in
 #if DEBUG
             let newlineCount = newValue.reduce(into: 0) { count, character in
                 if character == "\n" { count += 1 }

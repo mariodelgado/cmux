@@ -4,6 +4,7 @@ import Combine
 import CmuxFileOpen
 import CmuxSettings
 import SwiftUI
+import UniformTypeIdentifiers
 
 #if DEBUG
 private func fileExplorerDebugResponder(_ responder: NSResponder?) -> String {
@@ -2075,7 +2076,9 @@ final class FileExplorerCellView: NSTableCellView {
                 iconView.image = folderIcon
                 iconView.contentTintColor = nil
             } else {
-                let fileIcon = NSWorkspace.shared.icon(forFileType: (node.name as NSString).pathExtension)
+                let pathExtension = (node.name as NSString).pathExtension
+                let contentType = UTType(filenameExtension: pathExtension) ?? .data
+                let fileIcon = NSWorkspace.shared.icon(for: contentType)
                 fileIcon.size = NSSize(width: style.iconSize, height: style.iconSize)
                 iconView.image = fileIcon
                 iconView.contentTintColor = nil

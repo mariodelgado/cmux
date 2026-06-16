@@ -396,10 +396,10 @@ struct cmuxApp: App {
 #endif
                     bootstrapMainWindowScene()
                 }
-                .onChange(of: appearanceMode) { _ in
+                .onChange(of: appearanceMode) { _, _ in
                     applyAppearance()
                 }
-                .onChange(of: socketControlMode) { _ in
+                .onChange(of: socketControlMode) { _, _ in
                     updateSocketController()
                 }
                 .onReceive(NotificationCenter.default.publisher(for: .browserFocusModeStateDidChange)) { _ in
@@ -3017,7 +3017,7 @@ private struct SidebarDebugView: View {
                             Text(option.title).tag(option.rawValue)
                         }
                     }
-                    .onChange(of: sidebarPreset) { _ in
+                    .onChange(of: sidebarPreset) { _, _ in
                         applyPreset()
                     }
                     .padding(.top, 2)
@@ -3326,19 +3326,19 @@ private struct MenuBarExtraDebugView: View {
             .frame(maxWidth: .infinity, alignment: .topLeading)
         }
         .onAppear { applyLiveUpdate() }
-        .onChange(of: previewEnabled) { _ in applyLiveUpdate() }
-        .onChange(of: previewCount) { _ in applyLiveUpdate() }
-        .onChange(of: badgeRectX) { _ in applyLiveUpdate() }
-        .onChange(of: badgeRectY) { _ in applyLiveUpdate() }
-        .onChange(of: badgeRectWidth) { _ in applyLiveUpdate() }
-        .onChange(of: badgeRectHeight) { _ in applyLiveUpdate() }
-        .onChange(of: singleDigitFontSize) { _ in applyLiveUpdate() }
-        .onChange(of: multiDigitFontSize) { _ in applyLiveUpdate() }
-        .onChange(of: singleDigitXAdjust) { _ in applyLiveUpdate() }
-        .onChange(of: multiDigitXAdjust) { _ in applyLiveUpdate() }
-        .onChange(of: singleDigitYOffset) { _ in applyLiveUpdate() }
-        .onChange(of: multiDigitYOffset) { _ in applyLiveUpdate() }
-        .onChange(of: textRectWidthAdjust) { _ in applyLiveUpdate() }
+        .onChange(of: previewEnabled) { _, _ in applyLiveUpdate() }
+        .onChange(of: previewCount) { _, _ in applyLiveUpdate() }
+        .onChange(of: badgeRectX) { _, _ in applyLiveUpdate() }
+        .onChange(of: badgeRectY) { _, _ in applyLiveUpdate() }
+        .onChange(of: badgeRectWidth) { _, _ in applyLiveUpdate() }
+        .onChange(of: badgeRectHeight) { _, _ in applyLiveUpdate() }
+        .onChange(of: singleDigitFontSize) { _, _ in applyLiveUpdate() }
+        .onChange(of: multiDigitFontSize) { _, _ in applyLiveUpdate() }
+        .onChange(of: singleDigitXAdjust) { _, _ in applyLiveUpdate() }
+        .onChange(of: multiDigitXAdjust) { _, _ in applyLiveUpdate() }
+        .onChange(of: singleDigitYOffset) { _, _ in applyLiveUpdate() }
+        .onChange(of: multiDigitYOffset) { _, _ in applyLiveUpdate() }
+        .onChange(of: textRectWidthAdjust) { _, _ in applyLiveUpdate() }
     }
 
     private func sliderRow(
@@ -4180,8 +4180,8 @@ private struct BackgroundDebugView: View {
             .padding(16)
             .frame(maxWidth: .infinity, alignment: .topLeading)
         }
-        .onChange(of: bgGlassTintHex) { _ in updateWindowGlassTint() }
-        .onChange(of: bgGlassTintOpacity) { _ in updateWindowGlassTint() }
+        .onChange(of: bgGlassTintHex) { _, _ in updateWindowGlassTint() }
+        .onChange(of: bgGlassTintOpacity) { _, _ in updateWindowGlassTint() }
     }
 
     private func updateWindowGlassTint() {

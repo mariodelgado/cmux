@@ -191,7 +191,7 @@ private struct FeedListView: View {
                     )
                 }
             }
-            .onChange(of: scrollRequest) { request in
+            .onChange(of: scrollRequest) { _, request in
                 guard let request else { return }
                 proxy.scrollTo(request.id, anchor: .top)
             }
