@@ -135,7 +135,7 @@ private struct PDFPreviewChromeDebugView: View {
     private var actionStatus: some View {
         if model.actionCount == 0 {
             Text(String(localized: "debug.pdfPreviewChrome.noActions", defaultValue: "No sample actions yet."))
-                .font(.system(size: 11, design: .monospaced))
+                .font(.cmuxMonospaced(size: 11))
                 .foregroundStyle(.secondary)
         } else {
             Text(
@@ -148,7 +148,7 @@ private struct PDFPreviewChromeDebugView: View {
                     model.actionCount
                 )
             )
-            .font(.system(size: 11, design: .monospaced))
+            .font(.cmuxMonospaced(size: 11))
             .foregroundStyle(.secondary)
         }
     }

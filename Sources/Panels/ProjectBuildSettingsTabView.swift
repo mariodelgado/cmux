@@ -197,7 +197,7 @@ private struct SettingsRow: View {
         HStack(spacing: 0) {
             Spacer().frame(width: 3)
             Text(row.key)
-                .font(.system(size: 11, weight: .medium, design: .monospaced))
+                .font(.cmuxMonospaced(size: 11, weight: .medium))
                 .frame(width: settingColumnWidth, alignment: .leading)
                 .lineLimit(1)
                 .truncationMode(.tail)
@@ -224,7 +224,7 @@ private struct SettingsRow: View {
             }
         }()
         Text(value)
-            .font(.system(size: 11, design: .monospaced))
+            .font(.cmuxMonospaced(size: 11))
             .lineLimit(1)
             .truncationMode(.tail)
             .foregroundStyle(value == "—" ? Color.secondary.opacity(0.6) : style)

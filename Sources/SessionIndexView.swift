@@ -114,7 +114,7 @@ struct SessionIndexView: View {
             Toggle(isOn: $store.scopeToCurrentDirectory) {
                 Text(String(localized: "sessionIndex.scope.thisFolder", defaultValue: "This folder only"))
                     .font(.system(size: 11))
-                    .foregroundColor(.secondary)
+                    .foregroundColor(RightSidebarCatppuccinMochaPalette.subtext0)
             }
             .toggleStyle(.checkbox)
             .controlSize(.small)
@@ -145,7 +145,7 @@ struct SessionIndexView: View {
             ProgressView().controlSize(.small)
             Text(String(localized: "sessionIndex.loading", defaultValue: "Loading Vault…"))
                 .font(.system(size: 11))
-                .foregroundColor(.secondary)
+                .foregroundColor(RightSidebarCatppuccinMochaPalette.subtext0)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
@@ -154,11 +154,11 @@ struct SessionIndexView: View {
         VStack(spacing: 4) {
             Text(String(localized: "sessionIndex.empty.title", defaultValue: "Vault is empty"))
                 .font(.system(size: 12))
-                .foregroundColor(.secondary)
+                .foregroundColor(RightSidebarCatppuccinMochaPalette.subtext0)
             Text(String(localized: "sessionIndex.empty.subtitle",
                                    defaultValue: "Claude Code, Codex, OpenCode, and Rovo Dev history will appear here."))
                 .font(.system(size: 11))
-                .foregroundColor(.secondary.opacity(0.7))
+                .foregroundColor(RightSidebarCatppuccinMochaPalette.overlay0)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 16)
         }
@@ -268,7 +268,7 @@ private struct AgentIconImage: View, Equatable {
         } else {
             Image(systemName: agent.systemImageName ?? "person.crop.circle")
                 .font(.system(size: max(size - 2, 10), weight: .regular))
-                .foregroundColor(.secondary)
+                .foregroundColor(RightSidebarCatppuccinMochaPalette.subtext0)
                 .frame(width: size, height: size)
         }
     }
@@ -573,13 +573,13 @@ private struct SessionRow: View, Equatable {
             AgentIconImage(agent: entry.agent, size: 12)
             Text(entry.displayTitle)
                 .font(.system(size: 13))
-                .foregroundColor(.primary.opacity(0.92))
+                .foregroundColor(RightSidebarCatppuccinMochaPalette.text)
                 .lineLimit(1)
                 .truncationMode(.tail)
             Spacer(minLength: 8)
             Text(relativeTime(entry.modified))
-                .font(.system(size: 12).monospacedDigit())
-                .foregroundColor(.secondary.opacity(0.65))
+                .font(.cmuxMonospaced(size: 12))
+                .foregroundColor(RightSidebarCatppuccinMochaPalette.overlay0)
                 .fixedSize()
         }
         .padding(.leading, 32)
@@ -634,10 +634,10 @@ private struct SessionRow: View, Equatable {
 
     private var rowBackgroundColor: Color {
         if isHovered {
-            return Color.primary.opacity(0.05)
+            return RightSidebarCatppuccinMochaPalette.surface0.opacity(0.62)
         }
         if isPreviewPresented {
-            return Color.primary.opacity(0.07)
+            return RightSidebarCatppuccinMochaPalette.surface1.opacity(0.45)
         }
         return Color.clear
     }
@@ -2489,8 +2489,8 @@ private struct PopoverRow: View, Equatable {
         TimelineView(RelativeTimestampSchedule(modified: entry.modified)) { context in
             Text(SessionIndexView.relativeFormatter.localizedString(for: entry.modified, relativeTo: context.date))
         }
-        .font(.system(size: 11).monospacedDigit())
-        .foregroundColor(.secondary.opacity(0.7))
+        .font(.cmuxMonospaced(size: 11))
+        .foregroundColor(RightSidebarCatppuccinMochaPalette.overlay0)
         .fixedSize()
     }
 

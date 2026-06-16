@@ -14,7 +14,7 @@ struct SidebarDirectoryText: View {
     var body: some View {
         if candidates.count <= 1 {
             Text(candidates.first ?? "")
-                .font(.system(size: 10 * fontScale, design: .monospaced))
+                .font(.cmuxMonospaced(size: 10 * fontScale))
                 .foregroundColor(color)
                 .lineLimit(1)
                 .truncationMode(.tail)
@@ -22,13 +22,13 @@ struct SidebarDirectoryText: View {
             ViewThatFits(in: .horizontal) {
                 ForEach(Array(candidates.dropLast().enumerated()), id: \.offset) { _, candidate in
                     Text(candidate)
-                        .font(.system(size: 10 * fontScale, design: .monospaced))
+                        .font(.cmuxMonospaced(size: 10 * fontScale))
                         .foregroundColor(color)
                         .lineLimit(1)
                         .fixedSize(horizontal: true, vertical: false)
                 }
                 Text(candidates.last ?? "")
-                    .font(.system(size: 10 * fontScale, design: .monospaced))
+                    .font(.cmuxMonospaced(size: 10 * fontScale))
                     .foregroundColor(color)
                     .lineLimit(1)
                     .truncationMode(.tail)

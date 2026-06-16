@@ -250,6 +250,10 @@ struct RightSidebarPanelView: View {
         }
         .shortcutHintVisibilityAnimation(value: focusShortcutHintAnimationValue)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(RightSidebarCatppuccinMochaPalette.base)
+        .foregroundStyle(RightSidebarCatppuccinMochaPalette.text)
+        .tint(RightSidebarCatppuccinMochaPalette.mauve)
+        .environment(\.colorScheme, .dark)
         .background(
             RightSidebarKeyboardFocusBridge()
             .frame(width: 1, height: 1)
@@ -709,15 +713,15 @@ private struct ModeBarButton: View {
     private var pendingChip: some View {
         let countText = badgeCount > 9 ? "9+" : String(badgeCount)
         return Text(countText)
-            .font(.system(size: 10, weight: .bold).monospacedDigit())
+            .font(.cmuxMonospaced(size: 10, weight: .bold))
             .lineLimit(1)
             .fixedSize(horizontal: true, vertical: true)
-            .foregroundColor(.orange)
+            .foregroundColor(RightSidebarCatppuccinMochaPalette.mauve)
             .padding(.horizontal, 5)
             .padding(.vertical, 1)
             .background(
                 Capsule(style: .continuous)
-                    .fill(Color.orange.opacity(0.20))
+                    .fill(RightSidebarCatppuccinMochaPalette.surface0)
             )
             .fixedSize(horizontal: true, vertical: true)
             .layoutPriority(2)

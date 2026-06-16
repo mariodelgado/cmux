@@ -405,7 +405,7 @@ private struct GlobalSearchResultRowView: View {
 
                 if let shortcutLabel = row.shortcutLabel {
                     Text(shortcutLabel)
-                        .font(.system(size: 11, weight: .medium, design: .monospaced))
+                        .font(.cmuxMonospaced(size: 11, weight: .medium))
                         .foregroundStyle(.secondary)
                         .frame(minWidth: 30, alignment: .trailing)
                 }

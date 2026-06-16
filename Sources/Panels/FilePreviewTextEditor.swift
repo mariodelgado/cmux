@@ -156,7 +156,7 @@ extension SavingTextView {
         textView.importsGraphics = false
         textView.usesFindPanel = true
         textView.usesFontPanel = false
-        textView.font = .monospacedSystemFont(ofSize: 13, weight: .regular)
+        textView.font = .cmuxMonospaced(ofSize: 13, weight: .regular)
         textView.minSize = NSSize(width: 0, height: 0)
         textView.maxSize = NSSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)
         textView.isVerticallyResizable = true
@@ -269,7 +269,7 @@ final class SavingTextView: NSTextView {
         let clamped = min(max(nextFontSize, Self.minimumPreviewFontSize), Self.maximumPreviewFontSize)
         guard clamped.isFinite else { return }
         previewFontSize = clamped
-        let nextFont = NSFont.monospacedSystemFont(ofSize: clamped, weight: .regular)
+        let nextFont = NSFont.cmuxMonospaced(ofSize: clamped, weight: .regular)
         font = nextFont
         typingAttributes[.font] = nextFont
     }

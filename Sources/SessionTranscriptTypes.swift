@@ -51,7 +51,7 @@ enum SessionTranscriptRole: Equatable, Sendable {
     var bodyFont: Font {
         switch self {
         case .tool, .system:
-            return .system(size: 11, design: .monospaced)
+            return .cmuxMonospaced(size: 11)
         case .user, .assistant, .event:
             return .system(size: 12)
         }

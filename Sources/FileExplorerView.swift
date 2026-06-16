@@ -801,6 +801,8 @@ final class FileExplorerContainerView: NSView {
 
         super.init(frame: .zero)
         configureSearchDebounce()
+        wantsLayer = true
+        layer?.backgroundColor = RightSidebarCatppuccinMochaPalette.baseNS.cgColor
 
         // Header
         headerView.translatesAutoresizingMaskIntoConstraints = false
@@ -808,6 +810,8 @@ final class FileExplorerContainerView: NSView {
 
         // Search bar
         searchBarView.translatesAutoresizingMaskIntoConstraints = false
+        searchBarView.wantsLayer = true
+        searchBarView.layer?.backgroundColor = RightSidebarCatppuccinMochaPalette.mantleNS.cgColor
         searchBarView.isHidden = true
         addSubview(searchBarView)
 
@@ -815,6 +819,7 @@ final class FileExplorerContainerView: NSView {
         searchField.setAccessibilityIdentifier("FileExplorerSearchField")
         searchField.placeholderString = String(localized: "fileExplorer.search.placeholder", defaultValue: "Search files")
         searchField.font = .systemFont(ofSize: 12, weight: .regular)
+        searchField.textColor = RightSidebarCatppuccinMochaPalette.textNS
         searchField.focusRingType = .none
         searchField.cell?.usesSingleLineMode = true
         searchField.cell?.isScrollable = true
@@ -841,7 +846,7 @@ final class FileExplorerContainerView: NSView {
 
         searchStatusLabel.translatesAutoresizingMaskIntoConstraints = false
         searchStatusLabel.font = .systemFont(ofSize: 11, weight: .medium)
-        searchStatusLabel.textColor = .secondaryLabelColor
+        searchStatusLabel.textColor = RightSidebarCatppuccinMochaPalette.subtext0NS
         searchStatusLabel.lineBreakMode = .byTruncatingTail
         searchStatusLabel.maximumNumberOfLines = 1
         searchStatusLabel.alignment = .left
@@ -852,7 +857,7 @@ final class FileExplorerContainerView: NSView {
         // Empty state label
         emptyLabel.translatesAutoresizingMaskIntoConstraints = false
         emptyLabel.font = .systemFont(ofSize: 13)
-        emptyLabel.textColor = .secondaryLabelColor
+        emptyLabel.textColor = RightSidebarCatppuccinMochaPalette.subtext0NS
         emptyLabel.alignment = .center
         emptyLabel.isHidden = true
         addSubview(emptyLabel)
@@ -1873,13 +1878,13 @@ private final class FileExplorerSearchResultCellView: NSTableCellView {
     private func setupViews() {
         pathLabel.translatesAutoresizingMaskIntoConstraints = false
         pathLabel.font = .systemFont(ofSize: 12, weight: .semibold)
-        pathLabel.textColor = .labelColor
+        pathLabel.textColor = RightSidebarCatppuccinMochaPalette.textNS
         pathLabel.lineBreakMode = .byTruncatingMiddle
         pathLabel.maximumNumberOfLines = 1
 
         previewLabel.translatesAutoresizingMaskIntoConstraints = false
-        previewLabel.font = .monospacedSystemFont(ofSize: 11, weight: .regular)
-        previewLabel.textColor = .secondaryLabelColor
+        previewLabel.font = .cmuxMonospaced(ofSize: 11, weight: .regular)
+        previewLabel.textColor = RightSidebarCatppuccinMochaPalette.subtext0NS
         previewLabel.lineBreakMode = .byTruncatingTail
         previewLabel.maximumNumberOfLines = 1
 
@@ -1924,17 +1929,19 @@ final class FileExplorerHeaderView: NSView {
 
     private func setupViews() {
         iconView.translatesAutoresizingMaskIntoConstraints = false
-        iconView.contentTintColor = .secondaryLabelColor
+        iconView.contentTintColor = RightSidebarCatppuccinMochaPalette.subtext0NS
 
         pathLabel.translatesAutoresizingMaskIntoConstraints = false
         pathLabel.font = .systemFont(ofSize: 11, weight: .medium)
-        pathLabel.textColor = .secondaryLabelColor
+        pathLabel.textColor = RightSidebarCatppuccinMochaPalette.subtext0NS
         pathLabel.lineBreakMode = .byTruncatingMiddle
         pathLabel.maximumNumberOfLines = 1
         pathLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
 
         addSubview(iconView)
         addSubview(pathLabel)
+        wantsLayer = true
+        layer?.backgroundColor = RightSidebarCatppuccinMochaPalette.mantleNS.cgColor
 
         NSLayoutConstraint.activate([
             heightAnchor.constraint(equalToConstant: RightSidebarChromeMetrics.secondaryBarHeight),
@@ -2011,7 +2018,7 @@ final class FileExplorerCellView: NSTableCellView {
         iconView.imageScaling = .scaleProportionallyDown
 
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
-        nameLabel.textColor = .labelColor
+        nameLabel.textColor = RightSidebarCatppuccinMochaPalette.textNS
         nameLabel.lineBreakMode = .byTruncatingTail
         nameLabel.maximumNumberOfLines = 1
 
@@ -2117,7 +2124,7 @@ final class FileExplorerCellView: NSTableCellView {
             nameLabel.textColor = style.gitColor(for: gitStatus)
             nameLabel.toolTip = node.path
         } else {
-            nameLabel.textColor = .labelColor
+            nameLabel.textColor = RightSidebarCatppuccinMochaPalette.textNS
             nameLabel.toolTip = node.path
         }
     }
@@ -2347,9 +2354,9 @@ final class FileExplorerRowView: NSTableRowView {
 
     private func selectionFillColor(isFocused: Bool) -> NSColor {
         if isFocused {
-            return .controlAccentColor.withAlphaComponent(0.20)
+            return RightSidebarCatppuccinMochaPalette.mauveNS.withAlphaComponent(0.28)
         }
-        return .labelColor.withAlphaComponent(0.08)
+        return RightSidebarCatppuccinMochaPalette.surface0NS.withAlphaComponent(0.72)
     }
 
     override var interiorBackgroundStyle: NSView.BackgroundStyle {

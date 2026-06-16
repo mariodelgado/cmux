@@ -2910,7 +2910,7 @@ struct TextBoxInputContainer: View {
             VStack(alignment: .leading, spacing: 10) {
                 ForEach(Array(entries.enumerated()), id: \.offset) { _, entry in
                     Text(entry.submissionText.trimmingCharacters(in: .whitespacesAndNewlines))
-                        .font(.system(size: 11, design: .monospaced))
+                        .font(.cmuxMonospaced(size: 11))
                         .textSelection(.enabled)
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }

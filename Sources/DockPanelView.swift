@@ -572,9 +572,12 @@ struct DockPanelView: View {
     var body: some View {
         VStack(spacing: 0) {
             toolbar
-            Divider()
+            RightSidebarCatppuccinDivider()
             content
         }
+        .background(RightSidebarCatppuccinMochaPalette.base)
+        .foregroundStyle(RightSidebarCatppuccinMochaPalette.text)
+        .tint(RightSidebarCatppuccinMochaPalette.mauve)
         .background(
             DockKeyboardFocusBridge(store: store)
                 .frame(width: 1, height: 1)
@@ -586,7 +589,7 @@ struct DockPanelView: View {
         HStack(spacing: 6) {
             Text(store.sourceLabel)
                 .font(.system(size: 11, weight: .medium))
-                .foregroundStyle(.secondary)
+                .foregroundStyle(RightSidebarCatppuccinMochaPalette.subtext0)
                 .lineLimit(1)
                 .truncationMode(.middle)
             Spacer(minLength: 4)
@@ -595,6 +598,7 @@ struct DockPanelView: View {
             } label: {
                 Image(systemName: "doc.text")
                     .font(.system(size: 11, weight: .medium))
+                    .foregroundStyle(RightSidebarCatppuccinMochaPalette.blue)
             }
             .buttonStyle(.plain)
             .help(String(localized: "dock.action.openConfig", defaultValue: "Open Dock Config"))
@@ -605,6 +609,7 @@ struct DockPanelView: View {
             } label: {
                 Image(systemName: "arrow.clockwise")
                     .font(.system(size: 11, weight: .medium))
+                    .foregroundStyle(RightSidebarCatppuccinMochaPalette.blue)
             }
             .buttonStyle(.plain)
             .help(String(localized: "dock.action.reload", defaultValue: "Reload Dock"))
@@ -675,7 +680,7 @@ private struct DockControlsLayoutView: View {
                             }
                         )
                         if index < snapshots.count - 1 {
-                            Divider()
+                            RightSidebarCatppuccinDivider()
                                 .frame(height: dividerHeight)
                         }
                     }
@@ -744,16 +749,16 @@ private struct DockControlSectionView<TerminalContent: View>: View {
     private var header: some View {
         HStack(spacing: 6) {
             Text("\(ordinal)")
-                .font(.system(size: 10, weight: .semibold).monospacedDigit())
-                .foregroundStyle(.secondary)
+                .font(.cmuxMonospaced(size: 10, weight: .semibold))
+                .foregroundStyle(RightSidebarCatppuccinMochaPalette.subtext0)
                 .frame(width: 18, alignment: .center)
             Text(snapshot.title)
                 .font(.system(size: 12, weight: .semibold))
                 .lineLimit(1)
                 .truncationMode(.tail)
             Text(snapshot.command)
-                .font(.system(size: 10, weight: .regular, design: .monospaced))
-                .foregroundStyle(.secondary)
+                .font(.cmuxMonospaced(size: 10, weight: .regular))
+                .foregroundStyle(RightSidebarCatppuccinMochaPalette.subtext0)
                 .lineLimit(1)
                 .truncationMode(.middle)
             Spacer(minLength: 4)
@@ -762,6 +767,7 @@ private struct DockControlSectionView<TerminalContent: View>: View {
             } label: {
                 Image(systemName: "keyboard")
                     .font(.system(size: 10, weight: .medium))
+                    .foregroundStyle(RightSidebarCatppuccinMochaPalette.blue)
             }
             .buttonStyle(.plain)
             .help(String(localized: "dock.action.focusControl", defaultValue: "Focus Control"))
@@ -772,6 +778,7 @@ private struct DockControlSectionView<TerminalContent: View>: View {
             } label: {
                 Image(systemName: "arrow.clockwise")
                     .font(.system(size: 10, weight: .medium))
+                    .foregroundStyle(RightSidebarCatppuccinMochaPalette.blue)
             }
             .buttonStyle(.plain)
             .help(String(localized: "dock.action.restartControl", defaultValue: "Restart Control"))
@@ -780,7 +787,7 @@ private struct DockControlSectionView<TerminalContent: View>: View {
         .padding(.horizontal, 8)
         .padding(.vertical, 5)
         .frame(height: 30)
-        .background(Color.primary.opacity(0.035))
+        .background(RightSidebarCatppuccinMochaPalette.surface0.opacity(0.72))
     }
 }
 
@@ -826,11 +833,11 @@ private struct DockTrustView: View {
                 defaultValue: "This project wants to start commands from its Dock config."
             ))
             .font(.system(size: 12))
-            .foregroundStyle(.secondary)
+            .foregroundStyle(RightSidebarCatppuccinMochaPalette.subtext0)
             .multilineTextAlignment(.center)
             Text(request.configPath)
-                .font(.system(size: 10, weight: .regular, design: .monospaced))
-                .foregroundStyle(.secondary)
+                .font(.cmuxMonospaced(size: 10, weight: .regular))
+                .foregroundStyle(RightSidebarCatppuccinMochaPalette.subtext0)
                 .lineLimit(2)
                 .truncationMode(.middle)
             Button(String(localized: "dock.trust.action", defaultValue: "Trust and Start")) {
@@ -856,7 +863,7 @@ private struct DockErrorView: View {
                 .font(.system(size: 13, weight: .semibold))
             Text(message)
                 .font(.system(size: 12))
-                .foregroundStyle(.secondary)
+                .foregroundStyle(RightSidebarCatppuccinMochaPalette.subtext0)
                 .multilineTextAlignment(.center)
         }
         .padding(20)

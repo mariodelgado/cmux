@@ -64,7 +64,7 @@ struct ConfigSettingsView: View {
             VStack(alignment: .leading, spacing: 4) {
                 ForEach(currentSnapshot.displayPaths, id: \.self) { path in
                     Text(verbatim: path)
-                        .font(.system(size: 12, weight: .regular, design: .monospaced))
+                        .font(.cmuxMonospaced(size: 12, weight: .regular))
                         .foregroundStyle(.secondary)
                         .textSelection(.enabled)
                 }
@@ -318,7 +318,7 @@ private struct ConfigSettingsTextView: NSViewRepresentable {
         textView.isEditable = isEditable
         textView.isSelectable = true
         textView.string = text
-        textView.font = .monospacedSystemFont(ofSize: 12, weight: .regular)
+        textView.font = .cmuxMonospaced(ofSize: 12, weight: .regular)
         textView.textColor = .textColor
         textView.backgroundColor = .textBackgroundColor
         textView.insertionPointColor = .textColor

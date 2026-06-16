@@ -121,7 +121,7 @@ struct ProjectSchemesTabView: View {
                                 .foregroundStyle(.secondary)
                             ForEach(selected.scheme.launchArguments, id: \.self) { arg in
                                 Text(arg)
-                                    .font(.system(size: 11, design: .monospaced))
+                                    .font(.cmuxMonospaced(size: 11))
                                     .textSelection(.enabled)
                             }
                         }
@@ -133,7 +133,7 @@ struct ProjectSchemesTabView: View {
                                 .foregroundStyle(.secondary)
                             ForEach(selected.scheme.environmentVariables.sorted(by: { $0.key < $1.key }), id: \.key) { entry in
                                 Text("\(entry.key) = \(entry.value)")
-                                    .font(.system(size: 11, design: .monospaced))
+                                    .font(.cmuxMonospaced(size: 11))
                                     .textSelection(.enabled)
                             }
                         }

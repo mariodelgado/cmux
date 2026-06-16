@@ -8,7 +8,7 @@ struct DockEmptyView: View {
         VStack(spacing: 10) {
             Image(systemName: "dock.rectangle")
                 .font(.system(size: 24))
-                .foregroundStyle(.secondary)
+                .foregroundStyle(RightSidebarCatppuccinMochaPalette.subtext0)
             Text(String(localized: "dock.empty.title", defaultValue: "No Dock Controls"))
                 .font(.system(size: 13, weight: .semibold))
             Text(String(
@@ -16,7 +16,7 @@ struct DockEmptyView: View {
                 defaultValue: "Add controls to .cmux/dock.json."
             ))
             .font(.system(size: 12))
-            .foregroundStyle(.secondary)
+            .foregroundStyle(RightSidebarCatppuccinMochaPalette.subtext0)
             VStack(spacing: 8) {
                 HStack(spacing: 4) {
                     Button {
@@ -70,7 +70,7 @@ struct DockEmptyView: View {
             ScrollView {
                 Text(agentPrompt)
                     .font(.system(size: 12))
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(RightSidebarCatppuccinMochaPalette.subtext0)
                     .textSelection(.enabled)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }

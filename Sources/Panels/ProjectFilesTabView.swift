@@ -406,7 +406,7 @@ private struct ProjectFilesDetailStrip: View {
                 .foregroundStyle(.secondary)
                 .frame(width: 70, alignment: .leading)
             Text(value)
-                .font(.system(size: 11, design: .monospaced))
+                .font(.cmuxMonospaced(size: 11))
                 .textSelection(.enabled)
         }
     }
@@ -424,7 +424,7 @@ private struct ProjectFilesDetailStrip: View {
                 .foregroundStyle(.secondary)
             if !membership.compilerFlags.isEmpty {
                 Text("flags: \(membership.compilerFlags.joined(separator: " "))")
-                    .font(.system(size: 10, design: .monospaced))
+                    .font(.cmuxMonospaced(size: 10))
                     .foregroundStyle(.secondary)
             }
             Spacer()

@@ -174,7 +174,7 @@ struct MarkdownPanelView: View {
                 .font(.headline)
                 .foregroundColor(.primary)
             Text(panel.filePath)
-                .font(.system(size: 12, design: .monospaced))
+                .font(.cmuxMonospaced(size: 12))
                 .foregroundColor(.secondary)
                 .multilineTextAlignment(.center)
                 .textSelection(.enabled)

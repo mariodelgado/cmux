@@ -107,7 +107,7 @@ struct CmuxTaskManagerView: View {
                 .font(.caption)
                 .foregroundStyle(.secondary)
             Text(value)
-                .font(.system(.body, design: .monospaced).weight(.semibold))
+                .font(.cmuxMonospaced(size: 13, weight: .semibold))
                 .monospacedDigit()
         }
     }

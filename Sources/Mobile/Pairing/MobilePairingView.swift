@@ -323,7 +323,7 @@ struct MobilePairingView: View {
                 .foregroundStyle(.secondary)
             ForEach(ready.tailscaleLines, id: \.self) { line in
                 Text(line)
-                    .font(.system(.caption, design: .monospaced))
+                    .font(.cmuxMonospaced(size: 11))
                     .textSelection(.enabled)
                     .foregroundStyle(.secondary)
             }

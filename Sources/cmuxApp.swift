@@ -2711,7 +2711,7 @@ private struct AcknowledgmentsView: View {
     var body: some View {
         ScrollView {
             Text(content)
-                .font(.system(.body, design: .monospaced))
+                .font(.cmuxMonospaced(size: 13))
                 .textSelection(.enabled)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding()
@@ -2772,7 +2772,7 @@ private struct FileExplorerStyleDebugView: View {
                 Text("Current: \(currentStyle.label)")
                     .font(.system(size: 11, weight: .medium))
                 Text("Row: \(Int(currentStyle.rowHeight))pt, Indent: \(Int(currentStyle.indentation))pt, Icon: \(Int(currentStyle.iconSize))pt")
-                    .font(.system(size: 11, design: .monospaced))
+                    .font(.cmuxMonospaced(size: 11))
                     .foregroundColor(.secondary)
             }
         }
@@ -4066,11 +4066,11 @@ private struct TabBarBackdropLabTerminalPane: View {
                     .foregroundStyle(Color.green)
                 Text(String(localized: "debug.tabBarBackdropLab.terminal.overflow", defaultValue: "tab titles intentionally overflow under the split buttons"))
                     .foregroundStyle(Color.white.opacity(0.78))
-                Text(String(localized: "debug.tabBarBackdropLab.terminal.compare", defaultValue: "drag / resize / compare the transparent edges"))
+            Text(String(localized: "debug.tabBarBackdropLab.terminal.compare", defaultValue: "drag / resize / compare the transparent edges"))
                     .foregroundStyle(Color.white.opacity(0.52))
                 Spacer(minLength: 0)
             }
-            .font(.system(size: 11, design: .monospaced))
+            .font(.cmuxMonospaced(size: 11))
             .padding(10)
         }
     }
@@ -4379,7 +4379,7 @@ private struct StartupAppearanceDebugView: View {
                     VStack(alignment: .leading, spacing: 8) {
                         ScrollView {
                             Text(selectedConfigText)
-                                .font(.system(.caption, design: .monospaced))
+                                .font(.cmuxMonospaced(size: 11))
                                 .textSelection(.enabled)
                                 .frame(maxWidth: .infinity, alignment: .topLeading)
                                 .padding(8)
@@ -4542,7 +4542,7 @@ private struct AboutPropertyRow: View {
             .padding(.leading, 2)
             .tint(.secondary)
             .opacity(0.8)
-            .monospaced()
+            .font(.cmuxMonospaced(size: 13))
     }
 
     var body: some View {

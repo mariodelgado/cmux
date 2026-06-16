@@ -69,7 +69,7 @@ enum FileExplorerStyle: Int, CaseIterable {
         switch self {
         case .liquidGlass: return .systemFont(ofSize: 13, weight: .medium)
         case .highDensity: return .systemFont(ofSize: 11, weight: .regular)
-        case .terminalStealth: return .monospacedSystemFont(ofSize: 12, weight: .regular)
+        case .terminalStealth: return .cmuxMonospaced(ofSize: 12, weight: .regular)
         case .proStudio: return .systemFont(ofSize: 14, weight: .semibold)
         case .finder: return .systemFont(ofSize: 13, weight: .regular)
         }
@@ -131,21 +131,21 @@ enum FileExplorerStyle: Int, CaseIterable {
 
     var fileIconTint: NSColor {
         switch self {
-        case .liquidGlass: return .secondaryLabelColor
-        case .highDensity: return .secondaryLabelColor
-        case .terminalStealth: return .tertiaryLabelColor
-        case .proStudio: return .secondaryLabelColor
-        case .finder: return NSColor(white: 0.55, alpha: 1.0)
+        case .liquidGlass: return RightSidebarCatppuccinMochaPalette.subtext0NS
+        case .highDensity: return RightSidebarCatppuccinMochaPalette.subtext0NS
+        case .terminalStealth: return RightSidebarCatppuccinMochaPalette.overlay0NS
+        case .proStudio: return RightSidebarCatppuccinMochaPalette.subtext0NS
+        case .finder: return RightSidebarCatppuccinMochaPalette.overlay0NS
         }
     }
 
     var folderIconTint: NSColor {
         switch self {
-        case .liquidGlass: return .systemBlue
-        case .highDensity: return .secondaryLabelColor
-        case .terminalStealth: return .tertiaryLabelColor
-        case .proStudio: return .systemBlue
-        case .finder: return .systemBlue
+        case .liquidGlass: return RightSidebarCatppuccinMochaPalette.blueNS
+        case .highDensity: return RightSidebarCatppuccinMochaPalette.blueNS
+        case .terminalStealth: return RightSidebarCatppuccinMochaPalette.overlay0NS
+        case .proStudio: return RightSidebarCatppuccinMochaPalette.blueNS
+        case .finder: return RightSidebarCatppuccinMochaPalette.blueNS
         }
     }
 

@@ -192,7 +192,7 @@ private struct TitlebarLayoutDebugView: View {
                 .frame(width: 112, alignment: .leading)
             Slider(value: clamped, in: range, step: step)
             Text(String(format: "%.1f", clamped.wrappedValue))
-                .font(.system(.caption, design: .monospaced))
+                .font(.cmuxMonospaced(size: 11))
                 .frame(width: 44, alignment: .trailing)
         }
     }

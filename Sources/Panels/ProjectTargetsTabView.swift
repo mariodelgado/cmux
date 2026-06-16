@@ -218,7 +218,7 @@ struct ProjectTargetsTabView: View {
                 .foregroundStyle(.secondary)
                 .frame(width: 80, alignment: .leading)
             Text(value)
-                .font(.system(size: 11, design: .monospaced))
+                .font(.cmuxMonospaced(size: 11))
                 .textSelection(.enabled)
         }
     }

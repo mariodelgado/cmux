@@ -85,6 +85,9 @@ struct FeedPanelView: View {
                 onLoadOlderItems: viewModel.loadOlderItems
             )
         }
+        .background(RightSidebarCatppuccinMochaPalette.base)
+        .foregroundStyle(RightSidebarCatppuccinMochaPalette.text)
+        .tint(RightSidebarCatppuccinMochaPalette.mauve)
     }
 
     private var controlBar: some View {
@@ -575,7 +578,7 @@ private struct FeedListView: View {
 
     private var rowSeparator: some View {
         Rectangle()
-            .fill(Color.primary.opacity(0.08))
+            .fill(RightSidebarCatppuccinMochaPalette.surface1)
             .frame(maxWidth: .infinity)
             .frame(height: 1)
     }
@@ -588,14 +591,14 @@ private struct FeedListView: View {
                  : String(localized: "feed.empty.activity.title",
                           defaultValue: "No activity yet"))
                 .font(.system(size: 12))
-                .foregroundColor(.secondary)
+                .foregroundColor(RightSidebarCatppuccinMochaPalette.subtext0)
             Text(filter == .actionable
                  ? String(localized: "feed.empty.actionable.subtitle",
                           defaultValue: "Permission, plan, and question requests from AI agents will appear here.")
                  : String(localized: "feed.empty.activity.subtitle",
                           defaultValue: "Agent decisions and todo-list updates will appear here."))
                 .font(.system(size: 11))
-                .foregroundColor(.secondary.opacity(0.7))
+                .foregroundColor(RightSidebarCatppuccinMochaPalette.overlay0)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 16)
         }
@@ -651,7 +654,7 @@ private struct FeedRowSurface: View {
             .equatable()
             if showsDivider {
                 Rectangle()
-                    .fill(Color.primary.opacity(0.08))
+                    .fill(RightSidebarCatppuccinMochaPalette.surface1)
                     .frame(maxWidth: .infinity)
                     .frame(height: 1)
             }
@@ -670,18 +673,18 @@ private struct FeedRowSurface: View {
     private var rowBackgroundFill: Color {
         if isSelected {
             guard isFocusActive else {
-                return Color.primary.opacity(0.07)
+                return RightSidebarCatppuccinMochaPalette.surface0.opacity(0.72)
             }
             if snapshot.status.isPending {
                 return tint.opacity(0.14)
             }
-            return Color.primary.opacity(0.075)
+            return RightSidebarCatppuccinMochaPalette.surface1.opacity(0.42)
         }
         if isHovered {
             if snapshot.status.isPending {
                 return tint.opacity(0.10)
             }
-            return Color.primary.opacity(0.055)
+            return RightSidebarCatppuccinMochaPalette.surface0.opacity(0.62)
         }
         return .clear
     }
@@ -689,9 +692,9 @@ private struct FeedRowSurface: View {
     private var tint: Color {
         switch snapshot.kind {
         case .permissionRequest: return .orange
-        case .exitPlan: return .purple
-        case .question: return .blue
-        default: return snapshot.status.isPending ? .orange : .secondary.opacity(0.8)
+        case .exitPlan: return RightSidebarCatppuccinMochaPalette.mauve
+        case .question: return RightSidebarCatppuccinMochaPalette.blue
+        default: return snapshot.status.isPending ? .orange : RightSidebarCatppuccinMochaPalette.subtext0
         }
     }
 }
@@ -1159,7 +1162,7 @@ struct FeedItemRow: View, Equatable {
     private func chip(text: String, fg: Color, bg: Color, mono: Bool = false) -> some View {
         Text(text)
             .font(mono
-                  ? .system(size: 10, weight: .medium).monospacedDigit()
+                  ? .cmuxMonospaced(size: 10, weight: .medium)
                   : .system(size: 10, weight: .medium))
             .foregroundColor(fg)
             .padding(.horizontal, 5)
@@ -1532,12 +1535,12 @@ private struct PermissionActionArea: View {
                 HStack(alignment: .firstTextBaseline, spacing: 6) {
                     if let sigil = preview.sigil {
                         Text(sigil)
-                            .font(.system(size: 11, weight: .medium, design: .monospaced))
+                            .font(.cmuxMonospaced(size: 11, weight: .medium))
                             .foregroundColor(.orange)
                     }
                     Text(primary)
-                        .font(.system(size: 11, design: .monospaced))
-                        .foregroundColor(.primary.opacity(0.95))
+                        .font(.cmuxMonospaced(size: 11))
+                        .foregroundColor(RightSidebarCatppuccinMochaPalette.text)
                         .textSelection(.enabled)
                         .fixedSize(horizontal: false, vertical: true)
                 }
@@ -1553,11 +1556,11 @@ private struct PermissionActionArea: View {
         .padding(10)
         .background(
             RoundedRectangle(cornerRadius: 6, style: .continuous)
-                .fill(Color.primary.opacity(0.05))
+                .fill(RightSidebarCatppuccinMochaPalette.surface0.opacity(0.7))
         )
         .overlay(
             RoundedRectangle(cornerRadius: 6, style: .continuous)
-                .stroke(Color.primary.opacity(0.10), lineWidth: 1)
+                .stroke(RightSidebarCatppuccinMochaPalette.surface1, lineWidth: 1)
         )
     }
 }
@@ -2418,8 +2421,8 @@ private struct ExitPlanPlanFileView: View {
                 .font(.system(size: 10, weight: .semibold))
                 .foregroundColor(.secondary)
             Text((path as NSString).lastPathComponent)
-                .font(.system(size: 10, design: .monospaced))
-                .foregroundColor(.secondary.opacity(0.85))
+                .font(.cmuxMonospaced(size: 10))
+                .foregroundColor(RightSidebarCatppuccinMochaPalette.subtext0)
                 .lineLimit(1)
                 .truncationMode(.middle)
                 .help(path)
@@ -2487,8 +2490,8 @@ private struct PlanBodyView: View {
                         ForEach(Array(items.enumerated()), id: \.offset) { _, item in
                             HStack(alignment: .top, spacing: 5) {
                                 Text("\(item.index).")
-                                    .font(.system(size: 11, weight: .medium).monospacedDigit())
-                                    .foregroundColor(.secondary)
+                                    .font(.cmuxMonospaced(size: 11, weight: .medium))
+                                    .foregroundColor(RightSidebarCatppuccinMochaPalette.subtext0)
                                 markdownText(item.text, color: .primary.opacity(0.85))
                             }
                         }
@@ -2752,8 +2755,8 @@ private struct QuestionActionArea: View {
         } label: {
             HStack(alignment: .top, spacing: 10) {
                 Text("\(index)")
-                    .font(.system(size: 11, weight: .bold).monospacedDigit())
-                    .foregroundColor(selected ? .white : .secondary)
+                    .font(.cmuxMonospaced(size: 11, weight: .bold))
+                    .foregroundColor(selected ? .white : RightSidebarCatppuccinMochaPalette.subtext0)
                     .frame(width: 20, height: 20)
                     .background(
                         RoundedRectangle(cornerRadius: 4, style: .continuous)
@@ -2802,8 +2805,8 @@ private struct QuestionActionArea: View {
         let font = NSFont.systemFont(ofSize: 12, weight: .semibold)
         return HStack(alignment: .top, spacing: 10) {
             Text("\(index)")
-                .font(.system(size: 11, weight: .bold).monospacedDigit())
-                .foregroundColor(selected ? .white : .secondary)
+                .font(.cmuxMonospaced(size: 11, weight: .bold))
+                .foregroundColor(selected ? .white : RightSidebarCatppuccinMochaPalette.subtext0)
                 .frame(width: 20, height: 20)
                 .background(
                     RoundedRectangle(cornerRadius: 4, style: .continuous)
@@ -2850,8 +2853,8 @@ private struct QuestionActionArea: View {
         VStack(alignment: .leading, spacing: 5) {
             HStack(alignment: .top, spacing: 5) {
                 Text("\(index).")
-                    .font(.system(size: 11, weight: .semibold).monospacedDigit())
-                    .foregroundColor(.blue)
+                    .font(.cmuxMonospaced(size: 11, weight: .semibold))
+                    .foregroundColor(RightSidebarCatppuccinMochaPalette.blue)
                 Text(question.prompt)
                     .font(.system(size: 11, weight: .medium))
                     .foregroundColor(.primary.opacity(0.95))
@@ -3761,8 +3764,8 @@ private struct TelemetryActionArea: View {
             .truncationMode(.tail)
         } else if !summary.isEmpty {
             Text(summary)
-                .font(.system(size: 11, design: .monospaced))
-                .foregroundColor(.secondary.opacity(0.85))
+                .font(.cmuxMonospaced(size: 11))
+                .foregroundColor(RightSidebarCatppuccinMochaPalette.subtext0)
                 .lineLimit(3)
                 .truncationMode(.tail)
         }

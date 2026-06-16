@@ -1405,7 +1405,7 @@ struct FilePreviewPanelView: View {
             Text(String(localized: "filePreview.fileUnavailable.title", defaultValue: "File unavailable"))
                 .font(.headline)
             Text(panel.filePath)
-                .font(.system(size: 12, design: .monospaced))
+                .font(.cmuxMonospaced(size: 12))
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
                 .textSelection(.enabled)

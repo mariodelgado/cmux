@@ -982,6 +982,7 @@ class GhosttyApp {
                 prefix: "cmux-shell-integration-override",
                 logLabel: "shell integration override (fallback)"
             )
+            loadCmuxDefaultFontFamilyIfNeeded(fallbackConfig)
             loadCmuxManagedTerminalSettingsConfig(fallbackConfig)
             loadCmuxOwnedGhosttyKeybindOverrides(fallbackConfig)
             loadNoActiveDisplayVsyncFallbackIfNeeded(fallbackConfig)
@@ -1152,6 +1153,16 @@ class GhosttyApp {
         )
     }
 
+    private func loadCmuxDefaultFontFamilyIfNeeded(_ config: ghostty_config_t) {
+        guard !Self.userConfigSetsFontFamily() else { return }
+        loadInlineGhosttyConfig(
+            "font-family = \(String.cmuxDefaultMonospacedFontFamily)",
+            into: config,
+            prefix: "cmux-default-font-family",
+            logLabel: "default font family"
+        )
+    }
+
     func loadDefaultConfigFilesWithLegacyFallback(
         _ config: ghostty_config_t,
         preferredColorScheme: GhosttyConfig.ColorSchemePreference = GhosttyConfig.currentColorSchemePreference(),
@@ -1201,6 +1212,7 @@ class GhosttyApp {
             )
         }
         #endif
+        loadCmuxDefaultFontFamilyIfNeeded(config)
         loadCJKFontFallbackIfNeeded(config)
         let renderingModeChanged = setUsesHostLayerBackground(
             true,
@@ -1365,6 +1377,7 @@ class GhosttyApp {
 
     private struct UserFontConfigSummary {
         var containsCodepointMap = false
+        var containsFontFamilyDirective = false
         var effectiveFontFamilies: [String] = []
 
         var hasExplicitFontFamilyFallbackChain: Bool {
@@ -1385,6 +1398,7 @@ class GhosttyApp {
         }
 
         mutating func recordFontFamily(_ value: String) {
+            containsFontFamilyDirective = true
             if value.isEmpty {
                 effectiveFontFamilies.removeAll()
                 return
@@ -1484,6 +1498,12 @@ class GhosttyApp {
         configPaths: [String] = loadedGhosttyConfigScanPaths()
     ) -> Bool {
         userFontConfigSummary(configPaths: configPaths).hasExplicitFontFamilyFallbackChain
+    }
+
+    static func userConfigSetsFontFamily(
+        configPaths: [String] = loadedGhosttyConfigScanPaths()
+    ) -> Bool {
+        userFontConfigSummary(configPaths: configPaths).containsFontFamilyDirective
     }
 
     static func shouldInjectCJKFontFallback(

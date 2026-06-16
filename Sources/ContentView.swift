@@ -1883,12 +1883,53 @@ struct ContentView: View {
         role: WindowBackdropRole,
         appearance: WindowAppearanceSnapshot
     ) -> some View {
-        WindowBackdropLayer(role: role, snapshot: appearance)
+        sidebarBackdropContent(role: role, appearance: appearance)
             .ignoresSafeArea()
             .frame(width: width)
             .clipShape(RoundedRectangle(cornerRadius: appearance.sidebarSettings.materialPolicy.cornerRadius, style: .continuous))
             .clipped()
             .allowsHitTesting(false)
+    }
+
+    @ViewBuilder
+    private func sidebarBackdropContent(
+        role: WindowBackdropRole,
+        appearance: WindowAppearanceSnapshot
+    ) -> some View {
+        switch role {
+        case .leftSidebar:
+            leftSidebarLiquidGlassBackdrop(appearance: appearance)
+        case .rightSidebar:
+            ZStack {
+                WindowBackdropLayer(role: role, snapshot: appearance)
+                RightSidebarCatppuccinMochaPalette.panelBackground
+                    .opacity(0.97)
+            }
+        case .windowRoot, .terminalCanvas, .bonsplitChrome, .titlebar, .browserSurface:
+            WindowBackdropLayer(role: role, snapshot: appearance)
+        }
+    }
+
+    private func leftSidebarLiquidGlassBackdrop(
+        appearance: WindowAppearanceSnapshot
+    ) -> some View {
+        let materialPolicy = appearance.sidebarSettings.materialPolicy
+        let usingNativeLiquidGlass = SidebarVisualEffectBackground.liquidGlassAvailable
+
+        return ZStack {
+            SidebarVisualEffectBackground(
+                material: .underWindowBackground,
+                blendingMode: .withinWindow,
+                state: materialPolicy.state,
+                opacity: materialPolicy.opacity,
+                tintColor: materialPolicy.tintColor,
+                cornerRadius: materialPolicy.cornerRadius,
+                preferLiquidGlass: true
+            )
+            if !usingNativeLiquidGlass {
+                Color(nsColor: materialPolicy.tintColor)
+            }
+        }
     }
 
     private func sidebarPanelContainer<Content: View>(
@@ -1918,7 +1959,10 @@ struct ContentView: View {
         }
         .overlay(alignment: .leading) {
             if rightSidebarVisible {
-                WindowChromeBorder(orientation: .vertical)
+                WindowChromeBorder(
+                    orientation: .vertical,
+                    color: RightSidebarCatppuccinMochaPalette.surface1
+                )
             }
         }
 
@@ -1953,6 +1997,10 @@ struct ContentView: View {
         .clipped()
         .allowsHitTesting(rightSidebarVisible)
         .accessibilityHidden(!rightSidebarVisible)
+        .environment(\.colorScheme, .dark)
+        .foregroundStyle(RightSidebarCatppuccinMochaPalette.text)
+        .tint(RightSidebarCatppuccinMochaPalette.mauve)
+        .background(RightSidebarCatppuccinMochaPalette.base)
         .transaction { $0.animation = nil }
         .onAppear {
             let sanitized = normalizedRightSidebarWidth(fileExplorerState.width)
@@ -13466,7 +13514,7 @@ struct TabItemView: View, Equatable {
             VStack(alignment: .leading, spacing: 2) {
                 HStack(spacing: 6) {
                     Text(remoteWorkspaceSidebarText)
-                        .font(.system(size: scaledFontSize(10), design: .monospaced))
+                        .font(.cmuxMonospaced(size: scaledFontSize(10)))
                         .foregroundColor(activeSecondaryColor(0.8))
                         .lineLimit(1)
                         .truncationMode(.middle)
@@ -13716,7 +13764,7 @@ struct TabItemView: View, Equatable {
                                     if sidebarStacksBranchAndDirectory {
                                         if let branch = line.branch {
                                             Text(branch)
-                                                .font(.system(size: scaledFontSize(10), design: .monospaced))
+                                                .font(.cmuxMonospaced(size: scaledFontSize(10)))
                                                 .foregroundColor(activeSecondaryColor(0.75))
                                                 .lineLimit(1)
                                                 .truncationMode(.tail)
@@ -13732,7 +13780,7 @@ struct TabItemView: View, Equatable {
                                         HStack(spacing: 3) {
                                             if let branch = line.branch {
                                                 Text(branch)
-                                                    .font(.system(size: scaledFontSize(10), design: .monospaced))
+                                                    .font(.cmuxMonospaced(size: scaledFontSize(10)))
                                                     .foregroundColor(activeSecondaryColor(0.75))
                                                     .lineLimit(1)
                                                     .truncationMode(.tail)
@@ -13768,7 +13816,7 @@ struct TabItemView: View, Equatable {
                         VStack(alignment: .leading, spacing: 1) {
                             if let branchRow = workspaceSnapshot.compactGitBranchSummaryText {
                                 Text(branchRow)
-                                    .font(.system(size: scaledFontSize(10), design: .monospaced))
+                                    .font(.cmuxMonospaced(size: scaledFontSize(10)))
                                     .foregroundColor(activeSecondaryColor(0.75))
                                     .lineLimit(1)
                                     .truncationMode(.tail)
@@ -13847,7 +13895,7 @@ struct TabItemView: View, Equatable {
                     }
                     Spacer(minLength: 0)
                 }
-                .font(.system(size: scaledFontSize(10), design: .monospaced))
+                .font(.cmuxMonospaced(size: scaledFontSize(10)))
                 .foregroundColor(activeSecondaryColor(0.75))
                 .lineLimit(1)
             }
@@ -16376,6 +16424,7 @@ struct WindowChromeBorder: View {
 
     let orientation: Orientation
     var ignoresSafeArea = true
+    var color: Color? = nil
     @State private var separatorColor = WindowChromeSeparatorColor.current()
 
     var body: some View {
@@ -16388,7 +16437,7 @@ struct WindowChromeBorder: View {
 
     private var border: some View {
         Rectangle()
-            .fill(Color(nsColor: separatorColor))
+            .fill(color ?? Color(nsColor: separatorColor))
             .frame(
                 maxWidth: orientation == .horizontal ? .infinity : nil,
                 maxHeight: orientation == .vertical ? .infinity : nil

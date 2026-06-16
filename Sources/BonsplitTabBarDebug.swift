@@ -286,7 +286,7 @@ private struct BonsplitTabBarDebugView: View {
             }
 
             Text(verbatim: BonsplitTabBarDebugSettings.currentTuningDescription())
-                .font(.system(.caption, design: .monospaced))
+                .font(.cmuxMonospaced(size: 11))
                 .textSelection(.enabled)
                 .lineLimit(3)
                 .frame(maxWidth: .infinity, alignment: .leading)

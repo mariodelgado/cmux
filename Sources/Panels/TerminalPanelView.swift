@@ -98,7 +98,7 @@ struct TerminalPanelView: View {
                     surface: panel.surface,
                     terminalBackgroundColor: appearance.backgroundColor,
                     terminalForegroundColor: appearance.foregroundColor,
-                    terminalFont: NSFont.monospacedSystemFont(
+                    terminalFont: NSFont.cmuxMonospaced(
                         ofSize: terminalFontSize,
                         weight: .regular
                     ),

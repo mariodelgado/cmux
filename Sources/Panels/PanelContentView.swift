@@ -157,7 +157,7 @@ struct PanelFilePathHeader<TrailingContent: View>: View {
                 .foregroundStyle(.secondary)
                 .frame(width: 16)
             Text(filePath)
-                .font(.system(size: 11, design: .monospaced))
+                .font(.cmuxMonospaced(size: 11))
                 .foregroundStyle(Color(nsColor: foregroundColor).opacity(0.68))
                 .lineLimit(1)
                 .truncationMode(.middle)
