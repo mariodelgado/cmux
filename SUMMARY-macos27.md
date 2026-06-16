@@ -65,3 +65,47 @@ App path:
 
 - On the first cold package graph resolution, plain `xcodebuild` stalled in Xcode's keychain package authorization path. `-packageAuthorizationProvider netrc` got the graph resolved, and the exact requested command succeeded afterward from the warm package/artifact cache.
 - The clean build log still includes pre-existing nonblocking warnings in large actor/sendability areas such as `AppDelegate.swift` and `TerminalNotificationStore.swift`, plus an async WebKit suggestion in `ReactGrab.swift`, AppIcon unassigned-child warnings, AppIntents metadata skipped, and the existing run-script output warning. These are not SDK deprecation warnings and did not block the Debug app build.
+
+## UI changes
+
+- Left panel Liquid Glass: the vertical-tabs sidebar now uses the existing `SidebarVisualEffectBackground` wrapper with `preferLiquidGlass: true`, selecting `NSGlassEffectView` on macOS 26+ and retaining the wrapper fallback path on older systems.
+- Default font: cmux now injects `font-family = SFMono Nerd Font` into the built-in Ghostty config only when the user has not set `font-family`, and monospaced sidebar/panel UI font choices use `SFMono Nerd Font` with a system mono fallback.
+- Right panel Catppuccin Mocha: the right-hand sidebar keeps its existing structure while applying Catppuccin Mocha base/mantle backgrounds, surface dividers/cards, text/subtext labels, and mauve/blue accents.
+
+Touched files:
+- `SUMMARY-macos27.md`
+- `Sources/AppDelegate+CmuxSSHURL.swift`
+- `Sources/BonsplitTabBarDebug.swift`
+- `Sources/ContentView.swift`
+- `Sources/DockEmptyView.swift`
+- `Sources/DockPanelView.swift`
+- `Sources/Feed/FeedPanelView.swift`
+- `Sources/FileExplorerStore.swift`
+- `Sources/FileExplorerView.swift`
+- `Sources/GhosttyTerminalView.swift`
+- `Sources/Mobile/Pairing/MobilePairingView.swift`
+- `Sources/Panels/FilePreviewPanel.swift`
+- `Sources/Panels/FilePreviewTextEditor.swift`
+- `Sources/Panels/MarkdownPanelView.swift`
+- `Sources/Panels/PDFPreviewChromeDebugWindowController.swift`
+- `Sources/Panels/PanelContentView.swift`
+- `Sources/Panels/ProjectBuildSettingsTabView.swift`
+- `Sources/Panels/ProjectFilesTabView.swift`
+- `Sources/Panels/ProjectSchemesTabView.swift`
+- `Sources/Panels/ProjectTargetsTabView.swift`
+- `Sources/Panels/TerminalPanelView.swift`
+- `Sources/RightSidebarChromeStyle.swift`
+- `Sources/RightSidebarPanelView.swift`
+- `Sources/Search/MenubarSearchPopover.swift`
+- `Sources/SessionIndexView.swift`
+- `Sources/SessionTranscriptTypes.swift`
+- `Sources/Settings/ConfigSettingsView.swift`
+- `Sources/Sidebar/SidebarDirectoryText.swift`
+- `Sources/TaskManagerView.swift`
+- `Sources/TextBoxInput.swift`
+- `Sources/TitlebarLayoutDebugWindow.swift`
+- `Sources/cmuxApp.swift`
+
+Final build result:
+- `xcodebuild -project cmux.xcodeproj -scheme cmux -configuration Debug -destination platform=macOS -derivedDataPath /tmp/cmux-codex build`: `BUILD SUCCEEDED` (log: `/tmp/cmux-ui-build.log`).
+- `./scripts/reload.sh --tag macos27-codex`: succeeded in 23s (log: `/tmp/cmux-reload-macos27-codex.log`; app: `/Users/marioelysian/Library/Developer/Xcode/DerivedData/cmux-macos27-codex/Build/Products/Debug/cmux DEV macos27-codex.app`).
