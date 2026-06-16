@@ -525,15 +525,18 @@ final class SessionIndexStore: ObservableObject {
         invalidateDirectorySnapshots()
         loadTask = Task.detached(priority: .userInitiated) { [weak self] in
             let scanned = await Self.scanAll()
-            await MainActor.run {
-                guard let self else { return }
-                if Task.isCancelled { return }
-                self.entries = scanned
-                self.isLoading = false
-                self.backfillAgentOrderFromEntries()
-                self.backfillDirectoryOrderFromEntries()
-            }
+            guard !Task.isCancelled else { return }
+            await self?.finishReload(scanned)
         }
+    }
+
+    @MainActor
+    private func finishReload(_ scanned: [SessionEntry]) {
+        guard !Task.isCancelled else { return }
+        entries = scanned
+        isLoading = false
+        backfillAgentOrderFromEntries()
+        backfillDirectoryOrderFromEntries()
     }
 
 #if DEBUG
@@ -1599,18 +1602,7 @@ final class SessionIndexStore: ObservableObject {
             }
         } else {
             let rootURL = URL(fileURLWithPath: root)
-            guard let enumerator = fm.enumerator(
-                at: rootURL,
-                includingPropertiesForKeys: [.contentModificationDateKey, .isRegularFileKey],
-                options: [.skipsHiddenFiles]
-            ) else { return [] }
-            for case let url as URL in enumerator {
-                guard url.pathExtension == "jsonl" else { continue }
-                let values = try? url.resourceValues(forKeys: [.contentModificationDateKey, .isRegularFileKey])
-                guard values?.isRegularFile == true,
-                      let mtime = values?.contentModificationDate else { continue }
-                candidates.append((url, mtime))
-            }
+            candidates.append(contentsOf: Self.enumerateSessionJSONLCandidates(rootURL: rootURL, fileManager: fm))
         }
         candidates.sort { $0.1 > $1.1 }
 
@@ -1655,6 +1647,24 @@ final class SessionIndexStore: ObservableObject {
             ))
         }
         return Array(matches.dropFirst(offset).prefix(limit))
+    }
+
+    nonisolated private static func enumerateSessionJSONLCandidates(rootURL: URL, fileManager fm: FileManager) -> [(URL, Date)] {
+        guard let enumerator = fm.enumerator(
+            at: rootURL,
+            includingPropertiesForKeys: [.contentModificationDateKey, .isRegularFileKey],
+            options: [.skipsHiddenFiles]
+        ) else { return [] }
+
+        var candidates: [(URL, Date)] = []
+        for case let url as URL in enumerator {
+            guard url.pathExtension == "jsonl" else { continue }
+            let values = try? url.resourceValues(forKeys: [.contentModificationDateKey, .isRegularFileKey])
+            guard values?.isRegularFile == true,
+                  let mtime = values?.contentModificationDate else { continue }
+            candidates.append((url, mtime))
+        }
+        return candidates
     }
 
     /// Returns OpenCode session entries paginated by `time_updated` desc.

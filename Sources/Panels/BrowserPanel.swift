@@ -4518,7 +4518,9 @@ final class BrowserPanel: Panel, ObservableObject {
         if Thread.isMainThread {
             apply()
         } else {
-            DispatchQueue.main.async(execute: apply)
+            DispatchQueue.main.async {
+                apply()
+            }
         }
     }
 
@@ -4533,7 +4535,9 @@ final class BrowserPanel: Panel, ObservableObject {
         if Thread.isMainThread {
             apply()
         } else {
-            DispatchQueue.main.async(execute: apply)
+            DispatchQueue.main.async {
+                apply()
+            }
         }
     }
 
@@ -10882,8 +10886,9 @@ enum BrowserImportPlanResolver {
     @MainActor
     static func realize(
         plan: BrowserImportExecutionPlan,
-        profileStore: BrowserProfileStore = .shared
+        profileStore: BrowserProfileStore? = nil
     ) throws -> RealizedBrowserImportExecutionPlan {
+        let profileStore = profileStore ?? .shared
         var realizedEntries: [RealizedBrowserImportExecutionEntry] = []
         var createdProfiles: [BrowserProfileDefinition] = []
 
@@ -12311,7 +12316,7 @@ final class BrowserDataImportCoordinator {
 #endif
 
     @MainActor
-    private final class ImportWizardWindowController: NSObject, @preconcurrency NSWindowDelegate {
+    private final class ImportWizardWindowController: NSObject, NSWindowDelegate {
         private final class FlippedDocumentView: NSView {
             override var isFlipped: Bool { true }
         }
