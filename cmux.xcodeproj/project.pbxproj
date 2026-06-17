@@ -50,6 +50,12 @@
 		A9E050000000000000000002 /* AgentSessionWebRendererTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E050000000000000000001 /* AgentSessionWebRendererTests.swift */; };
 		A9E02000000000000000000D /* AgentSessionWebTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E01000000000000000000D /* AgentSessionWebTheme.swift */; };
 		A9F200000000000000000014 /* AgentSessionWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F100000000000000000014 /* AgentSessionWebView.swift */; };
+		A1A1A1040000000000000001 /* AIBackend.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A1A1040000000000000002 /* AIBackend.swift */; };
+		A1A1A1050000000000000001 /* AIBackendError.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A1A1050000000000000002 /* AIBackendError.swift */; };
+		A1A1A1060000000000000001 /* AIFeatureSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A1A1060000000000000002 /* AIFeatureSettings.swift */; };
+		A1A1A1070000000000000001 /* AIRequestQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A1A1070000000000000002 /* AIRequestQueue.swift */; };
+		A1A1A1080000000000000001 /* AIRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A1A1080000000000000002 /* AIRouter.swift */; };
+		A1A1A1090000000000000001 /* AITaskKind.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A1A1090000000000000002 /* AITaskKind.swift */; };
 		F4350A110000000000000001 /* AppBundleIconPersistencePolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4350A130000000000000001 /* AppBundleIconPersistencePolicy.swift */; };
 		F4350A120000000000000001 /* AppBundleIconPersistencePolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4350A130000000000000001 /* AppBundleIconPersistencePolicy.swift */; };
 		C4160A030000000000000001 /* AppDelegate+ClosedItemHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4160A030000000000000002 /* AppDelegate+ClosedItemHistory.swift */; };
@@ -519,6 +525,7 @@
 		3865A0033865A0033865A003 /* MenubarSearchPopover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3865B0033865B0033865B003 /* MenubarSearchPopover.swift */; };
 		E1000000A1B2C3D4E5F60718 /* MenuKeyEquivalentRoutingUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1000001A1B2C3D4E5F60718 /* MenuKeyEquivalentRoutingUITests.swift */; };
 		C0DE3150A00000000000001 /* MinimalModeSidebarControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DE3150A00000000000002 /* MinimalModeSidebarControls.swift */; };
+		A1A1A10A0000000000000001 /* MLXHubBackend.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A1A10A0000000000000002 /* MLXHubBackend.swift */; };
 		A1A1A1010000000000000001 /* MLXHubClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1A1A1010000000000000002 /* MLXHubClient.swift */; };
 		284FD21ACF8BD1ED6AEBD7A0 /* MobileAttachTicketStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D6D2AC715764ECC1F6B26A2 /* MobileAttachTicketStore.swift */; };
 		6AA2F2E8BEB19ED6B8E125DB /* MobileHostAuthorizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BD519CFE74530A46DF0925D /* MobileHostAuthorizationTests.swift */; };
@@ -1075,6 +1082,12 @@
 		A9E050000000000000000001 /* AgentSessionWebRendererTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AgentSessionWebRendererTests.swift; sourceTree = "<group>"; };
 		A9E01000000000000000000D /* AgentSessionWebTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Panels/AgentSessionWebTheme.swift; sourceTree = "<group>"; };
 		A9F100000000000000000014 /* AgentSessionWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Panels/AgentSessionWebView.swift; sourceTree = "<group>"; };
+		A1A1A1040000000000000002 /* AIBackend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AI/AIBackend.swift; sourceTree = "<group>"; };
+		A1A1A1050000000000000002 /* AIBackendError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AI/AIBackendError.swift; sourceTree = "<group>"; };
+		A1A1A1060000000000000002 /* AIFeatureSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AI/AIFeatureSettings.swift; sourceTree = "<group>"; };
+		A1A1A1070000000000000002 /* AIRequestQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AI/AIRequestQueue.swift; sourceTree = "<group>"; };
+		A1A1A1080000000000000002 /* AIRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AI/AIRouter.swift; sourceTree = "<group>"; };
+		A1A1A1090000000000000002 /* AITaskKind.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AI/AITaskKind.swift; sourceTree = "<group>"; };
 		F4350A130000000000000001 /* AppBundleIconPersistencePolicy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App/AppBundleIconPersistencePolicy.swift; sourceTree = "<group>"; };
 		C4160A030000000000000002 /* AppDelegate+ClosedItemHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppDelegate+ClosedItemHistory.swift"; sourceTree = "<group>"; };
 		C3677004000000000000002 /* AppDelegate+CmuxSSHURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppDelegate+CmuxSSHURL.swift"; sourceTree = "<group>"; };
@@ -1467,6 +1480,7 @@
 		3865B0033865B0033865B003 /* MenubarSearchPopover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Search/MenubarSearchPopover.swift; sourceTree = "<group>"; };
 		E1000001A1B2C3D4E5F60718 /* MenuKeyEquivalentRoutingUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuKeyEquivalentRoutingUITests.swift; sourceTree = "<group>"; };
 		C0DE3150A00000000000002 /* MinimalModeSidebarControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Update/MinimalModeSidebarControls.swift; sourceTree = "<group>"; };
+		A1A1A10A0000000000000002 /* MLXHubBackend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AI/MLXHubBackend.swift; sourceTree = "<group>"; };
 		A1A1A1010000000000000002 /* MLXHubClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AI/MLXHubClient.swift; sourceTree = "<group>"; };
 		8D6D2AC715764ECC1F6B26A2 /* MobileAttachTicketStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MobileAttachTicketStore.swift; sourceTree = "<group>"; };
 		9BD519CFE74530A46DF0925D /* MobileHostAuthorizationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MobileHostAuthorizationTests.swift; sourceTree = "<group>"; };
@@ -2253,7 +2267,14 @@
 				D27C0D030000000000000002 /* SidebarRollingOutputPreviewLine.swift */,
 				D27C0D040000000000000002 /* SidebarRollingOutputPreviewSampler.swift */,
 				A1A1A1020000000000000002 /* SidebarAIInsightCoordinator.swift */,
+				A1A1A1040000000000000002 /* AIBackend.swift */,
+				A1A1A1050000000000000002 /* AIBackendError.swift */,
+				A1A1A1060000000000000002 /* AIFeatureSettings.swift */,
+				A1A1A1070000000000000002 /* AIRequestQueue.swift */,
+				A1A1A1080000000000000002 /* AIRouter.swift */,
+				A1A1A1090000000000000002 /* AITaskKind.swift */,
 				A1A1A1030000000000000002 /* FoundationModelsBackend.swift */,
+				A1A1A10A0000000000000002 /* MLXHubBackend.swift */,
 				A1A1A1010000000000000002 /* MLXHubClient.swift */,
 				C9A5720CC9A5720CC9A5720C /* TabItemView+WorkspaceGroups.swift */,
 				C9A5720AC9A5720AC9A5720A /* VerticalTabsSidebar+WorkspaceGroups.swift */,
@@ -3488,6 +3509,12 @@
 				A9E02000000000000000000C /* AgentSessionWebRendererSession.swift in Sources */,
 				A9E02000000000000000000D /* AgentSessionWebTheme.swift in Sources */,
 				A9F200000000000000000014 /* AgentSessionWebView.swift in Sources */,
+				A1A1A1040000000000000001 /* AIBackend.swift in Sources */,
+				A1A1A1050000000000000001 /* AIBackendError.swift in Sources */,
+				A1A1A1060000000000000001 /* AIFeatureSettings.swift in Sources */,
+				A1A1A1070000000000000001 /* AIRequestQueue.swift in Sources */,
+				A1A1A1080000000000000001 /* AIRouter.swift in Sources */,
+				A1A1A1090000000000000001 /* AITaskKind.swift in Sources */,
 				F4350A110000000000000001 /* AppBundleIconPersistencePolicy.swift in Sources */,
 				C4160A030000000000000001 /* AppDelegate+ClosedItemHistory.swift in Sources */,
 				C3677004000000000000001 /* AppDelegate+CmuxSSHURL.swift in Sources */,
@@ -3704,6 +3731,7 @@
 				1A8BEE693C9E4C3190CB7F20 /* MenuBarExtraController.swift in Sources */,
 				3865A0033865A0033865A003 /* MenubarSearchPopover.swift in Sources */,
 				C0DE3150A00000000000001 /* MinimalModeSidebarControls.swift in Sources */,
+				A1A1A10A0000000000000001 /* MLXHubBackend.swift in Sources */,
 				A1A1A1010000000000000001 /* MLXHubClient.swift in Sources */,
 				284FD21ACF8BD1ED6AEBD7A0 /* MobileAttachTicketStore.swift in Sources */,
 				C7A50B000000000000000016 /* MobileHostBuildIdentity.swift in Sources */,

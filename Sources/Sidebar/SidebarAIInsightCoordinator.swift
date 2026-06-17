@@ -30,7 +30,7 @@ final class SidebarAIInsightCoordinator {
 
     private static let minimumRequestInterval: TimeInterval = 9
 
-    private let client: MLXHubClient
+    private let router: AIRouter
     private let notificationStore: TerminalNotificationStore
     private var entries: [Key: Entry] = [:]
     private var queuedCandidates: [Key: Candidate] = [:]
@@ -38,10 +38,10 @@ final class SidebarAIInsightCoordinator {
     private var focusedWorkspaceId: UUID?
 
     init(
-        client: MLXHubClient = MLXHubClient(),
+        router: AIRouter = .shared,
         notificationStore: TerminalNotificationStore? = nil
     ) {
-        self.client = client
+        self.router = router
         self.notificationStore = notificationStore ?? .shared
     }
 
@@ -58,7 +58,7 @@ final class SidebarAIInsightCoordinator {
     }
 
     func cachedSummary(workspaceId: UUID, panelId: UUID, sampleText: String?) -> String? {
-        guard MLXHubSettings.configuration() != nil,
+        guard AIFeatureSettings.isEnabled(),
               let sampleText,
               let entry = entries[Key(workspaceId: workspaceId, panelId: panelId)],
               entry.cachedSummaryFingerprint == sampleText else { return nil }
@@ -74,7 +74,7 @@ final class SidebarAIInsightCoordinator {
         priority: UInt64
     ) {
         let key = Key(workspaceId: workspace.id, panelId: panelId)
-        guard let sampleText, MLXHubSettings.configuration() != nil else {
+        guard let sampleText, AIFeatureSettings.isEnabled() else {
             entries.removeValue(forKey: key)
             queuedCandidates.removeValue(forKey: key)
             notificationStore.applyAIPaneStatus(
@@ -135,9 +135,9 @@ final class SidebarAIInsightCoordinator {
             queuedCandidates.removeValue(forKey: candidate.key)
             guard entries[candidate.key]?.pendingRequestID == candidate.requestID else { continue }
 
-            let summary = await client.summarize(text: candidate.sampleText)
+            let summary = await router.summarizeTerminalOutput(text: candidate.sampleText)
             guard !Task.isCancelled else { return }
-            let status = await client.classify(text: candidate.sampleText)
+            let status = await router.classifyTerminalOutput(text: candidate.sampleText)
             guard !Task.isCancelled else { return }
 
             applyResult(summary: summary, status: status, for: candidate)

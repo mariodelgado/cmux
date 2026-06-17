@@ -1,24 +1,30 @@
 import Foundation
 import FoundationModels
 
-struct FoundationModelsBackend {
+struct FoundationModelsBackend: AIBackend {
     private let maximumResponseTokens: Int?
 
     init(maximumResponseTokens: Int? = nil) {
         self.maximumResponseTokens = maximumResponseTokens
     }
 
-    func complete(system: String, user: String) async -> String? {
+    func complete(system: String, user: String) async throws -> String {
         if #available(macOS 26.0, *) {
-            return try? await completeWithSystemLanguageModel(system: system, user: user)
+            return try await completeWithSystemLanguageModel(system: system, user: user)
         }
-        return nil
+        throw AIBackendError.unavailable
+    }
+
+    func completeIfAvailable(system: String, user: String) async -> String? {
+        try? await complete(system: system, user: user)
     }
 
     @available(macOS 26.0, *)
-    private func completeWithSystemLanguageModel(system: String, user: String) async throws -> String? {
+    private func completeWithSystemLanguageModel(system: String, user: String) async throws -> String {
         let model = SystemLanguageModel.default
-        guard case .available = model.availability else { return nil }
+        guard case .available = model.availability else {
+            throw AIBackendError.unavailable
+        }
 
         let session = LanguageModelSession(model: model, instructions: system)
         let options = GenerationOptions(
@@ -28,6 +34,9 @@ struct FoundationModelsBackend {
         )
         let response = try await session.respond(to: user, options: options)
         let trimmed = response.content.trimmingCharacters(in: .whitespacesAndNewlines)
-        return trimmed.isEmpty ? nil : trimmed
+        guard !trimmed.isEmpty else {
+            throw AIBackendError.emptyResponse
+        }
+        return trimmed
     }
 }

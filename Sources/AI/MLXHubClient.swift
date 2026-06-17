@@ -50,6 +50,14 @@ actor MLXHubClient {
         }
     }
 
+    func complete(system: String, user: String, maxTokens: Int) async -> String? {
+        let input = Self.clippedTerminalText(user)
+        guard !input.isEmpty else { return nil }
+        return await Self.requestQueue.run {
+            await self.chat(systemPrompt: system, userText: input, maxTokens: maxTokens)
+        }
+    }
+
     private func performSummarize(text: String) async -> String? {
         let systemPrompt = """
         Summarize terminal output into a sidebar status. Return only a status of six words or fewer. Prefer concrete state like tests passed, build failed, waiting for input, deploying, or percent progress. No quotes or explanations.
