@@ -16,5 +16,11 @@ public struct AICatalogSection: SettingCatalogSection {
         userDefaultsKey: "aiEndpoint"
     )
 
+    public let appIntents = DefaultsKey<Bool>(
+        id: "ai.appIntents",
+        defaultValue: true,
+        userDefaultsKey: "aiAppIntentsEnabled"
+    )
+
     public init() {}
 }

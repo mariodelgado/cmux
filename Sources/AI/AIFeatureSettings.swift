@@ -13,7 +13,16 @@ struct AIFeatureSettings {
         return settings.value(for: SettingCatalog().ai.enabled)
     }
 
+    func appIntentsEnabled() -> Bool {
+        let settings = UserDefaultsSettingsClient(defaults: defaults)
+        return settings.value(for: SettingCatalog().ai.appIntents)
+    }
+
     static func isEnabled(defaults: UserDefaults = .standard) -> Bool {
         AIFeatureSettings(defaults: defaults).isEnabled()
+    }
+
+    static func appIntentsEnabled(defaults: UserDefaults = .standard) -> Bool {
+        AIFeatureSettings(defaults: defaults).appIntentsEnabled()
     }
 }

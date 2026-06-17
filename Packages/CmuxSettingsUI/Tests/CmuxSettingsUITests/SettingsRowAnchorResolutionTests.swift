@@ -57,6 +57,7 @@ struct SettingsRowAnchorResolutionTests {
         "app.workspaceInheritWorkingDirectory",
         "ai.enabled",
         "ai.endpoint",
+        "ai.appIntents",
         "automation.claudeBinaryPath",
         "automation.claudeCodeIntegration",
         "automation.cursorIntegration",

@@ -20,6 +20,7 @@ public struct AutomationSection: View {
     @State private var autoNamingStatusModel: DefaultsValueModel<String>
     @State private var aiEnabledModel: DefaultsValueModel<Bool>
     @State private var aiEndpointModel: DefaultsValueModel<String>
+    @State private var aiAppIntentsModel: DefaultsValueModel<Bool>
     @State private var ripgrepPathModel: DefaultsValueModel<String>
     @State private var suppressSubagentModel: DefaultsValueModel<Bool>
     @State private var ampModel: DefaultsValueModel<Bool>
@@ -70,6 +71,7 @@ public struct AutomationSection: View {
         ))
         _aiEnabledModel = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.ai.enabled))
         _aiEndpointModel = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.ai.endpoint))
+        _aiAppIntentsModel = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.ai.appIntents))
         _ripgrepPathModel = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.integrations.ripgrepCustomBinaryPath))
         _suppressSubagentModel = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.integrations.suppressSubagentNotifications))
         _ampModel = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.integrations.ampHooksEnabled))
@@ -342,7 +344,7 @@ public struct AutomationSection: View {
                 configurationReview: .json("ai.enabled"),
                 String(localized: "settings.automation.ai", defaultValue: "Local AI"),
                 subtitle: aiEnabledModel.current
-                    ? String(localized: "settings.automation.ai.subtitleOn", defaultValue: "Local MLX hub is used for sidebar summaries and triage.")
+                    ? String(localized: "settings.automation.ai.subtitleOn", defaultValue: "Foundation Models and the local MLX hub are used for sidebar summaries and triage.")
                     : String(localized: "settings.automation.ai.subtitleOff", defaultValue: "AI sidebar summaries and triage are disabled.")
             ) {
                 Toggle("", isOn: Binding(get: { aiEnabledModel.current }, set: { aiEnabledModel.set($0) }))
@@ -366,7 +368,19 @@ public struct AutomationSection: View {
                 .accessibilityIdentifier("SettingsAIEndpointField")
             }
             SettingsCardDivider()
-            SettingsCardNote(String(localized: "settings.automation.ai.note", defaultValue: "Requests are serialized and heavily throttled. If the endpoint is unavailable, cmux falls back to the existing sidebar preview."))
+            SettingsCardRow(
+                configurationReview: .json("ai.appIntents"),
+                String(localized: "settings.automation.ai.appIntents", defaultValue: "App Intents"),
+                subtitle: String(localized: "settings.automation.ai.appIntents.subtitle", defaultValue: "Expose local AI actions to Shortcuts, Siri, and Spotlight.")
+            ) {
+                Toggle("", isOn: Binding(get: { aiAppIntentsModel.current }, set: { aiAppIntentsModel.set($0) }))
+                    .labelsHidden()
+                    .controlSize(.small)
+                    .disabled(!aiEnabledModel.current)
+                    .accessibilityIdentifier("SettingsAIAppIntentsToggle")
+            }
+            SettingsCardDivider()
+            SettingsCardNote(String(localized: "settings.automation.ai.note", defaultValue: "Light tasks prefer in-process Foundation Models on the Neural Engine. Heavy tasks prefer the local MLX hub. Requests stay serialized and heavily throttled."))
         }
     }
 

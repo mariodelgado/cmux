@@ -879,7 +879,8 @@
         },
         "ai": {
           "enabled": "バックグラウンドのターミナルペインでローカルAIの要約とトリアージを有効にします。",
-          "endpoint": "ローカルMLXハブのOpenAI互換ベースURL。"
+          "endpoint": "ローカルMLXハブのOpenAI互換ベースURL。",
+          "appIntents": "ローカルAIアクションをショートカット、Siri、Spotlightに公開します。"
         },
         "app": {
           "confirmQuit": "cmux の終了前に確認を求めるタイミングを制御します。DEV ビルドではこの設定に関係なく常にすぐ終了します。従来の app.warnBeforeQuit も boolean フォールバックとして引き続き受け付けます。",

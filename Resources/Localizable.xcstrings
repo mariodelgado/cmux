@@ -97769,6 +97769,261 @@
         }
       }
     },
+    "ai.triage.summary.empty": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No cmux sessions are currently flagged by local AI triage."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "現在、ローカルAIトリアージでフラグされたcmuxセッションはありません。"
+          }
+        }
+      }
+    },
+    "appIntents.aiDisabled": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "cmux AI is disabled."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "cmux AIは無効です。"
+          }
+        }
+      }
+    },
+    "appIntents.appIntentsDisabled": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "cmux AI App Intents are disabled."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "cmux AI App Intentsは無効です。"
+          }
+        }
+      }
+    },
+    "appIntents.askLocalModel.description": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ask cmux local AI a question."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "cmuxのローカルAIに質問します。"
+          }
+        }
+      }
+    },
+    "appIntents.askLocalModel.shortTitle": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ask Local Model"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ローカルモデルに質問"
+          }
+        }
+      }
+    },
+    "appIntents.askLocalModel.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ask Local Model"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ローカルモデルに質問"
+          }
+        }
+      }
+    },
+    "appIntents.command": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Command"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "コマンド"
+          }
+        }
+      }
+    },
+    "appIntents.explainCommand.description": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Explain a shell command with cmux local AI."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "cmuxのローカルAIでシェルコマンドを説明します。"
+          }
+        }
+      }
+    },
+    "appIntents.explainCommand.shortTitle": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Explain Command"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "コマンドを説明"
+          }
+        }
+      }
+    },
+    "appIntents.explainCommand.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Explain Command"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "コマンドを説明"
+          }
+        }
+      }
+    },
+    "appIntents.noAnswer": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No local AI answer is available."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "利用可能なローカルAIの回答はありません。"
+          }
+        }
+      }
+    },
+    "appIntents.prompt": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prompt"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "プロンプト"
+          }
+        }
+      }
+    },
+    "appIntents.summarizeRemoteSessions.description": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Summarize cmux sessions currently flagged by local AI triage."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ローカルAIトリアージで現在フラグされたcmuxセッションを要約します。"
+          }
+        }
+      }
+    },
+    "appIntents.summarizeRemoteSessions.shortTitle": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Summarize Sessions"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "セッションを要約"
+          }
+        }
+      }
+    },
+    "appIntents.summarizeRemoteSessions.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Summarize Remote Sessions"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "リモートセッションを要約"
+          }
+        }
+      }
+    },
     "settings.automation.ai": {
       "extractionState": "manual",
       "localizations": {
@@ -97799,6 +98054,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "AIエンドポイント"
+          }
+        }
+      }
+    },
+    "settings.automation.ai.appIntents": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "App Intents"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "App Intents"
+          }
+        }
+      }
+    },
+    "settings.automation.ai.appIntents.subtitle": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Expose local AI actions to Shortcuts, Siri, and Spotlight."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ローカルAIアクションをショートカット、Siri、Spotlightに公開します。"
           }
         }
       }
@@ -97843,13 +98132,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Requests are serialized and heavily throttled. If the endpoint is unavailable, cmux falls back to the existing sidebar preview."
+            "value": "Light tasks prefer in-process Foundation Models on the Neural Engine. Heavy tasks prefer the local MLX hub. Requests stay serialized and heavily throttled."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "リクエストは直列化され、強く間引かれます。エンドポイントを利用できない場合、cmuxは既存のサイドバープレビューに戻ります。"
+            "value": "軽いタスクはNeural Engine上のインプロセスFoundation Modelsを優先します。重いタスクはローカルMLXハブを優先します。リクエストは引き続き直列化され、強く間引かれます。"
           }
         }
       }
@@ -97877,13 +98166,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Local MLX hub is used for sidebar summaries and triage."
+            "value": "Foundation Models and the local MLX hub are used for sidebar summaries and triage."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "ローカルMLXハブをサイドバー要約とトリアージに使用します。"
+            "value": "Foundation ModelsとローカルMLXハブをサイドバー要約とトリアージに使用します。"
           }
         }
       }
@@ -97894,13 +98183,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "ai.enabled ai.endpoint local mlx hub openai compatible qwen summaries triage classify"
+            "value": "ai.enabled ai.endpoint ai.appIntents local foundation models mlx hub openai compatible qwen summaries triage classify shortcuts siri spotlight"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "ai.enabled ai.endpoint local mlx hub openai compatible qwen summaries triage classify ローカル AI 要約 トリアージ 分類"
+            "value": "ai.enabled ai.endpoint ai.appIntents local foundation models mlx hub openai compatible qwen summaries triage classify shortcuts siri spotlight ローカル AI 要約 トリアージ 分類 ショートカット Siri Spotlight"
           }
         }
       }

@@ -992,6 +992,12 @@
           "default": "http://127.0.0.1:8765/v1",
           "descriptionKey": "schemaDescriptions.ai.endpoint",
           "description": "OpenAI-compatible base URL for the local MLX hub."
+        },
+        "appIntents": {
+          "type": "boolean",
+          "default": true,
+          "descriptionKey": "schemaDescriptions.ai.appIntents",
+          "description": "Expose local AI actions to Shortcuts, Siri, and Spotlight."
         }
       }
     },

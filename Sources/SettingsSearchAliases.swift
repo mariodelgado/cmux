@@ -125,7 +125,7 @@ enum SettingsSearchAliasIndex {
         "automation:socket-password": localized("settings.search.alias.setting.automation.socket-password", defaultValue: "automation.socketPassword auth token credential secret password access key"),
         "automation:claude-code": localized("settings.search.alias.setting.automation.claude-code", defaultValue: "automation.claudeCodeIntegration claude code hooks agent integration status notifications"),
         "automation:claude-path": localized("settings.search.alias.setting.automation.claude-path", defaultValue: "automation.claudeBinaryPath claude binary executable path cli command custom"),
-        "automation:ai-local-hub": localized("settings.search.alias.setting.automation.ai-local-hub", defaultValue: "ai.enabled ai.endpoint local mlx hub openai compatible qwen summaries triage classify"),
+        "automation:ai-local-hub": localized("settings.search.alias.setting.automation.ai-local-hub", defaultValue: "ai.enabled ai.endpoint ai.appIntents local foundation models mlx hub openai compatible qwen summaries triage classify shortcuts siri spotlight"),
         "automation:ripgrep-path": localized("settings.search.alias.setting.automation.ripgrep-path", defaultValue: "automation.ripgrepBinaryPath ripgrep rg binary executable path search find nix custom"),
         "automation:subagent-notifications": localized("settings.search.alias.setting.automation.subagent-notifications", defaultValue: "automation.suppressSubagentNotifications subagent nested child agent codex claude hooks notifications"),
         "automation:cursor": localized("settings.search.alias.setting.automation.cursor", defaultValue: "automation.cursorIntegration cursor ide agent hooks notifications"),

@@ -905,6 +905,29 @@ final class TerminalNotificationStore: ObservableObject {
         notifications = updated
     }
 
+    @MainActor
+    func currentAITriageSummary(maxItems: Int = 5) -> String {
+        let ids = Set(aiTriageNotificationIDByTabSurface.values)
+        let active = notifications.filter { notification in
+            ids.contains(notification.id) && notification.paneFlash
+        }
+        guard !active.isEmpty else {
+            return String(
+                localized: "ai.triage.summary.empty",
+                defaultValue: "No cmux sessions are currently flagged by local AI triage."
+            )
+        }
+
+        return active.prefix(max(1, maxItems)).map { notification in
+            let body = notification.body.trimmingCharacters(in: .whitespacesAndNewlines)
+            if body.isEmpty {
+                return notification.title
+            }
+            return "\(notification.title): \(body)"
+        }
+        .joined(separator: "\n")
+    }
+
     private static func aiTriageBody(for status: AIPaneStatus, summary: String?) -> String {
         let trimmedSummary = summary?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         if !trimmedSummary.isEmpty {
