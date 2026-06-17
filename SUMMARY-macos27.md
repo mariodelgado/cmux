@@ -162,3 +162,79 @@ Final verification:
 - `scripts/check-pbxproj.sh`: succeeded.
 - `xcodebuild -project cmux.xcodeproj -scheme cmux -configuration Debug -destination platform=macOS -derivedDataPath /tmp/cmux-codex build`: `BUILD SUCCEEDED`.
 - `./scripts/reload.sh --tag macos27-codex`: succeeded in 62s (log: `/tmp/cmux-reload-macos27-codex.log`; app: `/Users/marioelysian/Library/Developer/Xcode/DerivedData/cmux-macos27-codex/Build/Products/Debug/cmux DEV macos27-codex.app`).
+
+## AI features (local MLX hub)
+
+cmux now has an opt-in-by-default local AI foundation for the MLX-compatible
+hub at `http://127.0.0.1:8765/v1`. Configuration is exposed through the
+settings catalog, `cmux.json`, Settings search, the config template, the web
+schema, and docs as:
+
+- `ai.enabled` defaulting to `true`
+- `ai.endpoint` defaulting to `http://127.0.0.1:8765/v1`
+
+Files added or materially touched:
+- `Sources/AI/MLXHubClient.swift`
+- `Sources/Sidebar/SidebarAIInsightCoordinator.swift`
+- `Sources/Sidebar/SidebarRollingOutputPreviewFormatter.swift`
+- `Sources/Sidebar/SidebarRollingOutputPreviewSampler.swift`
+- `Sources/TerminalNotificationStore.swift`
+- `Packages/CmuxSettings/Sources/CmuxSettings/Keys/AICatalogSection.swift`
+- `Packages/CmuxSettings/Sources/CmuxSettings/Keys/SettingCatalog.swift`
+- `Sources/CmuxSettingsJSONPathSupport.swift`
+- `Sources/KeyboardShortcutSettingsFileStore.swift`
+- `Sources/KeyboardShortcutSettingsFileStore+Template.swift`
+- `Packages/CmuxSettingsUI/Sources/CmuxSettingsUI/Sections/AutomationSection.swift`
+- `Sources/SettingsNavigation.swift`
+- `Sources/SettingsSearchAliases.swift`
+- `Resources/Localizable.xcstrings`
+- `docs/configuration.md`
+- `web/data/cmux.schema.json`
+- `web/messages/en.json`
+- `web/messages/ja.json`
+- `cmux.xcodeproj/project.pbxproj`
+
+Client and queue design:
+- `MLXHubClient` uses `URLSession` with async/await, a roughly 10 second
+  timeout, and a configurable OpenAI-compatible base URL.
+- The client exposes `summarize(text:) async -> String?` and
+  `classify(text:) async -> AIPaneStatus?`.
+- All client instances share one process-wide actor-backed request queue, so
+  rolling previews and triage do not overlap hub calls.
+- Endpoint failures mark a short cooldown and return `nil`, so all AI features
+  silently fall back when the hub is disabled, unreachable, slow, or returning
+  invalid output.
+
+Rolling preview throttling:
+- The sampler still skips the focused workspace and only reads background
+  terminal panels.
+- Recent pane text is sampled outside render and typing hot paths, with
+  `TerminalSurface.forceRefresh()`, `TabItemView` body, and
+  `WindowTerminalHostView.hitTest()` left untouched.
+- `SidebarAIInsightCoordinator` fingerprints recent output, caches summaries
+  per workspace/panel, avoids duplicate pending requests, and enforces a
+  roughly 9 second minimum request interval per pane.
+- The coordinator prioritizes the most recently active background workspace and
+  drops stale completions when newer pane output arrives. It falls back to the
+  existing raw rolling-preview line while a summary is pending, while the hub is
+  cooling down, or when AI is disabled.
+
+Agent triage:
+- The same coordinator classifies sampled background pane output into
+  `working`, `needs_attention`, `done`, or `errored`.
+- `needs_attention` and `errored` are routed through the existing
+  `TerminalNotificationStore` unread/flash path so the sidebar's current
+  attention indicators light up without a parallel notification UI.
+- `done` records a read, non-flashing notification as a subtle completed state;
+  `working` clears the AI-owned notification for that pane.
+
+Final verification:
+- `scripts/check-pbxproj.sh`: succeeded.
+- `jq empty web/data/cmux.schema.json web/messages/en.json web/messages/ja.json Resources/Localizable.xcstrings`: succeeded.
+- Bare-English scan over the touched Swift UI/runtime files found no new
+  unlocalized `Text`, `Button`, `SettingsCardNote`, or inline `SettingsCardRow`
+  strings.
+- `xcodebuild -project cmux.xcodeproj -scheme cmux -configuration Debug -destination platform=macOS -derivedDataPath /tmp/cmux-codex build`: `BUILD SUCCEEDED`.
+- `./scripts/reload.sh --tag macos27-codex`: succeeded in 40s (log:
+  `/tmp/cmux-reload-macos27-codex.log`; app:
+  `/Users/marioelysian/Library/Developer/Xcode/DerivedData/cmux-macos27-codex/Build/Products/Debug/cmux DEV macos27-codex.app`).
