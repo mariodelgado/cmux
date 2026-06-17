@@ -10298,6 +10298,7 @@ struct VerticalTabsSidebar: View {
     @State private var frozenShortcutHintsTabId: UUID?
     @State private var frozenShortcutHintsValue: Bool = false
     @State private var pendingSelectedWorkspaceScrollId: UUID?
+    @State private var rollingOutputPreviewSampler = SidebarRollingOutputPreviewSampler()
     @State private var collapsedExtensionSidebarSectionIds: Set<String> = []
     @State private var extensionSidebarWorktreeCreationInFlightSectionIds: Set<String> = []
     @State private var extensionSidebarUpdateToken: UInt64 = 0
@@ -10760,11 +10761,13 @@ struct VerticalTabsSidebar: View {
                 tabId: nil,
                 reason: "sidebar_appear"
             )
+            configureRollingOutputPreviewSampler()
         }
         .onDisappear {
             modifierKeyMonitor.stop()
             dragAutoScrollController.stop()
             dragFailsafeMonitor.stop()
+            rollingOutputPreviewSampler.stop()
             dragState.clearDrag()
             isBonsplitWorkspaceDropTargetCollectionActive = false
             // Clear the simulator flag too so a re-mounted sidebar doesn't
@@ -10777,6 +10780,12 @@ struct VerticalTabsSidebar: View {
                 tabId: nil,
                 reason: "sidebar_disappear"
             )
+        }
+        .onChange(of: effectiveExtensionSidebarProviderId) { _, _ in
+            configureRollingOutputPreviewSampler()
+        }
+        .onChange(of: tabManager.selectedTabId) { _, _ in
+            configureRollingOutputPreviewSampler()
         }
         .onChange(of: showModifierHoldHints) { _, enabled in
             if enabled {
@@ -10822,6 +10831,7 @@ struct VerticalTabsSidebar: View {
             dragState.clearDrag()
         }
         .onChange(of: tabManager.tabs.map(\.id)) { _, tabIds in
+            configureRollingOutputPreviewSampler()
             guard let frozenTabId = frozenShortcutHintsTabId,
                   !tabIds.contains(frozenTabId) else { return }
             frozenShortcutHintsTabId = nil
@@ -12430,6 +12440,17 @@ struct VerticalTabsSidebar: View {
         guard let id else { return "nil" }
         return String(id.uuidString.prefix(5))
     }
+
+    private func configureRollingOutputPreviewSampler() {
+        guard CmuxExtensionSidebarSelection.descriptor(for: effectiveExtensionSidebarProviderId).id == CmuxSidebarProviderDescriptor.defaultWorkspacesID else {
+            rollingOutputPreviewSampler.stop()
+            return
+        }
+        rollingOutputPreviewSampler.configure(
+            workspaces: tabManager.tabs,
+            focusedWorkspaceId: tabManager.selectedTabId
+        )
+    }
 }
 
 struct SidebarWorkspaceFrameAnchorModifier: ViewModifier {
@@ -13172,6 +13193,7 @@ struct SidebarWorkspaceSnapshotBuilder {
         let branchLinesContainBranch: Bool
         let pullRequestRows: [PullRequestDisplay]
         let listeningPorts: [Int]
+        let rollingOutputPreview: SidebarRollingOutputPreview?
 
     }
 }
@@ -13660,6 +13682,13 @@ struct TabItemView: View, Equatable {
                     .allowsHitTesting(showCloseButton)
                     .accessibilityHidden(!showCloseButton)
                 }
+            }
+
+            if !isActive, let rollingOutputPreview = workspaceSnapshot.rollingOutputPreview {
+                SidebarRollingOutputPreviewLine(
+                    preview: rollingOutputPreview,
+                    fontScale: fontScale
+                )
             }
 
             if let description = workspaceSnapshot.customDescription {
@@ -14677,7 +14706,8 @@ struct TabItemView: View, Equatable {
             branchDirectoryLines: branchDirectoryLines,
             branchLinesContainBranch: branchLinesContainBranch,
             pullRequestRows: pullRequestRows,
-            listeningPorts: detailVisibility.showsPorts ? tab.listeningPorts : []
+            listeningPorts: detailVisibility.showsPorts ? tab.listeningPorts : [],
+            rollingOutputPreview: tab.sidebarRollingOutputPreview
         )
     }
 

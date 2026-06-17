@@ -39,7 +39,8 @@ extension SidebarWorkspaceSnapshotBuilder.Snapshot {
             branchDirectoryLines: branchDirectoryLines,
             branchLinesContainBranch: branchLinesContainBranch,
             pullRequestRows: pullRequestRows,
-            listeningPorts: listeningPorts
+            listeningPorts: listeningPorts,
+            rollingOutputPreview: rollingOutputPreview
         )
     }
 }

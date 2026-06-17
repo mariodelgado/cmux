@@ -108,6 +108,13 @@ extension TerminalSurface {
         return Self.readText(surface: surface, pointTag: GHOSTTY_POINT_VIEWPORT)
     }
 
+    /// The active terminal screen text, or nil without a live surface.
+    @MainActor
+    public func screenText() -> String? {
+        guard let surface = liveSurfaceForGhosttyAccess(reason: "screenText") else { return nil }
+        return Self.readText(surface: surface, pointTag: GHOSTTY_POINT_SCREEN)
+    }
+
     /// Send text with control characters (Return, Tab, etc.) delivered as key
     /// events so the shell processes them, while complete terminal control
     /// sequences are routed through Ghostty's PTY-output parser. Cold surfaces

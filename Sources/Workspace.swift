@@ -2321,6 +2321,7 @@ final class Workspace: Identifiable, ObservableObject {
     @Published private(set) var latestConversationMessage: String?
     @Published private(set) var latestSubmittedMessage: String?
     @Published private(set) var latestSubmittedAt: Date?
+    @Published var sidebarRollingOutputPreview: SidebarRollingOutputPreview?
     @Published var logEntries: [SidebarLogEntry] = []
     @Published var progress: SidebarProgressState?
     @Published var gitBranch: SidebarGitBranchState?

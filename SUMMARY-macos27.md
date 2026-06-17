@@ -133,3 +133,32 @@ Latest verification after this fix:
 ## Right panel macOS 27 styling
 
 The right sidebar remains fully opaque Catppuccin Mocha rather than Liquid Glass. Its backdrop now uses an opaque mantle/base fill with no window backdrop layer underneath, and the right-panel content adopts a Tahoe-style inset grouped treatment: rounded surface0 cards, low-opacity surface1 hairlines, more comfortable row metrics, uppercase secondary section headers, and rounded mauve/blue hover and selection highlights. The file explorer, Vault/session sections, Feed rows, Dock controls, titlebar pills, and right-panel hairline dividers now share the same continuous-corner Catppuccin chrome while leaving the left sidebar Liquid Glass path and the SFMono Nerd Font default unchanged.
+
+## Rolling tab preview
+
+Background workspace rows in the left vertical-tabs sidebar now show a one-line rolling terminal output preview directly under the workspace title. The active workspace intentionally shows no preview line. The preview uses `SFMono Nerd Font`, Catppuccin Mocha `subtext0`/`overlay0` colors, a short system `.smooth` content transition for updates, and an idle dim state after 9 seconds. Reduce Motion disables scale pulse motion, while Differentiate Without Color and Reduce Transparency add weight/opacity contrast instead of relying only on color.
+
+Touched files:
+- `Packages/CmuxTerminal/Sources/CmuxTerminal/Surface/TerminalSurface+Input.swift`
+- `Sources/ContentView.swift`
+- `Sources/Sidebar/SidebarRollingOutputPreview.swift`
+- `Sources/Sidebar/SidebarRollingOutputPreviewFormatter.swift`
+- `Sources/Sidebar/SidebarRollingOutputPreviewLine.swift`
+- `Sources/Sidebar/SidebarRollingOutputPreviewSampler.swift`
+- `Sources/Sidebar/SidebarWorkspaceSnapshotRefreshPolicy.swift`
+- `Sources/Workspace+SidebarRollingOutputPreview.swift`
+- `Sources/Workspace.swift`
+- `Sources/WorkspaceSidebarObservation.swift`
+- `cmux.xcodeproj/project.pbxproj`
+
+Sampling approach:
+- The sampler reuses the existing Ghostty tick notification demand path via `GhosttyApp.retainTickNotifications()` and coalesces samples to roughly 3.5 Hz with a 280 ms deadline.
+- Sampling is outside terminal render hot paths: `TerminalSurface.forceRefresh()` is untouched, and the sampler only reads from background workspaces. The focused workspace is skipped entirely.
+- The terminal package exposes `TerminalSurface.screenText()` for the screen tail, with `visibleText()` as a fallback. The formatter strips ANSI/OSC/control noise, normalizes whitespace, picks the last non-empty row, trims trailing whitespace, and caps stored text length.
+- Preview state lives on `Workspace.sidebarRollingOutputPreview`; the existing sidebar observation/snapshot refresh path carries it into `TabItemView`, and the context-menu snapshot freeze policy preserves the existing preview while a menu is open.
+
+Final verification:
+- `scripts/normalize-pbxproj.py`: succeeded.
+- `scripts/check-pbxproj.sh`: succeeded.
+- `xcodebuild -project cmux.xcodeproj -scheme cmux -configuration Debug -destination platform=macOS -derivedDataPath /tmp/cmux-codex build`: `BUILD SUCCEEDED`.
+- `./scripts/reload.sh --tag macos27-codex`: succeeded in 62s (log: `/tmp/cmux-reload-macos27-codex.log`; app: `/Users/marioelysian/Library/Developer/Xcode/DerivedData/cmux-macos27-codex/Build/Products/Debug/cmux DEV macos27-codex.app`).
