@@ -109,3 +109,23 @@ Touched files:
 Final build result:
 - `xcodebuild -project cmux.xcodeproj -scheme cmux -configuration Debug -destination platform=macOS -derivedDataPath /tmp/cmux-codex build`: `BUILD SUCCEEDED` (log: `/tmp/cmux-ui-build.log`).
 - `./scripts/reload.sh --tag macos27-codex`: succeeded in 23s (log: `/tmp/cmux-reload-macos27-codex.log`; app: `/Users/marioelysian/Library/Developer/Xcode/DerivedData/cmux-macos27-codex/Build/Products/Debug/cmux DEV macos27-codex.app`).
+
+## Liquid Glass fix
+
+The earlier left panel note was wrong: `SidebarVisualEffectBackground` was
+creating a bare `NSGlassEffectView` with no content view or public SwiftUI
+Liquid Glass configuration, then only poking a private tint selector. That path
+could render as a flat surface instead of genuine Liquid Glass.
+
+The left vertical-tabs sidebar now uses the native SwiftUI Liquid Glass API on
+macOS 26+: `.glassEffect(.regular.tint(...), in: RoundedRectangle(...))`, with
+the tint capped to a faint alpha and no opaque fill behind or over the glass.
+The window root backdrop also leaves the left sidebar strip clear and uses
+transparent window hosting when native glass is available, so the sidebar has
+real backing content to refract instead of sampling an opaque app fill. Older
+macOS versions fall back to `NSVisualEffectView` using sidebar material.
+
+Latest verification after this fix:
+- `xcodebuild -project cmux.xcodeproj -scheme cmux -configuration Debug -destination platform=macOS -derivedDataPath /tmp/cmux-codex build`: `BUILD SUCCEEDED`.
+- `./scripts/reload.sh --tag macos27-codex`: succeeded in 66s (log: `/tmp/cmux-reload-macos27-codex.log`; app: `/Users/marioelysian/Library/Developer/Xcode/DerivedData/cmux-macos27-codex/Build/Products/Debug/cmux DEV macos27-codex.app`).
+- Computer Use screenshot of the tagged app showed the left sidebar strip on the transparent backing rather than the previous opaque dark root fill.

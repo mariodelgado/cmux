@@ -1878,6 +1878,15 @@ struct ContentView: View {
         rightSidebarVisible ? fileExplorerWidth : 0
     }
 
+    private var leftSidebarNativeGlassClearInset: CGFloat {
+#if compiler(>=6.2)
+        if #available(macOS 26.0, *), sidebarState.isVisible {
+            return sidebarWidth
+        }
+#endif
+        return 0
+    }
+
     private func sidebarBackdropLayer(
         width: CGFloat,
         role: WindowBackdropRole,
@@ -1910,26 +1919,17 @@ struct ContentView: View {
         }
     }
 
+    @ViewBuilder
     private func leftSidebarLiquidGlassBackdrop(
         appearance: WindowAppearanceSnapshot
     ) -> some View {
         let materialPolicy = appearance.sidebarSettings.materialPolicy
-        let usingNativeLiquidGlass = SidebarVisualEffectBackground.liquidGlassAvailable
 
-        return ZStack {
-            SidebarVisualEffectBackground(
-                material: .underWindowBackground,
-                blendingMode: .withinWindow,
-                state: materialPolicy.state,
-                opacity: materialPolicy.opacity,
-                tintColor: materialPolicy.tintColor,
-                cornerRadius: materialPolicy.cornerRadius,
-                preferLiquidGlass: true
-            )
-            if !usingNativeLiquidGlass {
-                Color(nsColor: materialPolicy.tintColor)
-            }
-        }
+        SidebarLiquidGlassBackdrop(
+            materialPolicy: materialPolicy,
+            fallbackMaterial: .sidebar,
+            fallbackBlendingMode: .withinWindow
+        )
     }
 
     private func sidebarPanelContainer<Content: View>(
@@ -2538,6 +2538,7 @@ struct ContentView: View {
         var view = AnyView(
             ZStack(alignment: .topLeading) {
                 WindowBackdropLayer(role: .windowRoot, snapshot: appearance)
+                    .padding(.leading, leftSidebarNativeGlassClearInset)
                     .ignoresSafeArea()
                     .allowsHitTesting(false)
 
@@ -16284,48 +16285,29 @@ enum SidebarSelection {
     case notifications
 }
 
-/// Wrapper view that tries NSGlassEffectView (macOS 26+) when available or requested
+/// NSVisualEffectView fallback for sidebar material backgrounds.
 private struct SidebarVisualEffectBackground: NSViewRepresentable {
     let material: NSVisualEffectView.Material
     let blendingMode: NSVisualEffectView.BlendingMode
     let state: NSVisualEffectView.State
     let opacity: Double
-    let tintColor: NSColor?
     let cornerRadius: CGFloat
-    let preferLiquidGlass: Bool
 
     init(
         material: NSVisualEffectView.Material = .hudWindow,
         blendingMode: NSVisualEffectView.BlendingMode = .behindWindow,
         state: NSVisualEffectView.State = .active,
         opacity: Double = 1.0,
-        tintColor: NSColor? = nil,
-        cornerRadius: CGFloat = 0,
-        preferLiquidGlass: Bool = false
+        cornerRadius: CGFloat = 0
     ) {
         self.material = material
         self.blendingMode = blendingMode
         self.state = state
         self.opacity = opacity
-        self.tintColor = tintColor
         self.cornerRadius = cornerRadius
-        self.preferLiquidGlass = preferLiquidGlass
-    }
-
-    static var liquidGlassAvailable: Bool {
-        NSClassFromString("NSGlassEffectView") != nil
     }
 
     func makeNSView(context: Context) -> NSView {
-        // Try NSGlassEffectView if preferred or if we want to test availability
-        if preferLiquidGlass, let glassClass = NSClassFromString("NSGlassEffectView") as? NSView.Type {
-            let glass = glassClass.init(frame: .zero)
-            glass.autoresizingMask = [.width, .height]
-            glass.wantsLayer = true
-            return glass
-        }
-
-        // Use NSVisualEffectView
         let view = NSVisualEffectView()
         view.autoresizingMask = [.width, .height]
         view.wantsLayer = true
@@ -16335,22 +16317,7 @@ private struct SidebarVisualEffectBackground: NSViewRepresentable {
 
     func updateNSView(_ nsView: NSView, context: Context) {
         let clampedOpacity = max(0.0, min(1.0, opacity))
-        // Configure based on view type
-        if nsView.className == "NSGlassEffectView" {
-            // NSGlassEffectView configuration via private API
-            nsView.alphaValue = clampedOpacity
-            nsView.layer?.cornerRadius = cornerRadius
-            nsView.layer?.masksToBounds = cornerRadius > 0
-
-            // Try to set tint color via private selector
-            if let color = tintColor {
-                let selector = NSSelectorFromString("setTintColor:")
-                if nsView.responds(to: selector) {
-                    nsView.perform(selector, with: color)
-                }
-            }
-        } else if let visualEffect = nsView as? NSVisualEffectView {
-            // NSVisualEffectView configuration
+        if let visualEffect = nsView as? NSVisualEffectView {
             visualEffect.material = material
             visualEffect.blendingMode = blendingMode
             visualEffect.state = state
@@ -16359,6 +16326,59 @@ private struct SidebarVisualEffectBackground: NSViewRepresentable {
             visualEffect.layer?.masksToBounds = cornerRadius > 0
             visualEffect.needsDisplay = true
         }
+    }
+}
+
+private struct SidebarLiquidGlassBackdrop: View {
+    let materialPolicy: SidebarBackdropMaterialPolicy
+    let fallbackMaterial: NSVisualEffectView.Material
+    let fallbackBlendingMode: NSVisualEffectView.BlendingMode
+
+    var body: some View {
+        let shape = RoundedRectangle(
+            cornerRadius: materialPolicy.cornerRadius,
+            style: .continuous
+        )
+
+#if compiler(>=6.2)
+        if #available(macOS 26.0, *) {
+            shape
+                .fill(Color.clear)
+                .glassEffect(
+                    .regular.tint(materialPolicy.nativeLiquidGlassTint),
+                    in: shape
+                )
+                .overlay {
+                    shape.stroke(Color.white.opacity(0.18), lineWidth: 0.6)
+                }
+                .opacity(Double(WindowAppearanceSnapshot.clampedOpacity(materialPolicy.opacity)))
+        } else {
+            fallback(shape)
+        }
+#else
+        fallback(shape)
+#endif
+    }
+
+    @ViewBuilder
+    private func fallback(_ shape: RoundedRectangle) -> some View {
+        ZStack {
+            SidebarVisualEffectBackground(
+                material: fallbackMaterial,
+                blendingMode: fallbackBlendingMode,
+                state: materialPolicy.state,
+                opacity: materialPolicy.opacity,
+                cornerRadius: materialPolicy.cornerRadius
+            )
+            shape.fill(Color(nsColor: materialPolicy.tintColor))
+        }
+    }
+}
+
+private extension SidebarBackdropMaterialPolicy {
+    var nativeLiquidGlassTint: Color {
+        let alpha = min(tintColor.alphaComponent, 0.10)
+        return Color(nsColor: tintColor.withAlphaComponent(alpha))
     }
 }
 
@@ -16483,23 +16503,26 @@ private struct WindowBackdropLayer: View {
             }
         case let .sidebarMaterial(materialPolicy):
             ZStack {
-                let usingNativeLiquidGlass = materialPolicy.preferLiquidGlass &&
-                    SidebarVisualEffectBackground.liquidGlassAvailable
-                if let material = materialPolicy.material,
+                if materialPolicy.preferLiquidGlass,
                    !materialPolicy.usesWindowLevelGlass {
+                    SidebarLiquidGlassBackdrop(
+                        materialPolicy: materialPolicy,
+                        fallbackMaterial: materialPolicy.material ?? .sidebar,
+                        fallbackBlendingMode: materialPolicy.blendingMode
+                    )
+                } else if let material = materialPolicy.material,
+                          !materialPolicy.usesWindowLevelGlass {
                     SidebarVisualEffectBackground(
                         material: material,
                         blendingMode: materialPolicy.blendingMode,
                         state: materialPolicy.state,
                         opacity: materialPolicy.opacity,
-                        tintColor: materialPolicy.tintColor,
-                        cornerRadius: materialPolicy.cornerRadius,
-                        preferLiquidGlass: materialPolicy.preferLiquidGlass
+                        cornerRadius: materialPolicy.cornerRadius
                     )
                 }
-                // Tint overlay for tint-only materials and NSVisualEffectView
-                // fallback. Native liquid glass receives its tint in AppKit.
-                if !materialPolicy.usesWindowLevelGlass && !usingNativeLiquidGlass {
+                // Tint overlay for tint-only materials and visual-effect
+                // fallback. Native Liquid Glass receives a faint SwiftUI tint.
+                if !materialPolicy.usesWindowLevelGlass && !materialPolicy.preferLiquidGlass {
                     Color(nsColor: materialPolicy.tintColor)
                 }
             }
@@ -16556,7 +16579,7 @@ private struct LayerBackedBackdropColor: NSViewRepresentable {
 
 enum SidebarMaterialOption: String, CaseIterable, Identifiable {
     case none
-    case liquidGlass  // macOS 26+ NSGlassEffectView
+    case liquidGlass  // macOS 26+ SwiftUI Liquid Glass
     case sidebar
     case hudWindow
     case menu
@@ -16589,7 +16612,7 @@ enum SidebarMaterialOption: String, CaseIterable, Identifiable {
         }
     }
 
-    /// Returns true if this option should use NSGlassEffectView (macOS 26+)
+    /// Returns true if this option should use native SwiftUI Liquid Glass.
     var usesLiquidGlass: Bool {
         self == .liquidGlass
     }

@@ -165,6 +165,17 @@ extension WindowAppearanceSnapshot {
             )
         }
 
+        if glassEffectAvailable {
+            return WindowBackdropPlan(
+                hostingPhase: .transparentRootBackdrop,
+                windowBackgroundColor: WindowBackgroundComposition.policy.transparentWindowBaseColor,
+                windowIsOpaque: false,
+                rootPolicy: rootPolicy,
+                glass: nil,
+                shouldApplyGhosttyCompositorBlur: false
+            )
+        }
+
         if terminalBackgroundOpacity < 0.999 {
             return WindowBackdropPlan(
                 hostingPhase: .transparentRootBackdrop,
