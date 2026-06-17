@@ -238,3 +238,56 @@ Final verification:
 - `./scripts/reload.sh --tag macos27-codex`: succeeded in 40s (log:
   `/tmp/cmux-reload-macos27-codex.log`; app:
   `/Users/marioelysian/Library/Developer/Xcode/DerivedData/cmux-macos27-codex/Build/Products/Debug/cmux DEV macos27-codex.app`).
+
+## Deep macOS integrations (Foundation Models, App Intents, Services, menu-bar)
+
+cmux now has an in-binary Apple Foundation Models backend for macOS 26+ plus a
+tiered local AI router:
+
+- `Sources/AI/FoundationModelsBackend.swift` imports `FoundationModels`, checks
+  `SystemLanguageModel.default.availability`, creates `LanguageModelSession`
+  only when the model is available, and degrades to `nil`/fallback behavior
+  when Foundation Models cannot serve the request.
+- `Sources/AI/AIRouter.swift` routes light frequent work such as rolling preview
+  summaries, triage classification, and quick command explanations to
+  Foundation Models first, then falls back to MLX hub. Heavy work routes to the
+  existing MLX-compatible hub at `http://127.0.0.1:8765/v1`, then falls back to
+  Foundation Models.
+- Rolling previews and agent triage now call the shared router on the light
+  tier while preserving the existing request queue, throttling, output
+  fingerprinting, cooldowns, and background-pane-only sampling. Terminal typing
+  hot paths remain untouched.
+
+Native macOS entrypoints added:
+
+- App Intents in `Sources/Intents/` expose "Ask Local Model", "Summarize Remote
+  Sessions", and "Explain Command" to Shortcuts, Siri, and Spotlight, using the
+  same tiered AI router and async request path.
+- macOS Services are registered in `Resources/Info.plist` for "Explain with
+  cmux AI" and "Rewrite with cmux AI". The AppDelegate services provider reads
+  selected text from the pasteboard, sends it through the light AI tier, and
+  writes the result back to the service pasteboard and general pasteboard.
+- The menu-bar extra now shows AI triage status for flagged background panes,
+  provides a quick local-model prompt field, copies answers to the pasteboard,
+  and can focus the latest flagged pane through the existing notification
+  action path.
+
+Configuration and localization:
+
+- Settings and `cmux.json` now include `ai.enabled`, `ai.endpoint`,
+  `ai.appIntents`, `ai.services`, and `ai.menuBar`. The menu-bar setting
+  defaults on, matching the macOS integration behavior.
+- User-facing strings were added to `Resources/Localizable.xcstrings` with
+  English and Japanese values. Services titles were added to
+  `Resources/InfoPlist.xcstrings`. Schema descriptions were added to
+  `web/messages/en.json` and `web/messages/ja.json`.
+- No new cmux-owned keyboard shortcuts were added, so `KeyboardShortcutSettings`
+  did not need shortcut entries.
+
+Feature commits:
+
+- `7d4c50948 Add native Foundation Models backend`
+- `45c94257c Route local AI across Foundation Models and MLX`
+- `2e711067a Add local AI App Intents`
+- `bb5660e35 Add local AI macOS Services`
+- `76fbd4996 Add local AI menu bar status`
