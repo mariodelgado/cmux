@@ -374,6 +374,9 @@ final class CmuxSettingsFileStore {
         if let automationSection = root["automation"] as? [String: Any] {
             parseAutomationSection(automationSection, sourcePath: sourcePath, snapshot: &snapshot)
         }
+        if let aiSection = root["ai"] as? [String: Any] {
+            parseAISection(aiSection, sourcePath: sourcePath, snapshot: &snapshot)
+        }
         if let browserSection = root["browser"] as? [String: Any] {
             parseBrowserSection(browserSection, sourcePath: sourcePath, snapshot: &snapshot)
         }
@@ -855,6 +858,28 @@ final class CmuxSettingsFileStore {
                 return
             }
             snapshot.managedUserDefaults[AutomationSettings.portRangeKey] = .int(value)
+        }
+    }
+
+    private func parseAISection(
+        _ section: [String: Any],
+        sourcePath: String,
+        snapshot: inout ResolvedSettingsSnapshot
+    ) {
+        let ai = AICatalogSection()
+        applyBooleanSettings(AISettingsFileMapping.booleanSettings, from: section, sourcePath: sourcePath, snapshot: &snapshot)
+        if let raw = jsonString(section["endpoint"]) {
+            let trimmed = raw.trimmingCharacters(in: .whitespacesAndNewlines)
+            guard let url = URL(string: trimmed),
+                  let scheme = url.scheme?.lowercased(),
+                  ["http", "https"].contains(scheme),
+                  url.host != nil else {
+                logInvalid("ai.endpoint", sourcePath: sourcePath)
+                return
+            }
+            snapshot.managedUserDefaults[ai.endpoint.userDefaultsKey] = .string(trimmed)
+        } else if section.keys.contains("endpoint") {
+            logInvalid("ai.endpoint", sourcePath: sourcePath)
         }
     }
 

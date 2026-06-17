@@ -18,6 +18,8 @@ public struct AutomationSection: View {
     @State private var autoNamingModel: DefaultsValueModel<Bool>
     @State private var autoNamingAgentModel: DefaultsValueModel<String>
     @State private var autoNamingStatusModel: DefaultsValueModel<String>
+    @State private var aiEnabledModel: DefaultsValueModel<Bool>
+    @State private var aiEndpointModel: DefaultsValueModel<String>
     @State private var ripgrepPathModel: DefaultsValueModel<String>
     @State private var suppressSubagentModel: DefaultsValueModel<Bool>
     @State private var ampModel: DefaultsValueModel<Bool>
@@ -66,6 +68,8 @@ public struct AutomationSection: View {
                 userDefaultsKey: AutoNamingStatusStore.userDefaultsKey
             )
         ))
+        _aiEnabledModel = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.ai.enabled))
+        _aiEndpointModel = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.ai.endpoint))
         _ripgrepPathModel = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.integrations.ripgrepCustomBinaryPath))
         _suppressSubagentModel = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.integrations.suppressSubagentNotifications))
         _ampModel = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.integrations.ampHooksEnabled))
@@ -87,6 +91,7 @@ public struct AutomationSection: View {
             claudeCodeCard
             claudePathCard
             autoNamingCard
+            aiCard
             ripgrepPathCard
             suppressSubagentCard
             ampCard
@@ -328,6 +333,41 @@ public struct AutomationSection: View {
         guard !autoNamingStatusModel.current.isEmpty,
               let data = autoNamingStatusModel.current.data(using: .utf8) else { return nil }
         return try? JSONDecoder().decode(AutoNamingStatus.self, from: data)
+    }
+
+    @ViewBuilder
+    private var aiCard: some View {
+        SettingsCard {
+            SettingsCardRow(
+                configurationReview: .json("ai.enabled"),
+                String(localized: "settings.automation.ai", defaultValue: "Local AI"),
+                subtitle: aiEnabledModel.current
+                    ? String(localized: "settings.automation.ai.subtitleOn", defaultValue: "Local MLX hub is used for sidebar summaries and triage.")
+                    : String(localized: "settings.automation.ai.subtitleOff", defaultValue: "AI sidebar summaries and triage are disabled.")
+            ) {
+                Toggle("", isOn: Binding(get: { aiEnabledModel.current }, set: { aiEnabledModel.set($0) }))
+                    .labelsHidden()
+                    .controlSize(.small)
+                    .accessibilityIdentifier("SettingsAIEnabledToggle")
+            }
+            SettingsCardDivider()
+            SettingsCardRow(
+                configurationReview: .json("ai.endpoint"),
+                String(localized: "settings.automation.ai.endpoint", defaultValue: "AI Endpoint"),
+                subtitle: String(localized: "settings.automation.ai.endpoint.subtitle", defaultValue: "OpenAI-compatible base URL for the local MLX hub.")
+            ) {
+                TextField(
+                    String(localized: "settings.automation.ai.endpoint.placeholder", defaultValue: "http://127.0.0.1:8765/v1"),
+                    text: Binding(get: { aiEndpointModel.current }, set: { aiEndpointModel.set($0) })
+                )
+                .textFieldStyle(.roundedBorder)
+                .frame(width: 240)
+                .disabled(!aiEnabledModel.current)
+                .accessibilityIdentifier("SettingsAIEndpointField")
+            }
+            SettingsCardDivider()
+            SettingsCardNote(String(localized: "settings.automation.ai.note", defaultValue: "Requests are serialized and heavily throttled. If the endpoint is unavailable, cmux falls back to the existing sidebar preview."))
+        }
     }
 
     @ViewBuilder

@@ -23,6 +23,7 @@ extension Array where Element == CuratedSettingEntry {
             .init(section: .account, id: "account", title: "Account", synonyms: "auth authentication login logout signin sign-in signout sign-out email user profile stack team"),
             .init(section: .automation, id: "claude-code", title: "Claude Code Integration", synonyms: "automation.claudeCodeIntegration claude code hooks agent integration status notifications"),
             .init(section: .automation, id: "claude-path", title: "Claude Binary Path", synonyms: "automation.claudeBinaryPath claude binary executable path cli command custom"),
+            .init(section: .automation, id: "ai-local-hub", title: "Local AI", synonyms: "ai.enabled ai.endpoint local mlx hub openai compatible qwen summaries triage classify"),
             .init(section: .automation, id: "ripgrep-path", title: "Ripgrep Binary Path", synonyms: "automation.ripgrepBinaryPath ripgrep rg binary executable path search find nix custom"),
             .init(section: .automation, id: "subagent-notifications", title: "Suppress Subagent Notifications", synonyms: "automation.suppressSubagentNotifications subagent nested child agent codex claude hooks notifications"),
             .init(section: .automation, id: "cursor", title: "Cursor Integration", synonyms: "automation.cursorIntegration cursor ide agent hooks notifications"),

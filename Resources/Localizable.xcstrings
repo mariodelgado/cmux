@@ -97701,6 +97701,210 @@
         }
       }
     },
+    "ai.triage.done": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Done"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "完了"
+          }
+        }
+      }
+    },
+    "ai.triage.errored": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Errored"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "エラー"
+          }
+        }
+      }
+    },
+    "ai.triage.needsAttention": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Needs attention"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "確認が必要"
+          }
+        }
+      }
+    },
+    "ai.triage.notificationTitle": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Local AI"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ローカルAI"
+          }
+        }
+      }
+    },
+    "settings.automation.ai": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Local AI"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ローカルAI"
+          }
+        }
+      }
+    },
+    "settings.automation.ai.endpoint": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "AI Endpoint"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "AIエンドポイント"
+          }
+        }
+      }
+    },
+    "settings.automation.ai.endpoint.placeholder": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "http://127.0.0.1:8765/v1"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "http://127.0.0.1:8765/v1"
+          }
+        }
+      }
+    },
+    "settings.automation.ai.endpoint.subtitle": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OpenAI-compatible base URL for the local MLX hub."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ローカルMLXハブのOpenAI互換ベースURL。"
+          }
+        }
+      }
+    },
+    "settings.automation.ai.note": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Requests are serialized and heavily throttled. If the endpoint is unavailable, cmux falls back to the existing sidebar preview."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "リクエストは直列化され、強く間引かれます。エンドポイントを利用できない場合、cmuxは既存のサイドバープレビューに戻ります。"
+          }
+        }
+      }
+    },
+    "settings.automation.ai.subtitleOff": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "AI sidebar summaries and triage are disabled."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "AIによるサイドバー要約とトリアージは無効です。"
+          }
+        }
+      }
+    },
+    "settings.automation.ai.subtitleOn": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Local MLX hub is used for sidebar summaries and triage."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ローカルMLXハブをサイドバー要約とトリアージに使用します。"
+          }
+        }
+      }
+    },
+    "settings.search.alias.setting.automation.ai-local-hub": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ai.enabled ai.endpoint local mlx hub openai compatible qwen summaries triage classify"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ai.enabled ai.endpoint local mlx hub openai compatible qwen summaries triage classify ローカル AI 要約 トリアージ 分類"
+          }
+        }
+      }
+    },
     "settings.automation.claudeCode": {
       "extractionState": "manual",
       "localizations": {

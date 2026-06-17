@@ -182,6 +182,12 @@ extension CmuxSettingsFileStore {
                 ],
             ],
             [
+                "ai": [
+                    "enabled": SettingCatalog().ai.enabled.defaultValue,
+                    "endpoint": SettingCatalog().ai.endpoint.defaultValue,
+                ],
+            ],
+            [
                 "browser": [
                     "defaultSearchEngine": BrowserSearchSettingsStore.defaultSearchEngine.rawValue,
                     "customSearchEngineName": BrowserSearchSettingsStore.defaultCustomSearchEngineName,

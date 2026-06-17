@@ -277,6 +277,14 @@ enum AutomationSettingsFileMapping {
     ]
 }
 
+enum AISettingsFileMapping {
+    private static let ai = AICatalogSection()
+
+    static let booleanSettings: [SettingsFileBooleanMapping] = [
+        .init(jsonKey: "enabled", defaultsKey: ai.enabled.userDefaultsKey, invalidPath: "ai.enabled"),
+    ]
+}
+
 enum BrowserSettingsFileMapping {
     static let booleanSettings: [SettingsFileBooleanMapping] = [
         .init(jsonKey: "showSearchSuggestions", defaultsKey: BrowserSearchSettingsStore.searchSuggestionsEnabledKey),
@@ -410,6 +418,8 @@ extension CmuxSettingsFileStore {
         "automation.kiroNotificationLevel",
         "automation.portBase",
         "automation.portRange",
+        "ai.enabled",
+        "ai.endpoint",
         "browser.defaultSearchEngine",
         "browser.customSearchEngineName",
         "browser.customSearchEngineURLTemplate",

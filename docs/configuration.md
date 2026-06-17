@@ -81,6 +81,24 @@ Opt-in AI auto-naming of workspaces and tabs from agent conversation content. Wh
 
 Default: `false`. Manual renames (sidebar, command palette, CLI, or `/rename`) always win: a workspace or tab you renamed yourself is never auto-named again until you clear its custom name. Enable it from **Settings > Automation > Workspace Auto-Naming**.
 
+## `ai.enabled` / `ai.endpoint`
+
+Controls the local OpenAI-compatible MLX hub used for background-tab sidebar summaries and agent-pane triage.
+
+```json
+{
+  "ai": {
+    "enabled": true,
+    "endpoint": "http://127.0.0.1:8765/v1"
+  }
+}
+```
+
+- `enabled`: turns local AI summaries and triage on or off. Default: `true`.
+- `endpoint`: OpenAI-compatible base URL for the local hub. Default: `http://127.0.0.1:8765/v1`.
+
+Requests are serialized and heavily throttled. If the endpoint is unavailable, cmux silently falls back to the normal rolling sidebar preview and does not show AI triage updates. Configure it from **Settings > Automation > Local AI**.
+
 ## `diffViewer.defaultLayout`
 
 Controls the initial layout for newly opened diff viewers.

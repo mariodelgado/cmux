@@ -55,6 +55,8 @@ struct SettingsRowAnchorResolutionTests {
         "app.warnBeforeClosingTab",
         "app.warnBeforeClosingTabXButton",
         "app.workspaceInheritWorkingDirectory",
+        "ai.enabled",
+        "ai.endpoint",
         "automation.claudeBinaryPath",
         "automation.claudeCodeIntegration",
         "automation.cursorIntegration",

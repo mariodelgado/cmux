@@ -974,6 +974,27 @@
         }
       }
     },
+    "ai": {
+      "title": "ai",
+      "description": "Local AI settings for OpenAI-compatible MLX hub summaries and triage.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": true,
+          "descriptionKey": "schemaDescriptions.ai.enabled",
+          "description": "Enable local AI summaries and triage for background terminal panes."
+        },
+        "endpoint": {
+          "type": "string",
+          "format": "uri",
+          "default": "http://127.0.0.1:8765/v1",
+          "descriptionKey": "schemaDescriptions.ai.endpoint",
+          "description": "OpenAI-compatible base URL for the local MLX hub."
+        }
+      }
+    },
     "browser": {
       "title": "browser",
       "description": "Embedded browser settings from Settings > Browser.",
