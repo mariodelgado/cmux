@@ -284,6 +284,7 @@ enum AISettingsFileMapping {
         .init(jsonKey: "enabled", defaultsKey: ai.enabled.userDefaultsKey, invalidPath: "ai.enabled"),
         .init(jsonKey: "appIntents", defaultsKey: ai.appIntents.userDefaultsKey, invalidPath: "ai.appIntents"),
         .init(jsonKey: "services", defaultsKey: ai.services.userDefaultsKey, invalidPath: "ai.services"),
+        .init(jsonKey: "menuBar", defaultsKey: ai.menuBar.userDefaultsKey, invalidPath: "ai.menuBar"),
     ]
 }
 
@@ -424,6 +425,7 @@ extension CmuxSettingsFileStore {
         "ai.endpoint",
         "ai.appIntents",
         "ai.services",
+        "ai.menuBar",
         "browser.defaultSearchEngine",
         "browser.customSearchEngineName",
         "browser.customSearchEngineURLTemplate",

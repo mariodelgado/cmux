@@ -24,6 +24,12 @@ final class MenuBarExtraController: NSObject, NSMenuDelegate {
     private let globalSearchItem = NSMenuItem(title: String(localized: "statusMenu.searchAllWindows", defaultValue: "Search All Windows..."), action: nil, keyEquivalent: "")
     private let showMainWindowItem = NSMenuItem(title: String(localized: "statusMenu.showCmux", defaultValue: "Show cmux"), action: nil, keyEquivalent: "")
     private let taskManagerItem = NSMenuItem(title: String(localized: "statusMenu.taskManager", defaultValue: "Task Manager..."), action: nil, keyEquivalent: "")
+    private let aiSectionSeparator = NSMenuItem.separator()
+    private let aiStateItem = NSMenuItem(title: String(localized: "statusMenu.ai.noFlagged", defaultValue: "AI: no flagged panes"), action: nil, keyEquivalent: "")
+    private let aiAskItem = NSMenuItem()
+    private let aiAskView = MenuBarAIAskView()
+    private let aiAnswerItem = NSMenuItem(title: "", action: nil, keyEquivalent: "")
+    private let focusAIFlaggedItem = NSMenuItem(title: String(localized: "statusMenu.ai.focusFlagged", defaultValue: "Focus Flagged Pane"), action: nil, keyEquivalent: "")
     private let notificationListSeparator = NSMenuItem.separator()
     private let notificationSectionSeparator = NSMenuItem.separator()
     private let showNotificationsItem = NSMenuItem(title: String(localized: "statusMenu.showNotifications", defaultValue: "Show Notifications"), action: nil, keyEquivalent: "")
@@ -35,6 +41,7 @@ final class MenuBarExtraController: NSObject, NSMenuDelegate {
     private let quitItem = NSMenuItem(title: String(localized: "menu.quitCmux", defaultValue: "Quit cmux"), action: nil, keyEquivalent: "")
 
     private var notificationItems: [NSMenuItem] = []
+    private var latestAIFlaggedNotification: TerminalNotification?
     init(
         notificationStore: TerminalNotificationStore,
         onShowGlobalSearch: @escaping (NSStatusBarButton, (() -> Void)?) -> Void,
@@ -105,6 +112,24 @@ final class MenuBarExtraController: NSObject, NSMenuDelegate {
         taskManagerItem.action = #selector(taskManagerAction)
         menu.addItem(taskManagerItem)
 
+        menu.addItem(aiSectionSeparator)
+        aiStateItem.isEnabled = false
+        menu.addItem(aiStateItem)
+
+        aiAskView.onSubmit = { [weak self] prompt in
+            self?.askLocalModel(prompt: prompt)
+        }
+        aiAskItem.view = aiAskView
+        menu.addItem(aiAskItem)
+
+        aiAnswerItem.isEnabled = false
+        aiAnswerItem.isHidden = true
+        menu.addItem(aiAnswerItem)
+
+        focusAIFlaggedItem.target = self
+        focusAIFlaggedItem.action = #selector(focusAIFlaggedAction)
+        menu.addItem(focusAIFlaggedItem)
+
         menu.addItem(notificationListSeparator)
         notificationSectionSeparator.isHidden = true
         menu.addItem(notificationSectionSeparator)
@@ -150,6 +175,10 @@ final class MenuBarExtraController: NSObject, NSMenuDelegate {
         refreshUI()
     }
 
+    func refreshForSettingsChange() {
+        refreshUI()
+    }
+
     func removeFromMenuBar() {
         notificationMenuSnapshotCancellable?.cancel()
         notificationMenuSnapshotCancellable = nil
@@ -171,6 +200,8 @@ final class MenuBarExtraController: NSObject, NSMenuDelegate {
         displayedUnreadCount = actualUnreadCount
 #endif
 
+        let aiMenuState = refreshAISection()
+
         stateHintItem.title = snapshot.stateHintTitle
         showMainWindowItem.isHidden = !MenuBarOnlySettings.shouldShowMainWindowMenuItem()
 
@@ -185,13 +216,41 @@ final class MenuBarExtraController: NSObject, NSMenuDelegate {
         rebuildInlineNotificationItems(recentNotifications: snapshot.recentNotifications)
 
         if let button = statusItem.button {
-            button.image = MenuBarIconRenderer.makeImage(unreadCount: displayedUnreadCount)
-            button.toolTip = displayedUnreadCount == 0
-                ? "cmux"
-                : displayedUnreadCount == 1
-                    ? "cmux: " + String(localized: "statusMenu.tooltip.unread.one", defaultValue: "1 unread notification")
-                    : "cmux: " + String(localized: "statusMenu.tooltip.unread.other", defaultValue: "\(displayedUnreadCount) unread notifications")
+            let displayedBadgeCount = aiMenuState.flaggedCount > 0 ? aiMenuState.flaggedCount : displayedUnreadCount
+            let tooltip: String
+            if aiMenuState.flaggedCount > 0 {
+                tooltip = aiMenuState.tooltip
+            } else if displayedUnreadCount == 0 {
+                tooltip = "cmux"
+            } else if displayedUnreadCount == 1 {
+                tooltip = "cmux: " + String(localized: "statusMenu.tooltip.unread.one", defaultValue: "1 unread notification")
+            } else {
+                tooltip = "cmux: " + String(localized: "statusMenu.tooltip.unread.other", defaultValue: "\(displayedUnreadCount) unread notifications")
+            }
+            button.image = MenuBarIconRenderer.makeImage(unreadCount: displayedBadgeCount)
+            button.toolTip = tooltip
         }
+    }
+
+    private func refreshAISection() -> MenuBarAISectionState {
+        let isVisible = AIFeatureSettings.isEnabled() && AIFeatureSettings.menuBarEnabled()
+        aiSectionSeparator.isHidden = !isVisible
+        aiStateItem.isHidden = !isVisible
+        aiAskItem.isHidden = !isVisible
+        focusAIFlaggedItem.isHidden = !isVisible
+
+        guard isVisible else {
+            latestAIFlaggedNotification = nil
+            aiAnswerItem.isHidden = true
+            return .hidden
+        }
+
+        let flaggedCount = notificationStore.currentAIFlaggedNotificationCount()
+        latestAIFlaggedNotification = notificationStore.latestAIFlaggedNotification()
+        aiStateItem.title = MenuBarAIStatusFormatter.stateTitle(flaggedCount: flaggedCount)
+        focusAIFlaggedItem.isEnabled = latestAIFlaggedNotification != nil
+        focusAIFlaggedItem.title = String(localized: "statusMenu.ai.focusFlagged", defaultValue: "Focus Flagged Pane")
+        return MenuBarAISectionState(flaggedCount: flaggedCount)
     }
 
     private func applyShortcut(_ shortcut: StoredShortcut, to item: NSMenuItem) {
@@ -266,6 +325,46 @@ final class MenuBarExtraController: NSObject, NSMenuDelegate {
         onOpenTaskManager()
     }
 
+    private func askLocalModel(prompt: String) {
+        let trimmedPrompt = prompt.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmedPrompt.isEmpty else { return }
+        aiAnswerItem.isHidden = false
+        aiAnswerItem.title = String(localized: "statusMenu.ai.thinking", defaultValue: "Asking local model...")
+
+        Task { [weak self, trimmedPrompt] in
+            let system = """
+            Answer clearly and concisely from local context. Prefer developer-focused explanations. If the prompt needs current external information, say that local context is insufficient.
+            """
+            let answer = await AIRouter.shared.complete(
+                task: .light(maximumResponseTokens: 360),
+                system: system,
+                user: trimmedPrompt
+            )
+            self?.finishAIAsk(answer: answer)
+        }
+    }
+
+    private func finishAIAsk(answer: String?) {
+        guard let output = answer?.trimmingCharacters(in: .whitespacesAndNewlines),
+              !output.isEmpty else {
+            aiAnswerItem.title = String(localized: "statusMenu.ai.noAnswer", defaultValue: "No local AI answer is available.")
+            return
+        }
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(output, forType: .string)
+        let prefix = String(localized: "statusMenu.ai.answerPrefix", defaultValue: "Answer:")
+        aiAnswerItem.title = "\(prefix) \(MenuBarAIStatusFormatter.answerSnippet(output))"
+        aiAnswerItem.toolTip = output
+    }
+
+    @objc private func focusAIFlaggedAction() {
+        guard let latestAIFlaggedNotification else {
+            NSSound.beep()
+            return
+        }
+        onOpenNotification(latestAIFlaggedNotification)
+    }
+
     @objc private func markAllReadAction() {
         notificationStore.markAllRead()
     }
@@ -293,6 +392,84 @@ private final class NotificationMenuItemPayload: NSObject {
     init(notification: TerminalNotification) {
         self.notification = notification
         super.init()
+    }
+}
+
+private struct MenuBarAISectionState {
+    let flaggedCount: Int
+
+    static let hidden = MenuBarAISectionState(flaggedCount: 0)
+
+    var tooltip: String {
+        flaggedCount == 1
+            ? "cmux: " + String(localized: "statusMenu.ai.tooltip.one", defaultValue: "1 AI pane flagged")
+            : "cmux: " + String(localized: "statusMenu.ai.tooltip.other", defaultValue: "\(flaggedCount) AI panes flagged")
+    }
+}
+
+private enum MenuBarAIStatusFormatter {
+    static func stateTitle(flaggedCount: Int) -> String {
+        switch flaggedCount {
+        case 0:
+            return String(localized: "statusMenu.ai.noFlagged", defaultValue: "AI: no flagged panes")
+        case 1:
+            return String(localized: "statusMenu.ai.flagged.one", defaultValue: "AI: 1 flagged pane")
+        default:
+            return String(localized: "statusMenu.ai.flagged.other", defaultValue: "AI: \(flaggedCount) flagged panes")
+        }
+    }
+
+    static func answerSnippet(_ output: String, maxCharacters: Int = 96) -> String {
+        let singleLine = output
+            .split(whereSeparator: \.isNewline)
+            .joined(separator: " ")
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        guard singleLine.count > maxCharacters else { return singleLine }
+        return String(singleLine.prefix(maxCharacters)).trimmingCharacters(in: .whitespacesAndNewlines) + "..."
+    }
+}
+
+private final class MenuBarAIAskView: NSView, NSTextFieldDelegate {
+    var onSubmit: ((String) -> Void)?
+
+    private let textField = NSTextField(frame: NSRect(x: 12, y: 6, width: 206, height: 22))
+    private let askButton = NSButton(
+        title: String(localized: "statusMenu.ai.askButton", defaultValue: "Ask"),
+        target: nil,
+        action: nil
+    )
+
+    init() {
+        super.init(frame: NSRect(x: 0, y: 0, width: 286, height: 34))
+        textField.placeholderString = String(localized: "statusMenu.ai.askPlaceholder", defaultValue: "Ask the model...")
+        textField.delegate = self
+        addSubview(textField)
+
+        askButton.frame = NSRect(x: 224, y: 5, width: 50, height: 24)
+        askButton.bezelStyle = .rounded
+        askButton.target = self
+        askButton.action = #selector(submit)
+        addSubview(askButton)
+    }
+
+    required init?(coder: NSCoder) {
+        return nil
+    }
+
+    @objc private func submit() {
+        let prompt = textField.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !prompt.isEmpty else {
+            NSSound.beep()
+            return
+        }
+        textField.stringValue = ""
+        onSubmit?(prompt)
+    }
+
+    func control(_ control: NSControl, textView: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
+        guard commandSelector == #selector(NSResponder.insertNewline(_:)) else { return false }
+        submit()
+        return true
     }
 }
 
@@ -513,7 +690,14 @@ enum MenuBarExtraSettings {
     }
 
     static func shouldInstallMenuBarExtra(defaults: UserDefaults = .standard) -> Bool {
-        MenuBarOnlySettings.isEnabled(defaults: defaults) || showsMenuBarExtra(defaults: defaults)
+        MenuBarOnlySettings.isEnabled(defaults: defaults)
+            || showsMenuBarExtra(defaults: defaults)
+            || shouldInstallAIStatus(defaults: defaults)
+    }
+
+    private static func shouldInstallAIStatus(defaults: UserDefaults) -> Bool {
+        let settings = AIFeatureSettings(defaults: defaults)
+        return settings.isEnabled() && settings.menuBarEnabled()
     }
 }
 

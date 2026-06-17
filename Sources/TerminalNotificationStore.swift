@@ -907,10 +907,7 @@ final class TerminalNotificationStore: ObservableObject {
 
     @MainActor
     func currentAITriageSummary(maxItems: Int = 5) -> String {
-        let ids = Set(aiTriageNotificationIDByTabSurface.values)
-        let active = notifications.filter { notification in
-            ids.contains(notification.id) && notification.paneFlash
-        }
+        let active = currentAIFlaggedNotifications(maxItems: maxItems)
         guard !active.isEmpty else {
             return String(
                 localized: "ai.triage.summary.empty",
@@ -918,7 +915,7 @@ final class TerminalNotificationStore: ObservableObject {
             )
         }
 
-        return active.prefix(max(1, maxItems)).map { notification in
+        return active.map { notification in
             let body = notification.body.trimmingCharacters(in: .whitespacesAndNewlines)
             if body.isEmpty {
                 return notification.title
@@ -926,6 +923,30 @@ final class TerminalNotificationStore: ObservableObject {
             return "\(notification.title): \(body)"
         }
         .joined(separator: "\n")
+    }
+
+    @MainActor
+    func currentAIFlaggedNotifications(maxItems: Int = Int.max) -> [TerminalNotification] {
+        let ids = Set(aiTriageNotificationIDByTabSurface.values)
+        let active = notifications.filter { notification in
+            ids.contains(notification.id) && notification.paneFlash
+        }
+        return Array(active.prefix(max(1, maxItems)))
+    }
+
+    @MainActor
+    func currentAIFlaggedNotificationCount() -> Int {
+        let ids = Set(aiTriageNotificationIDByTabSurface.values)
+        return notifications.reduce(into: 0) { count, notification in
+            if ids.contains(notification.id), notification.paneFlash {
+                count += 1
+            }
+        }
+    }
+
+    @MainActor
+    func latestAIFlaggedNotification() -> TerminalNotification? {
+        currentAIFlaggedNotifications(maxItems: 1).first
     }
 
     private static func aiTriageBody(for status: AIPaneStatus, summary: String?) -> String {

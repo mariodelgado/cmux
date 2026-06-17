@@ -59,6 +59,7 @@ struct SettingsRowAnchorResolutionTests {
         "ai.endpoint",
         "ai.appIntents",
         "ai.services",
+        "ai.menuBar",
         "automation.claudeBinaryPath",
         "automation.claudeCodeIntegration",
         "automation.cursorIntegration",

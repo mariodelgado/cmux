@@ -8714,6 +8714,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
 
         if shouldInstall {
             setupMenuBarExtra()
+            menuBarExtraController?.refreshForSettingsChange()
             return
         }
 

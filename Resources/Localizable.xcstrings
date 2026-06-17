@@ -98194,6 +98194,40 @@
         }
       }
     },
+    "settings.automation.ai.menuBar": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Menu Bar"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "メニューバー"
+          }
+        }
+      }
+    },
+    "settings.automation.ai.menuBar.subtitle": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show flagged panes and a quick local model prompt in the menu bar."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "フラグされたペインとローカルモデルへのクイックプロンプトをメニューバーに表示します。"
+          }
+        }
+      }
+    },
     "settings.automation.ai.endpoint.placeholder": {
       "extractionState": "manual",
       "localizations": {
@@ -98285,13 +98319,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "ai.enabled ai.endpoint ai.appIntents ai.services local foundation models mlx hub openai compatible qwen summaries triage classify shortcuts siri spotlight services explain rewrite"
+            "value": "ai.enabled ai.endpoint ai.appIntents ai.services ai.menuBar local foundation models mlx hub openai compatible qwen summaries triage classify shortcuts siri spotlight services explain rewrite menu bar flagged panes"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "ai.enabled ai.endpoint ai.appIntents ai.services local foundation models mlx hub openai compatible qwen summaries triage classify shortcuts siri spotlight services explain rewrite ローカル AI 要約 トリアージ 分類 ショートカット Siri Spotlight サービス 説明 書き換え"
+            "value": "ai.enabled ai.endpoint ai.appIntents ai.services ai.menuBar local foundation models mlx hub openai compatible qwen summaries triage classify shortcuts siri spotlight services explain rewrite menu bar flagged panes ローカル AI 要約 トリアージ 分類 ショートカット Siri Spotlight サービス 説明 書き換え メニューバー フラグ付きペイン"
           }
         }
       }
@@ -138637,6 +138671,193 @@
           "stringUnit": {
             "state": "translated",
             "value": "Режим пароля"
+          }
+        }
+      }
+    },
+    "statusMenu.ai.answerPrefix": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Answer:"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "回答:"
+          }
+        }
+      }
+    },
+    "statusMenu.ai.askButton": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ask"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "質問"
+          }
+        }
+      }
+    },
+    "statusMenu.ai.askPlaceholder": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ask the model..."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "モデルに質問..."
+          }
+        }
+      }
+    },
+    "statusMenu.ai.flagged.one": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "AI: 1 flagged pane"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "AI: フラグ付きペイン 1件"
+          }
+        }
+      }
+    },
+    "statusMenu.ai.flagged.other": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "AI: %lld flagged panes"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "AI: フラグ付きペイン %lld件"
+          }
+        }
+      }
+    },
+    "statusMenu.ai.focusFlagged": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Focus Flagged Pane"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "フラグ付きペインにフォーカス"
+          }
+        }
+      }
+    },
+    "statusMenu.ai.noAnswer": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No local AI answer is available."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "利用可能なローカルAIの回答はありません。"
+          }
+        }
+      }
+    },
+    "statusMenu.ai.noFlagged": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "AI: no flagged panes"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "AI: フラグ付きペインなし"
+          }
+        }
+      }
+    },
+    "statusMenu.ai.thinking": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Asking local model..."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ローカルモデルに質問中..."
+          }
+        }
+      }
+    },
+    "statusMenu.ai.tooltip.one": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 AI pane flagged"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "AIフラグ付きペイン 1件"
+          }
+        }
+      }
+    },
+    "statusMenu.ai.tooltip.other": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld AI panes flagged"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "AIフラグ付きペイン %lld件"
           }
         }
       }

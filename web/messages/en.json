@@ -922,7 +922,8 @@
           "enabled": "Enable local AI summaries and triage for background terminal panes.",
           "endpoint": "OpenAI-compatible base URL for the local MLX hub.",
           "appIntents": "Expose local AI actions to Shortcuts, Siri, and Spotlight.",
-          "services": "Expose local AI actions in the macOS Services menu for selected text."
+          "services": "Expose local AI actions in the macOS Services menu for selected text.",
+          "menuBar": "Show local AI triage status and a quick prompt in the macOS menu bar."
         },
         "app": {
           "confirmQuit": "Control when cmux asks for confirmation before quitting. DEV builds always quit immediately regardless of this setting. Legacy app.warnBeforeQuit is still accepted as a boolean fallback.",

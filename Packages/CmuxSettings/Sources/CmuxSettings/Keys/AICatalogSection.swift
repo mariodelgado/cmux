@@ -28,5 +28,11 @@ public struct AICatalogSection: SettingCatalogSection {
         userDefaultsKey: "aiServicesEnabled"
     )
 
+    public let menuBar = DefaultsKey<Bool>(
+        id: "ai.menuBar",
+        defaultValue: true,
+        userDefaultsKey: "aiMenuBarEnabled"
+    )
+
     public init() {}
 }

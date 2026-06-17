@@ -187,6 +187,7 @@ extension CmuxSettingsFileStore {
                     "endpoint": SettingCatalog().ai.endpoint.defaultValue,
                     "appIntents": SettingCatalog().ai.appIntents.defaultValue,
                     "services": SettingCatalog().ai.services.defaultValue,
+                    "menuBar": SettingCatalog().ai.menuBar.defaultValue,
                 ],
             ],
             [

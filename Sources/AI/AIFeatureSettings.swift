@@ -23,6 +23,11 @@ struct AIFeatureSettings {
         return settings.value(for: SettingCatalog().ai.services)
     }
 
+    func menuBarEnabled() -> Bool {
+        let settings = UserDefaultsSettingsClient(defaults: defaults)
+        return settings.value(for: SettingCatalog().ai.menuBar)
+    }
+
     static func isEnabled(defaults: UserDefaults = .standard) -> Bool {
         AIFeatureSettings(defaults: defaults).isEnabled()
     }
@@ -33,5 +38,9 @@ struct AIFeatureSettings {
 
     static func servicesEnabled(defaults: UserDefaults = .standard) -> Bool {
         AIFeatureSettings(defaults: defaults).servicesEnabled()
+    }
+
+    static func menuBarEnabled(defaults: UserDefaults = .standard) -> Bool {
+        AIFeatureSettings(defaults: defaults).menuBarEnabled()
     }
 }

@@ -22,6 +22,7 @@ public struct AutomationSection: View {
     @State private var aiEndpointModel: DefaultsValueModel<String>
     @State private var aiAppIntentsModel: DefaultsValueModel<Bool>
     @State private var aiServicesModel: DefaultsValueModel<Bool>
+    @State private var aiMenuBarModel: DefaultsValueModel<Bool>
     @State private var ripgrepPathModel: DefaultsValueModel<String>
     @State private var suppressSubagentModel: DefaultsValueModel<Bool>
     @State private var ampModel: DefaultsValueModel<Bool>
@@ -74,6 +75,7 @@ public struct AutomationSection: View {
         _aiEndpointModel = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.ai.endpoint))
         _aiAppIntentsModel = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.ai.appIntents))
         _aiServicesModel = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.ai.services))
+        _aiMenuBarModel = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.ai.menuBar))
         _ripgrepPathModel = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.integrations.ripgrepCustomBinaryPath))
         _suppressSubagentModel = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.integrations.suppressSubagentNotifications))
         _ampModel = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.integrations.ampHooksEnabled))
@@ -392,6 +394,18 @@ public struct AutomationSection: View {
                     .controlSize(.small)
                     .disabled(!aiEnabledModel.current)
                     .accessibilityIdentifier("SettingsAIServicesToggle")
+            }
+            SettingsCardDivider()
+            SettingsCardRow(
+                configurationReview: .json("ai.menuBar"),
+                String(localized: "settings.automation.ai.menuBar", defaultValue: "Menu Bar"),
+                subtitle: String(localized: "settings.automation.ai.menuBar.subtitle", defaultValue: "Show flagged panes and a quick local model prompt in the menu bar.")
+            ) {
+                Toggle("", isOn: Binding(get: { aiMenuBarModel.current }, set: { aiMenuBarModel.set($0) }))
+                    .labelsHidden()
+                    .controlSize(.small)
+                    .disabled(!aiEnabledModel.current)
+                    .accessibilityIdentifier("SettingsAIMenuBarToggle")
             }
             SettingsCardDivider()
             SettingsCardNote(String(localized: "settings.automation.ai.note", defaultValue: "Light tasks prefer in-process Foundation Models on the Neural Engine. Heavy tasks prefer the local MLX hub. Requests stay serialized and heavily throttled."))

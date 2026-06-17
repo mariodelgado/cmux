@@ -1004,6 +1004,12 @@
           "default": true,
           "descriptionKey": "schemaDescriptions.ai.services",
           "description": "Expose local AI actions in the macOS Services menu for selected text."
+        },
+        "menuBar": {
+          "type": "boolean",
+          "default": true,
+          "descriptionKey": "schemaDescriptions.ai.menuBar",
+          "description": "Show local AI triage status and a quick prompt in the macOS menu bar."
         }
       }
     },
