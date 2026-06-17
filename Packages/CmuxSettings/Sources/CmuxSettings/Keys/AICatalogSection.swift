@@ -22,5 +22,11 @@ public struct AICatalogSection: SettingCatalogSection {
         userDefaultsKey: "aiAppIntentsEnabled"
     )
 
+    public let services = DefaultsKey<Bool>(
+        id: "ai.services",
+        defaultValue: true,
+        userDefaultsKey: "aiServicesEnabled"
+    )
+
     public init() {}
 }

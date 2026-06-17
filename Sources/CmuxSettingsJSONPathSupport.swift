@@ -283,6 +283,7 @@ enum AISettingsFileMapping {
     static let booleanSettings: [SettingsFileBooleanMapping] = [
         .init(jsonKey: "enabled", defaultsKey: ai.enabled.userDefaultsKey, invalidPath: "ai.enabled"),
         .init(jsonKey: "appIntents", defaultsKey: ai.appIntents.userDefaultsKey, invalidPath: "ai.appIntents"),
+        .init(jsonKey: "services", defaultsKey: ai.services.userDefaultsKey, invalidPath: "ai.services"),
     ]
 }
 
@@ -422,6 +423,7 @@ extension CmuxSettingsFileStore {
         "ai.enabled",
         "ai.endpoint",
         "ai.appIntents",
+        "ai.services",
         "browser.defaultSearchEngine",
         "browser.customSearchEngineName",
         "browser.customSearchEngineURLTemplate",

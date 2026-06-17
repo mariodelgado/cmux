@@ -21,6 +21,7 @@ public struct AutomationSection: View {
     @State private var aiEnabledModel: DefaultsValueModel<Bool>
     @State private var aiEndpointModel: DefaultsValueModel<String>
     @State private var aiAppIntentsModel: DefaultsValueModel<Bool>
+    @State private var aiServicesModel: DefaultsValueModel<Bool>
     @State private var ripgrepPathModel: DefaultsValueModel<String>
     @State private var suppressSubagentModel: DefaultsValueModel<Bool>
     @State private var ampModel: DefaultsValueModel<Bool>
@@ -72,6 +73,7 @@ public struct AutomationSection: View {
         _aiEnabledModel = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.ai.enabled))
         _aiEndpointModel = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.ai.endpoint))
         _aiAppIntentsModel = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.ai.appIntents))
+        _aiServicesModel = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.ai.services))
         _ripgrepPathModel = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.integrations.ripgrepCustomBinaryPath))
         _suppressSubagentModel = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.integrations.suppressSubagentNotifications))
         _ampModel = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.integrations.ampHooksEnabled))
@@ -378,6 +380,18 @@ public struct AutomationSection: View {
                     .controlSize(.small)
                     .disabled(!aiEnabledModel.current)
                     .accessibilityIdentifier("SettingsAIAppIntentsToggle")
+            }
+            SettingsCardDivider()
+            SettingsCardRow(
+                configurationReview: .json("ai.services"),
+                String(localized: "settings.automation.ai.services", defaultValue: "Services Menu"),
+                subtitle: String(localized: "settings.automation.ai.services.subtitle", defaultValue: "Expose Explain and Rewrite actions for selected text in other apps.")
+            ) {
+                Toggle("", isOn: Binding(get: { aiServicesModel.current }, set: { aiServicesModel.set($0) }))
+                    .labelsHidden()
+                    .controlSize(.small)
+                    .disabled(!aiEnabledModel.current)
+                    .accessibilityIdentifier("SettingsAIServicesToggle")
             }
             SettingsCardDivider()
             SettingsCardNote(String(localized: "settings.automation.ai.note", defaultValue: "Light tasks prefer in-process Foundation Models on the Neural Engine. Heavy tasks prefer the local MLX hub. Requests stay serialized and heavily throttled."))

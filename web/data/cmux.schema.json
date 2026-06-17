@@ -998,6 +998,12 @@
           "default": true,
           "descriptionKey": "schemaDescriptions.ai.appIntents",
           "description": "Expose local AI actions to Shortcuts, Siri, and Spotlight."
+        },
+        "services": {
+          "type": "boolean",
+          "default": true,
+          "descriptionKey": "schemaDescriptions.ai.services",
+          "description": "Expose local AI actions in the macOS Services menu for selected text."
         }
       }
     },

@@ -98024,6 +98024,74 @@
         }
       }
     },
+    "services.aiDisabled": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "cmux AI is disabled."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "cmux AIは無効です。"
+          }
+        }
+      }
+    },
+    "services.noAnswer": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No local AI answer is available."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "利用可能なローカルAIの回答はありません。"
+          }
+        }
+      }
+    },
+    "services.noText": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Select text to send to cmux AI."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "cmux AIに送信するテキストを選択してください。"
+          }
+        }
+      }
+    },
+    "services.servicesDisabled": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "cmux AI Services are disabled."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "cmux AIサービスは無効です。"
+          }
+        }
+      }
+    },
     "settings.automation.ai": {
       "extractionState": "manual",
       "localizations": {
@@ -98088,6 +98156,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "ローカルAIアクションをショートカット、Siri、Spotlightに公開します。"
+          }
+        }
+      }
+    },
+    "settings.automation.ai.services": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Services Menu"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "サービスメニュー"
+          }
+        }
+      }
+    },
+    "settings.automation.ai.services.subtitle": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Expose Explain and Rewrite actions for selected text in other apps."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "他のアプリで選択したテキスト向けに説明と書き換えのアクションを公開します。"
           }
         }
       }
@@ -98183,13 +98285,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "ai.enabled ai.endpoint ai.appIntents local foundation models mlx hub openai compatible qwen summaries triage classify shortcuts siri spotlight"
+            "value": "ai.enabled ai.endpoint ai.appIntents ai.services local foundation models mlx hub openai compatible qwen summaries triage classify shortcuts siri spotlight services explain rewrite"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "ai.enabled ai.endpoint ai.appIntents local foundation models mlx hub openai compatible qwen summaries triage classify shortcuts siri spotlight ローカル AI 要約 トリアージ 分類 ショートカット Siri Spotlight"
+            "value": "ai.enabled ai.endpoint ai.appIntents ai.services local foundation models mlx hub openai compatible qwen summaries triage classify shortcuts siri spotlight services explain rewrite ローカル AI 要約 トリアージ 分類 ショートカット Siri Spotlight サービス 説明 書き換え"
           }
         }
       }
