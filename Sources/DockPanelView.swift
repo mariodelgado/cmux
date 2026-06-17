@@ -572,10 +572,10 @@ struct DockPanelView: View {
     var body: some View {
         VStack(spacing: 0) {
             toolbar
-            RightSidebarCatppuccinDivider()
+                .rightSidebarChromeBottomBorder()
             content
         }
-        .background(RightSidebarCatppuccinMochaPalette.base)
+        .background(RightSidebarCatppuccinMochaPalette.panelBackdrop)
         .foregroundStyle(RightSidebarCatppuccinMochaPalette.text)
         .tint(RightSidebarCatppuccinMochaPalette.mauve)
         .background(
@@ -615,9 +615,7 @@ struct DockPanelView: View {
             .help(String(localized: "dock.action.reload", defaultValue: "Reload Dock"))
             .accessibilityLabel(String(localized: "dock.action.reload", defaultValue: "Reload Dock"))
         }
-        .padding(.horizontal, 8)
-        .padding(.vertical, 4)
-        .frame(height: 29)
+        .rightSidebarChromeBar()
     }
 
     @ViewBuilder
@@ -652,14 +650,13 @@ private struct DockControlsLayoutView: View {
     let onTriggerFlash: (String) -> Void
 
     private let headerHeight: CGFloat = 30
-    private let dividerHeight: CGFloat = 1
     private let minimumTerminalHeight: CGFloat = 160
 
     var body: some View {
         GeometryReader { proxy in
             let heights = terminalHeights(availableHeight: proxy.size.height)
             ScrollView {
-                VStack(spacing: 0) {
+                VStack(spacing: RightSidebarChromeMetrics.sectionSpacing) {
                     ForEach(Array(snapshots.enumerated()), id: \.element.id) { index, snapshot in
                         DockControlSectionView(
                             snapshot: snapshot,
@@ -679,13 +676,11 @@ private struct DockControlsLayoutView: View {
                                 }
                             }
                         )
-                        if index < snapshots.count - 1 {
-                            RightSidebarCatppuccinDivider()
-                                .frame(height: dividerHeight)
-                        }
                     }
                 }
                 .frame(maxWidth: .infinity)
+                .padding(.horizontal, RightSidebarChromeMetrics.contentInset)
+                .padding(.vertical, RightSidebarChromeMetrics.contentInset)
             }
             .dockZeroScrollContentMargins()
         }
@@ -695,7 +690,8 @@ private struct DockControlsLayoutView: View {
         guard !snapshots.isEmpty else { return [] }
 
         let chromeHeight = CGFloat(snapshots.count) * headerHeight
-            + CGFloat(max(snapshots.count - 1, 0)) * dividerHeight
+            + CGFloat(max(snapshots.count - 1, 0)) * RightSidebarChromeMetrics.sectionSpacing
+            + (RightSidebarChromeMetrics.contentInset * 2)
         let availableTerminalHeight = max(availableHeight - chromeHeight, 0)
         var heights = Array(repeating: CGFloat.zero, count: snapshots.count)
         var flexibleIndexes: [Int] = []
@@ -743,6 +739,7 @@ private struct DockControlSectionView<TerminalContent: View>: View {
                 .frame(height: terminalHeight)
                 .clipped()
         }
+        .rightSidebarInsetGroup()
         .accessibilityIdentifier("DockControl.\(snapshot.id)")
     }
 
@@ -752,6 +749,11 @@ private struct DockControlSectionView<TerminalContent: View>: View {
                 .font(.cmuxMonospaced(size: 10, weight: .semibold))
                 .foregroundStyle(RightSidebarCatppuccinMochaPalette.subtext0)
                 .frame(width: 18, alignment: .center)
+                .padding(.vertical, 2)
+                .background(
+                    Capsule(style: .continuous)
+                        .fill(RightSidebarCatppuccinMochaPalette.mantle.opacity(0.72))
+                )
             Text(snapshot.title)
                 .font(.system(size: 12, weight: .semibold))
                 .lineLimit(1)
@@ -784,10 +786,13 @@ private struct DockControlSectionView<TerminalContent: View>: View {
             .help(String(localized: "dock.action.restartControl", defaultValue: "Restart Control"))
             .accessibilityLabel(String(localized: "dock.action.restartControl", defaultValue: "Restart Control"))
         }
-        .padding(.horizontal, 8)
-        .padding(.vertical, 5)
+        .padding(.horizontal, 10)
+        .padding(.vertical, 6)
         .frame(height: 30)
-        .background(RightSidebarCatppuccinMochaPalette.surface0.opacity(0.72))
+        .background(RightSidebarCatppuccinMochaPalette.surface1.opacity(0.18))
+        .overlay(alignment: .bottom) {
+            RightSidebarCatppuccinDivider()
+        }
     }
 }
 

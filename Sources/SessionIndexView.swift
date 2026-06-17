@@ -245,9 +245,11 @@ struct SessionIndexView: View {
                     actions: gapActions
                 ).equatable()
             }
-            .padding(.bottom, 8)
+            .padding(.horizontal, RightSidebarChromeMetrics.contentInset)
+            .padding(.vertical, RightSidebarChromeMetrics.contentInset)
         }
         .modifier(ClearScrollBackground())
+        .background(RightSidebarCatppuccinMochaPalette.panelBackdrop)
         .background(
             DragCancelMonitor(dragCoordinator: dragCoordinator)
         )
@@ -397,10 +399,12 @@ private struct IndexSectionView: View, Equatable {
                 if section.entries.count > rowLimit {
                     showMoreButton
                 }
-                Spacer(minLength: 2)
+                Spacer(minLength: 4)
             }
         }
+        .rightSidebarInsetGroup()
         .opacity(isDragged ? 0.45 : 1.0)
+        .padding(.vertical, 3)
     }
 
     private var showMoreButton: some View {
@@ -409,10 +413,10 @@ private struct IndexSectionView: View, Equatable {
         } label: {
             Text(String(localized: "sessionIndex.section.showMore", defaultValue: "Show more"))
                 .font(.system(size: 12, weight: .medium))
-                .foregroundColor(.secondary.opacity(0.7))
+                .foregroundColor(RightSidebarCatppuccinMochaPalette.subtext0)
                 .padding(.leading, 32)
                 .padding(.trailing, 12)
-                .padding(.vertical, 4)
+                .padding(.vertical, 7)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .contentShape(Rectangle())
         }
@@ -435,18 +439,20 @@ private struct IndexSectionView: View, Equatable {
             HStack(spacing: 8) {
                 sectionIconView
                 Text(section.title)
-                    .font(.system(size: 13, weight: .regular))
-                    .foregroundColor(.secondary)
+                    .font(.system(size: 10, weight: .semibold))
+                    .foregroundColor(RightSidebarCatppuccinMochaPalette.subtext0)
+                    .textCase(.uppercase)
                     .lineLimit(1)
                     .truncationMode(.middle)
                 Image(systemName: "chevron.down")
                     .font(.system(size: 9, weight: .semibold))
-                    .foregroundColor(.secondary.opacity(0.6))
+                    .foregroundColor(RightSidebarCatppuccinMochaPalette.overlay0)
                     .rotationEffect(.degrees(isCollapsed ? -90 : 0))
                 Spacer(minLength: 0)
             }
             .padding(.horizontal, 12)
-            .padding(.vertical, 3)
+            .padding(.top, 10)
+            .padding(.bottom, 6)
             .frame(maxWidth: .infinity, alignment: .leading)
             .contentShape(Rectangle())
         }
@@ -475,7 +481,7 @@ private struct IndexSectionView: View, Equatable {
         case .folder:
             Image(systemName: "folder")
                 .font(.system(size: 12, weight: .regular))
-                .foregroundColor(.secondary)
+                .foregroundColor(RightSidebarCatppuccinMochaPalette.blue)
                 .frame(width: 14, height: 14)
         }
     }
@@ -504,7 +510,7 @@ private struct SectionReorderGap: View, Equatable {
             .overlay(alignment: .center) {
                 if isDropTarget && isValidDrop {
                     Capsule()
-                        .fill(Color.accentColor)
+                        .fill(RightSidebarCatppuccinMochaPalette.mauve)
                         .frame(height: 3)
                         .padding(.horizontal, 10)
                 }
@@ -584,9 +590,9 @@ private struct SessionRow: View, Equatable {
         }
         .padding(.leading, 32)
         .padding(.trailing, 12)
-        .padding(.vertical, 4)
+        .padding(.vertical, 7)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .contentShape(Rectangle())
+        .contentShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
         .background(rowBackground)
         .background(previewPopoverHost)
         .onHover { isHovered = $0 }
@@ -627,17 +633,18 @@ private struct SessionRow: View, Equatable {
     }
 
     private var rowBackground: some View {
-        RoundedRectangle(cornerRadius: 4, style: .continuous)
+        RoundedRectangle(cornerRadius: 8, style: .continuous)
             .fill(rowBackgroundColor)
-            .padding(.horizontal, 6)
+            .padding(.horizontal, 7)
+            .padding(.vertical, 1)
     }
 
     private var rowBackgroundColor: Color {
         if isHovered {
-            return RightSidebarCatppuccinMochaPalette.surface0.opacity(0.62)
+            return RightSidebarCatppuccinMochaPalette.blue.opacity(0.10)
         }
         if isPreviewPresented {
-            return RightSidebarCatppuccinMochaPalette.surface1.opacity(0.45)
+            return RightSidebarCatppuccinMochaPalette.mauve.opacity(0.18)
         }
         return Color.clear
     }

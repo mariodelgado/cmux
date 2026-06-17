@@ -258,16 +258,18 @@ private struct FeedListView: View {
         actions: FeedRowActions
     ) -> some View {
         ScrollView(.vertical) {
-            LazyVStack(spacing: 0) {
-                ForEach(Array(snapshots.enumerated()), id: \.element.id) { idx, snapshot in
+            LazyVStack(spacing: RightSidebarChromeMetrics.sectionSpacing) {
+                ForEach(snapshots, id: \.id) { snapshot in
                     rowSurface(
                         snapshot: snapshot,
                         actions: actions,
-                        showsDivider: idx < snapshots.count - 1
+                        showsDivider: false
                     )
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, RightSidebarChromeMetrics.contentInset)
+            .padding(.vertical, RightSidebarChromeMetrics.contentInset)
         }
         .feedZeroScrollContentMargins()
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
@@ -283,9 +285,16 @@ private struct FeedListView: View {
                 rowSurface(
                     snapshot: snapshot,
                     actions: actions,
-                    showsDivider: idx < groups.stable.count - 1
+                    showsDivider: false
                 )
-                .listRowInsets(EdgeInsets())
+                .listRowInsets(
+                    EdgeInsets(
+                        top: idx == 0 ? RightSidebarChromeMetrics.contentInset : 5,
+                        leading: RightSidebarChromeMetrics.contentInset,
+                        bottom: 5,
+                        trailing: RightSidebarChromeMetrics.contentInset
+                    )
+                )
                 .listRowSeparator(.hidden)
                 .listRowBackground(Color.clear)
             }
@@ -300,9 +309,16 @@ private struct FeedListView: View {
                 rowSurface(
                     snapshot: snapshot,
                     actions: actions,
-                    showsDivider: idx < groups.history.count - 1
+                    showsDivider: false
                 )
-                .listRowInsets(EdgeInsets())
+                .listRowInsets(
+                    EdgeInsets(
+                        top: 5,
+                        leading: RightSidebarChromeMetrics.contentInset,
+                        bottom: idx == groups.history.count - 1 && !showsLoadMore ? RightSidebarChromeMetrics.contentInset : 5,
+                        trailing: RightSidebarChromeMetrics.contentInset
+                    )
+                )
                 .listRowSeparator(.hidden)
                 .listRowBackground(Color.clear)
             }
@@ -311,7 +327,14 @@ private struct FeedListView: View {
                     isLoading: isLoadingOlderItems,
                     action: onLoadOlderItems
                 )
-                .listRowInsets(EdgeInsets())
+                .listRowInsets(
+                    EdgeInsets(
+                        top: 5,
+                        leading: RightSidebarChromeMetrics.contentInset,
+                        bottom: RightSidebarChromeMetrics.contentInset,
+                        trailing: RightSidebarChromeMetrics.contentInset
+                    )
+                )
                 .listRowSeparator(.hidden)
                 .listRowBackground(Color.clear)
             }
@@ -578,9 +601,10 @@ private struct FeedListView: View {
 
     private var rowSeparator: some View {
         Rectangle()
-            .fill(RightSidebarCatppuccinMochaPalette.surface1)
+            .fill(RightSidebarCatppuccinMochaPalette.hairline)
             .frame(maxWidth: .infinity)
             .frame(height: 1)
+            .padding(.horizontal, RightSidebarChromeMetrics.contentInset)
     }
 
     private var emptyState: some View {
@@ -652,15 +676,22 @@ private struct FeedRowSurface: View {
                 stopFocusRequestValue: stopReplyFocusRequest
             )
             .equatable()
-            if showsDivider {
-                Rectangle()
-                    .fill(RightSidebarCatppuccinMochaPalette.surface1)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 1)
-            }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(rowBackgroundFill)
+        .background {
+            ZStack {
+                RoundedRectangle(cornerRadius: RightSidebarChromeMetrics.insetGroupCornerRadius, style: .continuous)
+                    .fill(RightSidebarCatppuccinMochaPalette.insetGroupFill)
+                RoundedRectangle(cornerRadius: RightSidebarChromeMetrics.insetGroupCornerRadius, style: .continuous)
+                    .fill(rowBackgroundFill)
+            }
+        }
+        .overlay {
+            RoundedRectangle(cornerRadius: RightSidebarChromeMetrics.insetGroupCornerRadius, style: .continuous)
+                .stroke(rowBorderColor, lineWidth: 1)
+        }
+        .clipShape(RoundedRectangle(cornerRadius: RightSidebarChromeMetrics.insetGroupCornerRadius, style: .continuous))
+        .contentShape(RoundedRectangle(cornerRadius: RightSidebarChromeMetrics.insetGroupCornerRadius, style: .continuous))
         .animation(.easeOut(duration: 0.14), value: isHovered)
         .animation(.easeOut(duration: 0.14), value: isSelected)
         .onHover { hovering in
@@ -673,20 +704,30 @@ private struct FeedRowSurface: View {
     private var rowBackgroundFill: Color {
         if isSelected {
             guard isFocusActive else {
-                return RightSidebarCatppuccinMochaPalette.surface0.opacity(0.72)
+                return RightSidebarCatppuccinMochaPalette.surface1.opacity(0.24)
             }
             if snapshot.status.isPending {
-                return tint.opacity(0.14)
+                return tint.opacity(0.16)
             }
-            return RightSidebarCatppuccinMochaPalette.surface1.opacity(0.42)
+            return RightSidebarCatppuccinMochaPalette.mauve.opacity(0.15)
         }
         if isHovered {
             if snapshot.status.isPending {
-                return tint.opacity(0.10)
+                return tint.opacity(0.12)
             }
-            return RightSidebarCatppuccinMochaPalette.surface0.opacity(0.62)
+            return RightSidebarCatppuccinMochaPalette.blue.opacity(0.09)
         }
         return .clear
+    }
+
+    private var rowBorderColor: Color {
+        if isFocusActive {
+            return tint.opacity(0.42)
+        }
+        if isHovered || isSelected {
+            return RightSidebarCatppuccinMochaPalette.surface1.opacity(0.58)
+        }
+        return RightSidebarCatppuccinMochaPalette.hairline
     }
 
     private var tint: Color {

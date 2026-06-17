@@ -1909,11 +1909,7 @@ struct ContentView: View {
         case .leftSidebar:
             leftSidebarLiquidGlassBackdrop(appearance: appearance)
         case .rightSidebar:
-            ZStack {
-                WindowBackdropLayer(role: role, snapshot: appearance)
-                RightSidebarCatppuccinMochaPalette.panelBackground
-                    .opacity(0.97)
-            }
+            RightSidebarCatppuccinMochaPalette.panelBackground
         case .windowRoot, .terminalCanvas, .bonsplitChrome, .titlebar, .browserSurface:
             WindowBackdropLayer(role: role, snapshot: appearance)
         }
@@ -1961,7 +1957,7 @@ struct ContentView: View {
             if rightSidebarVisible {
                 WindowChromeBorder(
                     orientation: .vertical,
-                    color: RightSidebarCatppuccinMochaPalette.surface1
+                    color: RightSidebarCatppuccinMochaPalette.hairline
                 )
             }
         }
@@ -2000,7 +1996,7 @@ struct ContentView: View {
         .environment(\.colorScheme, .dark)
         .foregroundStyle(RightSidebarCatppuccinMochaPalette.text)
         .tint(RightSidebarCatppuccinMochaPalette.mauve)
-        .background(RightSidebarCatppuccinMochaPalette.base)
+        .background(RightSidebarCatppuccinMochaPalette.panelBackdrop)
         .transaction { $0.animation = nil }
         .onAppear {
             let sanitized = normalizedRightSidebarWidth(fileExplorerState.width)

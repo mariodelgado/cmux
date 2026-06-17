@@ -33,17 +33,20 @@ enum HeaderChromeControlMetrics {
 enum RightSidebarChromeMetrics {
     static let titlebarHeight: CGFloat = WindowChromeMetrics.appTitlebarHeight
     static let secondaryBarHeight: CGFloat = WindowChromeMetrics.secondaryTitlebarHeight
-    static let barHorizontalPadding: CGFloat = 8
-    static let barVerticalPadding: CGFloat = 4
+    static let barHorizontalPadding: CGFloat = 10
+    static let barVerticalPadding: CGFloat = 3
     static let controlHeight: CGFloat = secondaryBarHeight - (barVerticalPadding * 2)
-    static let controlHorizontalPadding: CGFloat = 8
-    static let controlCornerRadius: CGFloat = 5
+    static let controlHorizontalPadding: CGFloat = 10
+    static let controlCornerRadius: CGFloat = 8
     static let headerControlSize: CGFloat = HeaderChromeControlMetrics.buttonSize
     static let headerIconSize: CGFloat = 10
     static let headerIconFrameSize: CGFloat = headerIconSize
-    static let headerControlSpacing: CGFloat = 4
+    static let headerControlSpacing: CGFloat = 6
     static let headerControlCornerRadius: CGFloat = HeaderChromeControlMetrics.cornerRadius
     static let headerControlCenterAlignmentAdjustment: CGFloat = 0
+    static let contentInset: CGFloat = 10
+    static let sectionSpacing: CGFloat = 10
+    static let insetGroupCornerRadius: CGFloat = 12
 }
 
 enum SidebarWorkspaceListMetrics {

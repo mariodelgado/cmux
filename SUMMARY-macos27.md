@@ -129,3 +129,7 @@ Latest verification after this fix:
 - `xcodebuild -project cmux.xcodeproj -scheme cmux -configuration Debug -destination platform=macOS -derivedDataPath /tmp/cmux-codex build`: `BUILD SUCCEEDED`.
 - `./scripts/reload.sh --tag macos27-codex`: succeeded in 66s (log: `/tmp/cmux-reload-macos27-codex.log`; app: `/Users/marioelysian/Library/Developer/Xcode/DerivedData/cmux-macos27-codex/Build/Products/Debug/cmux DEV macos27-codex.app`).
 - Computer Use screenshot of the tagged app showed the left sidebar strip on the transparent backing rather than the previous opaque dark root fill.
+
+## Right panel macOS 27 styling
+
+The right sidebar remains fully opaque Catppuccin Mocha rather than Liquid Glass. Its backdrop now uses an opaque mantle/base fill with no window backdrop layer underneath, and the right-panel content adopts a Tahoe-style inset grouped treatment: rounded surface0 cards, low-opacity surface1 hairlines, more comfortable row metrics, uppercase secondary section headers, and rounded mauve/blue hover and selection highlights. The file explorer, Vault/session sections, Feed rows, Dock controls, titlebar pills, and right-panel hairline dividers now share the same continuous-corner Catppuccin chrome while leaving the left sidebar Liquid Glass path and the SFMono Nerd Font default unchanged.

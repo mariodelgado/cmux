@@ -28,7 +28,7 @@ enum FileExplorerStyle: Int, CaseIterable {
     var rowHeight: CGFloat {
         switch self {
         case .liquidGlass: return 28
-        case .highDensity: return 20
+        case .highDensity: return 26
         case .terminalStealth: return 24
         case .proStudio: return 32
         case .finder: return 26
@@ -38,7 +38,7 @@ enum FileExplorerStyle: Int, CaseIterable {
     var indentation: CGFloat {
         switch self {
         case .liquidGlass: return 16
-        case .highDensity: return 12
+        case .highDensity: return 16
         case .terminalStealth: return 14
         case .proStudio: return 20
         case .finder: return 18
@@ -48,7 +48,7 @@ enum FileExplorerStyle: Int, CaseIterable {
     var iconSize: CGFloat {
         switch self {
         case .liquidGlass: return 16
-        case .highDensity: return 14
+        case .highDensity: return 15
         case .terminalStealth: return 12
         case .proStudio: return 18
         case .finder: return 18
@@ -68,7 +68,7 @@ enum FileExplorerStyle: Int, CaseIterable {
     var nameFont: NSFont {
         switch self {
         case .liquidGlass: return .systemFont(ofSize: 13, weight: .medium)
-        case .highDensity: return .systemFont(ofSize: 11, weight: .regular)
+        case .highDensity: return .systemFont(ofSize: 12, weight: .regular)
         case .terminalStealth: return .cmuxMonospaced(ofSize: 12, weight: .regular)
         case .proStudio: return .systemFont(ofSize: 14, weight: .semibold)
         case .finder: return .systemFont(ofSize: 13, weight: .regular)
@@ -78,7 +78,7 @@ enum FileExplorerStyle: Int, CaseIterable {
     var iconToTextSpacing: CGFloat {
         switch self {
         case .liquidGlass: return 8
-        case .highDensity: return 4
+        case .highDensity: return 7
         case .terminalStealth: return 6
         case .proStudio: return 12
         case .finder: return 6
@@ -88,7 +88,7 @@ enum FileExplorerStyle: Int, CaseIterable {
     var selectionInset: CGFloat {
         switch self {
         case .liquidGlass: return 8
-        case .highDensity: return 0
+        case .highDensity: return 8
         case .terminalStealth: return 0
         case .proStudio: return 4
         case .finder: return 4
@@ -98,7 +98,7 @@ enum FileExplorerStyle: Int, CaseIterable {
     var selectionRadius: CGFloat {
         switch self {
         case .liquidGlass: return 6
-        case .highDensity: return 0
+        case .highDensity: return 8
         case .terminalStealth: return 0
         case .proStudio: return 8
         case .finder: return 5

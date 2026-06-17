@@ -802,7 +802,7 @@ final class FileExplorerContainerView: NSView {
         super.init(frame: .zero)
         configureSearchDebounce()
         wantsLayer = true
-        layer?.backgroundColor = RightSidebarCatppuccinMochaPalette.baseNS.cgColor
+        layer?.backgroundColor = RightSidebarCatppuccinMochaPalette.mantleNS.cgColor
 
         // Header
         headerView.translatesAutoresizingMaskIntoConstraints = false
@@ -911,6 +911,7 @@ final class FileExplorerContainerView: NSView {
         scrollView.borderType = .noBorder
         scrollView.drawsBackground = false
         scrollView.documentView = outlineView
+        styleInsetScrollView(scrollView)
         addSubview(scrollView)
 
         // Streaming search results
@@ -960,6 +961,7 @@ final class FileExplorerContainerView: NSView {
         searchScrollView.drawsBackground = false
         searchScrollView.documentView = searchResultsView
         searchScrollView.isHidden = true
+        styleInsetScrollView(searchScrollView)
         addSubview(searchScrollView)
 
         self.searchController.onSnapshotChanged = { [weak self] snapshot in
@@ -987,15 +989,21 @@ final class FileExplorerContainerView: NSView {
             searchStatusLabel.trailingAnchor.constraint(equalTo: searchField.trailingAnchor),
             searchStatusLabel.topAnchor.constraint(equalTo: searchField.bottomAnchor, constant: 2),
 
-            scrollView.topAnchor.constraint(equalTo: searchBarView.bottomAnchor),
-            scrollView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            scrollView.topAnchor.constraint(
+                equalTo: searchBarView.bottomAnchor,
+                constant: RightSidebarChromeMetrics.contentInset
+            ),
+            scrollView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: RightSidebarChromeMetrics.contentInset),
+            scrollView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -RightSidebarChromeMetrics.contentInset),
+            scrollView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -RightSidebarChromeMetrics.contentInset),
 
-            searchScrollView.topAnchor.constraint(equalTo: searchBarView.bottomAnchor),
-            searchScrollView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            searchScrollView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            searchScrollView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            searchScrollView.topAnchor.constraint(
+                equalTo: searchBarView.bottomAnchor,
+                constant: RightSidebarChromeMetrics.contentInset
+            ),
+            searchScrollView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: RightSidebarChromeMetrics.contentInset),
+            searchScrollView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -RightSidebarChromeMetrics.contentInset),
+            searchScrollView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -RightSidebarChromeMetrics.contentInset),
 
             emptyLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
             emptyLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
@@ -1003,6 +1011,18 @@ final class FileExplorerContainerView: NSView {
             loadingIndicator.centerXAnchor.constraint(equalTo: centerXAnchor),
             loadingIndicator.centerYAnchor.constraint(equalTo: centerYAnchor),
         ])
+    }
+
+    private func styleInsetScrollView(_ scrollView: NSScrollView) {
+        scrollView.wantsLayer = true
+        scrollView.layer?.backgroundColor = RightSidebarCatppuccinMochaPalette.surface0NS.cgColor
+        scrollView.layer?.cornerRadius = RightSidebarChromeMetrics.insetGroupCornerRadius
+        scrollView.layer?.cornerCurve = .continuous
+        scrollView.layer?.borderWidth = 1
+        scrollView.layer?.borderColor = RightSidebarCatppuccinMochaPalette.surface1NS
+            .withAlphaComponent(0.52)
+            .cgColor
+        scrollView.layer?.masksToBounds = true
     }
 
     required init?(coder: NSCoder) {
@@ -2354,9 +2374,9 @@ final class FileExplorerRowView: NSTableRowView {
 
     private func selectionFillColor(isFocused: Bool) -> NSColor {
         if isFocused {
-            return RightSidebarCatppuccinMochaPalette.mauveNS.withAlphaComponent(0.28)
+            return RightSidebarCatppuccinMochaPalette.mauveNS.withAlphaComponent(0.22)
         }
-        return RightSidebarCatppuccinMochaPalette.surface0NS.withAlphaComponent(0.72)
+        return RightSidebarCatppuccinMochaPalette.surface1NS.withAlphaComponent(0.34)
     }
 
     override var interiorBackgroundStyle: NSView.BackgroundStyle {

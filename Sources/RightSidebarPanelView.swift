@@ -250,7 +250,7 @@ struct RightSidebarPanelView: View {
         }
         .shortcutHintVisibilityAnimation(value: focusShortcutHintAnimationValue)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(RightSidebarCatppuccinMochaPalette.base)
+        .background(RightSidebarCatppuccinMochaPalette.panelBackdrop)
         .foregroundStyle(RightSidebarCatppuccinMochaPalette.text)
         .tint(RightSidebarCatppuccinMochaPalette.mauve)
         .environment(\.colorScheme, .dark)

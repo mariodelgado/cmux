@@ -42,10 +42,14 @@ struct RightSidebarCatppuccinMochaPalette {
     static let overlay0 = Color(nsColor: overlay0NS)
     static let mauve = Color(nsColor: mauveNS)
     static let blue = Color(nsColor: blueNS)
+    static let hairline = surface1.opacity(0.52)
+    static let softHairline = surface1.opacity(0.38)
+    static let insetGroupFill = surface0
+    static let panelBackdrop = mantle
 
     static var panelBackground: LinearGradient {
         LinearGradient(
-            colors: [mantle, base],
+            colors: [mantle, base, base],
             startPoint: .top,
             endPoint: .bottom
         )
@@ -71,7 +75,7 @@ struct RightSidebarCatppuccinDivider: View {
 
     var body: some View {
         Rectangle()
-            .fill(RightSidebarCatppuccinMochaPalette.surface1)
+            .fill(RightSidebarCatppuccinMochaPalette.hairline)
             .frame(
                 maxWidth: orientation == .horizontal ? .infinity : nil,
                 maxHeight: orientation == .vertical ? .infinity : nil
@@ -120,10 +124,10 @@ enum HeaderChromeIconStyle {
     ) -> Double {
         guard isEnabled else { return 0 }
         if isPressed {
-            return 0.14
+            return 0.18
         }
         if isHovering {
-            return hoverBackground ? 0.09 : 0.07
+            return hoverBackground ? 0.12 : 0.10
         }
         return 0
     }
@@ -136,12 +140,12 @@ enum HeaderChromeIconStyle {
     ) -> Double {
         guard isEnabled else { return buttonBackground ? 0.04 : 0 }
         if isPressed {
-            return 0.11
+            return 0.44
         }
         if isHovering {
-            return 0.07
+            return 0.32
         }
-        return buttonBackground ? 0.05 : 0
+        return buttonBackground ? 0.22 : 0
     }
 }
 
@@ -200,6 +204,10 @@ struct RightSidebarChromePillModifier: ViewModifier {
                 RoundedRectangle(cornerRadius: RightSidebarChromeMetrics.controlCornerRadius, style: .continuous)
                     .fill(backgroundColor)
             )
+            .overlay {
+                RoundedRectangle(cornerRadius: RightSidebarChromeMetrics.controlCornerRadius, style: .continuous)
+                    .stroke(borderColor, lineWidth: borderWidth)
+            }
             .contentShape(
                 RoundedRectangle(cornerRadius: RightSidebarChromeMetrics.controlCornerRadius, style: .continuous)
             )
@@ -219,12 +227,26 @@ struct RightSidebarChromePillModifier: ViewModifier {
 
     private var backgroundColor: Color {
         if isSelected {
-            return RightSidebarCatppuccinMochaPalette.surface1.opacity(0.58)
+            return RightSidebarCatppuccinMochaPalette.mauve.opacity(0.18)
         }
         if isHovered {
-            return RightSidebarCatppuccinMochaPalette.surface0.opacity(0.74)
+            return RightSidebarCatppuccinMochaPalette.blue.opacity(0.10)
         }
         return Color.clear
+    }
+
+    private var borderColor: Color {
+        if isSelected {
+            return RightSidebarCatppuccinMochaPalette.mauve.opacity(0.42)
+        }
+        if isHovered {
+            return RightSidebarCatppuccinMochaPalette.surface1.opacity(0.46)
+        }
+        return Color.clear
+    }
+
+    private var borderWidth: CGFloat {
+        isSelected || isHovered ? 1 : 0
     }
 }
 
@@ -235,6 +257,7 @@ struct RightSidebarChromeBottomBorderModifier: ViewModifier {
                 orientation: .horizontal,
                 ignoresSafeArea: false,
                 color: RightSidebarCatppuccinMochaPalette.surface1
+                    .opacity(0.52)
             )
         }
     }
@@ -274,10 +297,13 @@ private struct RightSidebarHeaderIconButtonStyleBody: View {
             )
             .foregroundStyle(foregroundColor)
             .background {
-                if backgroundOpacity > 0 {
-                    RoundedRectangle(cornerRadius: RightSidebarChromeMetrics.headerControlCornerRadius, style: .continuous)
-                        .fill(headerBackgroundColor)
-                }
+                RoundedRectangle(cornerRadius: RightSidebarChromeMetrics.headerControlCornerRadius, style: .continuous)
+                    .fill(headerBackgroundColor)
+                    .opacity(backgroundOpacity)
+            }
+            .overlay {
+                RoundedRectangle(cornerRadius: RightSidebarChromeMetrics.headerControlCornerRadius, style: .continuous)
+                    .stroke(headerBorderColor, lineWidth: backgroundOpacity > 0 ? 1 : 0)
             }
             .contentShape(
                 RoundedRectangle(cornerRadius: RightSidebarChromeMetrics.headerControlCornerRadius, style: .continuous)
@@ -314,9 +340,33 @@ private struct RightSidebarHeaderIconButtonStyleBody: View {
 
     private var headerBackgroundColor: Color {
         if configuration.isPressed {
-            return RightSidebarCatppuccinMochaPalette.surface1.opacity(0.68)
+            return RightSidebarCatppuccinMochaPalette.mauve
         }
-        return RightSidebarCatppuccinMochaPalette.surface0.opacity(0.72)
+        return RightSidebarCatppuccinMochaPalette.surface0
+    }
+
+    private var headerBorderColor: Color {
+        if configuration.isPressed {
+            return RightSidebarCatppuccinMochaPalette.mauve.opacity(0.42)
+        }
+        return RightSidebarCatppuccinMochaPalette.surface1.opacity(0.38)
+    }
+}
+
+struct RightSidebarInsetGroupModifier: ViewModifier {
+    var cornerRadius: CGFloat = RightSidebarChromeMetrics.insetGroupCornerRadius
+
+    func body(content: Content) -> some View {
+        content
+            .background(
+                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                    .fill(RightSidebarCatppuccinMochaPalette.insetGroupFill)
+            )
+            .overlay {
+                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                    .stroke(RightSidebarCatppuccinMochaPalette.hairline, lineWidth: 1)
+            }
+            .clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
     }
 }
 
@@ -353,6 +403,12 @@ extension View {
 
     func rightSidebarChromeBottomBorder() -> some View {
         modifier(RightSidebarChromeBottomBorderModifier())
+    }
+
+    func rightSidebarInsetGroup(
+        cornerRadius: CGFloat = RightSidebarChromeMetrics.insetGroupCornerRadius
+    ) -> some View {
+        modifier(RightSidebarInsetGroupModifier(cornerRadius: cornerRadius))
     }
 
     func rightSidebarHeaderControlAlignment() -> some View {
