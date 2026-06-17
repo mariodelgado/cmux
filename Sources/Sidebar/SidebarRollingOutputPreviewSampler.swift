@@ -11,10 +11,17 @@ final class SidebarRollingOutputPreviewSampler {
     private var pendingSampleTask: Task<Void, Never>?
     private var lastSampledAt: Date?
     private let formatter = SidebarRollingOutputPreviewFormatter()
+    private let aiCoordinator = SidebarAIInsightCoordinator()
+    private var workspaceActivityRank: [UUID: UInt64] = [:]
+    private var nextActivityRank: UInt64 = 1
 
     func configure(workspaces: [Workspace], focusedWorkspaceId: UUID?) {
+        if focusedWorkspaceId != self.focusedWorkspaceId, let focusedWorkspaceId {
+            markWorkspaceActive(focusedWorkspaceId)
+        }
         self.workspaces = workspaces
         self.focusedWorkspaceId = focusedWorkspaceId
+        aiCoordinator.configure(focusedWorkspaceId: focusedWorkspaceId)
 
         guard workspaces.contains(where: { $0.id != focusedWorkspaceId }) else {
             stopObserving()
@@ -57,6 +64,7 @@ final class SidebarRollingOutputPreviewSampler {
         pendingSampleTask?.cancel()
         pendingSampleTask = nil
         lastSampledAt = nil
+        aiCoordinator.stop()
     }
 
     private func scheduleSample(allowsImmediate: Bool = false) {
@@ -88,7 +96,17 @@ final class SidebarRollingOutputPreviewSampler {
         lastSampledAt = now
 
         var seenWorkspaceIds = Set<UUID>()
-        for workspace in workspaces where seenWorkspaceIds.insert(workspace.id).inserted {
+        let uniqueWorkspaces = workspaces.filter { seenWorkspaceIds.insert($0.id).inserted }
+        let backgroundWorkspaces = uniqueWorkspaces
+            .filter { $0.id != focusedWorkspaceId }
+            .sorted { lhs, rhs in
+                let lhsRank = workspaceActivityRank[lhs.id] ?? 0
+                let rhsRank = workspaceActivityRank[rhs.id] ?? 0
+                if lhsRank != rhsRank { return lhsRank > rhsRank }
+                return lhs.id.uuidString < rhs.id.uuidString
+            }
+
+        for workspace in backgroundWorkspaces {
             guard workspace.id != focusedWorkspaceId else { continue }
             guard let terminalPanel = workspace.terminalPanelForSidebarRollingOutputPreview() else {
                 workspace.updateSidebarRollingOutputPreview(text: nil, sourcePanelId: nil, now: now)
@@ -97,11 +115,30 @@ final class SidebarRollingOutputPreviewSampler {
 
             let rawText = terminalPanel.surface.screenText() ?? terminalPanel.surface.visibleText()
             let latestLine = rawText.flatMap(formatter.latestLine)
+            let recentText = rawText.flatMap { formatter.recentText(from: $0) }
+            let aiSummary = aiCoordinator.cachedSummary(
+                workspaceId: workspace.id,
+                panelId: terminalPanel.id,
+                sampleText: recentText
+            )
             workspace.updateSidebarRollingOutputPreview(
-                text: latestLine,
-                sourcePanelId: latestLine == nil ? nil : terminalPanel.id,
+                text: aiSummary ?? latestLine,
+                sourcePanelId: aiSummary == nil && latestLine == nil ? nil : terminalPanel.id,
                 now: now
             )
+            aiCoordinator.observeSample(
+                workspace: workspace,
+                panelId: terminalPanel.id,
+                sampleText: recentText,
+                latestLine: latestLine,
+                now: now,
+                priority: workspaceActivityRank[workspace.id] ?? 0
+            )
         }
+    }
+
+    private func markWorkspaceActive(_ workspaceId: UUID) {
+        workspaceActivityRank[workspaceId] = nextActivityRank
+        nextActivityRank &+= 1
     }
 }

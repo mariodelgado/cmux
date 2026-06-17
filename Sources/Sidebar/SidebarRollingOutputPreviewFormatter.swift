@@ -29,6 +29,24 @@ struct SidebarRollingOutputPreviewFormatter {
         return nil
     }
 
+    func recentText(from text: String, maxLines: Int = 32, maxCharacters: Int = 4_000) -> String? {
+        let plainText = plainText(from: text)
+        let lineLimit = max(1, maxLines)
+        let characterLimit = max(1, maxCharacters)
+        var lines: [String] = []
+        lines.reserveCapacity(min(lineLimit, 32))
+        for line in plainText.split(separator: "\n", omittingEmptySubsequences: false).reversed() {
+            let trimmed = trimmingTrailingWhitespace(line)
+            guard !trimmed.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { continue }
+            lines.append(trimmed)
+            if lines.count >= lineLimit { break }
+        }
+        guard !lines.isEmpty else { return nil }
+        let joined = lines.reversed().joined(separator: "\n")
+        guard joined.count > characterLimit else { return joined }
+        return String(joined.suffix(characterLimit))
+    }
+
     private func plainText(from text: String) -> String {
         var output = String.UnicodeScalarView()
         output.reserveCapacity(text.unicodeScalars.count)

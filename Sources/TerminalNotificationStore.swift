@@ -510,6 +510,7 @@ final class TerminalNotificationStore: ObservableObject {
     private var lastNotificationDateByCooldownKey: [String: Date] = [:]
     private var lastNotificationHookFailureDateByKey: [NotificationHookFailureThrottleKey: Date] = [:]
     private var indexes = NotificationIndexes()
+    private var aiTriageNotificationIDByTabSurface: [TabSurfaceKey: UUID] = [:]
 
     private init() {
         indexes = Self.buildIndexes(for: notifications)
@@ -854,6 +855,74 @@ final class TerminalNotificationStore: ObservableObject {
 
     func latestNotification(forTabId tabId: UUID) -> TerminalNotification? {
         indexes.latestByTabId[tabId]
+    }
+
+    func applyAIPaneStatus(
+        _ status: AIPaneStatus,
+        tabId: UUID,
+        surfaceId: UUID?,
+        panelId: UUID?,
+        summary: String?
+    ) {
+        let key = TabSurfaceKey(tabId: tabId, surfaceId: surfaceId)
+        var updated = notifications
+        if let existingID = aiTriageNotificationIDByTabSurface.removeValue(forKey: key) {
+            updated.removeAll { $0.id == existingID }
+        }
+
+        guard status != .working else {
+            if updated != notifications {
+                notifications = updated
+            }
+            clearFocusedReadIndicator(forTabId: tabId, surfaceId: surfaceId)
+            return
+        }
+
+        let body = Self.aiTriageBody(for: status, summary: summary)
+        guard !body.isEmpty else {
+            if updated != notifications {
+                notifications = updated
+            }
+            return
+        }
+
+        let id = UUID()
+        let notification = TerminalNotification(
+            id: id,
+            tabId: tabId,
+            surfaceId: surfaceId,
+            panelId: panelId,
+            title: String(localized: "ai.triage.notificationTitle", defaultValue: "Local AI"),
+            subtitle: "",
+            body: body,
+            createdAt: Date(),
+            isRead: status == .done,
+            paneFlash: status != .done
+        )
+        updated.insert(notification, at: 0)
+        aiTriageNotificationIDByTabSurface[key] = id
+        setWorkspaceManualUnread(false, forTabId: tabId)
+        notifications = updated
+    }
+
+    private static func aiTriageBody(for status: AIPaneStatus, summary: String?) -> String {
+        let trimmedSummary = summary?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        if !trimmedSummary.isEmpty {
+            if trimmedSummary.count <= 160 {
+                return trimmedSummary
+            }
+            return String(trimmedSummary.prefix(160))
+        }
+        switch status {
+        case .working:
+            return ""
+        case .needsAttention:
+            return String(localized: "ai.triage.needsAttention", defaultValue: "Needs attention")
+        case .errored:
+            return String(localized: "ai.triage.errored", defaultValue: "Errored")
+        case .done:
+            return String(localized: "ai.triage.done", defaultValue: "Done")
+        }
     }
 
     func notifications(forTabId tabId: UUID, surfaceId: UUID?) -> [TerminalNotification] {
