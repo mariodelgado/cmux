@@ -247,7 +247,11 @@ final class WindowToolbarController: NSObject, NSToolbarDelegate {
         container.identifier = parsedPaneAccessoryIdentifier
 
         let accessory = NSTitlebarAccessoryViewController()
-        accessory.layoutAttribute = .centerX
+        // NSTitlebarAccessoryViewController.layoutAttribute only accepts
+        // .leading/.trailing/.left/.right/.bottom. A .centerX value throws an
+        // uncaught NSInternalInconsistencyException during titlebar layout
+        // (-[NSTitlebarViewController insertChildViewController:atIndex:]).
+        accessory.layoutAttribute = .trailing
         accessory.view = container
         accessory.isHidden = true
         window.addTitlebarAccessoryViewController(accessory)

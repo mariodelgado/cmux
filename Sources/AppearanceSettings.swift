@@ -72,7 +72,8 @@ enum AppearanceSettings {
     typealias SystemAppearance = TerminalSystemAppearance
 
     static let appearanceModeKey = "appearanceMode"
-    static let defaultMode: AppearanceMode = .system
+    // Fresh installs default to dark appearance; users can override in Settings.
+    static let defaultMode: AppearanceMode = .dark
 
     static func mode(for rawValue: String?) -> AppearanceMode {
         guard let rawValue, let mode = AppearanceMode(rawValue: rawValue) else {

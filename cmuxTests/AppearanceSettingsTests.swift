@@ -217,7 +217,7 @@ final class AppearanceSettingsTests: XCTestCase {
         )
     }
 
-    func testResolvedModeDefaultsToSystemWhenUnset() {
+    func testResolvedModeDefaultsToDarkWhenUnset() {
         let suiteName = "AppearanceSettingsTests.Default.\(UUID().uuidString)"
         guard let defaults = UserDefaults(suiteName: suiteName) else {
             XCTFail("Failed to create isolated UserDefaults suite")
@@ -228,8 +228,8 @@ final class AppearanceSettingsTests: XCTestCase {
         defaults.removeObject(forKey: AppearanceSettings.appearanceModeKey)
 
         let resolved = AppearanceSettings.resolvedMode(defaults: defaults)
-        XCTAssertEqual(resolved, .system)
-        XCTAssertEqual(defaults.string(forKey: AppearanceSettings.appearanceModeKey), AppearanceMode.system.rawValue)
+        XCTAssertEqual(resolved, .dark)
+        XCTAssertEqual(defaults.string(forKey: AppearanceSettings.appearanceModeKey), AppearanceMode.dark.rawValue)
     }
 
     func testCurrentColorSchemePreferenceUsesStoredDarkModeBeforeAppAppearanceExists() {
