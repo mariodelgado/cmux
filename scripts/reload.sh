@@ -4,6 +4,10 @@ set -euo pipefail
 APP_NAME="cmux DEV"
 BUNDLE_ID="com.cmuxterm.app.debug"
 BASE_APP_NAME="cmux DEV"
+# User-facing brand. The .app filename / CFBundleName stay "cmux …" for build
+# isolation; only the visible CFBundleDisplayName is rebranded to the product
+# brand so the Dock, menu bar, and About panel show "tinymux …".
+BRAND="tinymux"
 DERIVED_DATA=""
 NAME_SET=0
 BUNDLE_SET=0
@@ -523,6 +527,11 @@ if [[ -n "$TAG" ]]; then
   fi
 fi
 
+# Visible name shown by the OS (Dock, menu bar, About). Mirrors APP_NAME but with
+# the "cmux" brand token swapped for the product brand, so a tagged build like
+# "cmux DEV macos27-codex" displays as "tinymux DEV macos27-codex".
+DISPLAY_NAME="${APP_NAME/cmux/$BRAND}"
+
 CMUX_DEV_PORT="$(choose_cmux_dev_port)"
 CMUX_DEV_PORT_RANGE="$(choose_cmux_dev_port_range)"
 CMUX_DEV_PORT_END="$(choose_cmux_dev_port_end "$CMUX_DEV_PORT" "$CMUX_DEV_PORT_RANGE")"
@@ -646,7 +655,7 @@ fi
 if [[ -z "$TAG" ]]; then
   XCODEBUILD_ARGS+=(
     INFOPLIST_KEY_CFBundleName="$APP_NAME"
-    INFOPLIST_KEY_CFBundleDisplayName="$APP_NAME"
+    INFOPLIST_KEY_CFBundleDisplayName="$DISPLAY_NAME"
   )
 fi
 XCODEBUILD_ARGS+=(PRODUCT_BUNDLE_IDENTIFIER="$BUNDLE_ID")
@@ -901,8 +910,8 @@ if [[ -n "$TAG" && "$APP_NAME" != "$SEARCH_APP_NAME" ]]; then
   if [[ -f "$INFO_PLIST" ]]; then
     /usr/libexec/PlistBuddy -c "Set :CFBundleName $APP_NAME" "$INFO_PLIST" 2>/dev/null \
       || /usr/libexec/PlistBuddy -c "Add :CFBundleName string $APP_NAME" "$INFO_PLIST"
-    /usr/libexec/PlistBuddy -c "Set :CFBundleDisplayName $APP_NAME" "$INFO_PLIST" 2>/dev/null \
-      || /usr/libexec/PlistBuddy -c "Add :CFBundleDisplayName string $APP_NAME" "$INFO_PLIST"
+    /usr/libexec/PlistBuddy -c "Set :CFBundleDisplayName $DISPLAY_NAME" "$INFO_PLIST" 2>/dev/null \
+      || /usr/libexec/PlistBuddy -c "Add :CFBundleDisplayName string $DISPLAY_NAME" "$INFO_PLIST"
     /usr/libexec/PlistBuddy -c "Set :CFBundleIdentifier $BUNDLE_ID" "$INFO_PLIST" 2>/dev/null \
       || /usr/libexec/PlistBuddy -c "Add :CFBundleIdentifier string $BUNDLE_ID" "$INFO_PLIST"
     if [[ -n "${TAG_SLUG:-}" ]]; then

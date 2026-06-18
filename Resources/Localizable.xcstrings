@@ -19526,115 +19526,115 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux"
+            "value": "tinymux"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux"
+            "value": "tinymux"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux"
+            "value": "tinymux"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux"
+            "value": "tinymux"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux"
+            "value": "tinymux"
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux"
+            "value": "tinymux"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux"
+            "value": "tinymux"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux"
+            "value": "tinymux"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux"
+            "value": "tinymux"
           }
         },
         "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux"
+            "value": "tinymux"
           }
         },
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux"
+            "value": "tinymux"
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux"
+            "value": "tinymux"
           }
         },
         "bs": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux"
+            "value": "tinymux"
           }
         },
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux"
+            "value": "tinymux"
           }
         },
         "nb": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux"
+            "value": "tinymux"
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux"
+            "value": "tinymux"
           }
         },
         "th": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux"
+            "value": "tinymux"
           }
         },
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux"
+            "value": "tinymux"
           }
         },
         "uk": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux"
+            "value": "tinymux"
           }
         }
       }
@@ -71610,115 +71610,115 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "About cmux"
+            "value": "About tinymux"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmuxについて"
+            "value": "tinymuxについて"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "关于 cmux"
+            "value": "关于 tinymux"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "關於 cmux"
+            "value": "關於 tinymux"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux에 관하여"
+            "value": "tinymux에 관하여"
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Über cmux"
+            "value": "Über tinymux"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Acerca de cmux"
+            "value": "Acerca de tinymux"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "À propos de cmux"
+            "value": "À propos de tinymux"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Informazioni su cmux"
+            "value": "Informazioni su tinymux"
           }
         },
         "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "Om cmux"
+            "value": "Om tinymux"
           }
         },
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "O cmux"
+            "value": "O tinymux"
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "О программе cmux"
+            "value": "О программе tinymux"
           }
         },
         "bs": {
           "stringUnit": {
             "state": "translated",
-            "value": "O programu cmux"
+            "value": "O programu tinymux"
           }
         },
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "حول cmux"
+            "value": "حول tinymux"
           }
         },
         "nb": {
           "stringUnit": {
             "state": "translated",
-            "value": "Om cmux"
+            "value": "Om tinymux"
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Sobre o cmux"
+            "value": "Sobre o tinymux"
           }
         },
         "th": {
           "stringUnit": {
             "state": "translated",
-            "value": "เกี่ยวกับ cmux"
+            "value": "เกี่ยวกับ tinymux"
           }
         },
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux Hakkında"
+            "value": "tinymux Hakkında"
           }
         },
         "uk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Про cmux"
+            "value": "Про tinymux"
           }
         }
       }
@@ -71967,13 +71967,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Make cmux the Default Terminal"
+            "value": "Make tinymux the Default Terminal"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux をデフォルトターミナルにする"
+            "value": "tinymux をデフォルトターミナルにする"
           }
         }
       }
@@ -82515,115 +82515,115 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Quit cmux"
+            "value": "Quit tinymux"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux を終了"
+            "value": "tinymux を終了"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "退出 cmux"
+            "value": "退出 tinymux"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "結束 cmux"
+            "value": "結束 tinymux"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux 종료"
+            "value": "tinymux 종료"
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux beenden"
+            "value": "tinymux beenden"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Salir de cmux"
+            "value": "Salir de tinymux"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Quitter cmux"
+            "value": "Quitter tinymux"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Esci da cmux"
+            "value": "Esci da tinymux"
           }
         },
         "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "Afslut cmux"
+            "value": "Afslut tinymux"
           }
         },
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Zakończ cmux"
+            "value": "Zakończ tinymux"
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Завершить cmux"
+            "value": "Завершить tinymux"
           }
         },
         "bs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Zatvori cmux"
+            "value": "Zatvori tinymux"
           }
         },
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "إنهاء cmux"
+            "value": "إنهاء tinymux"
           }
         },
         "nb": {
           "stringUnit": {
             "state": "translated",
-            "value": "Avslutt cmux"
+            "value": "Avslutt tinymux"
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Encerrar o cmux"
+            "value": "Encerrar o tinymux"
           }
         },
         "th": {
           "stringUnit": {
             "state": "translated",
-            "value": "ออกจาก cmux"
+            "value": "ออกจาก tinymux"
           }
         },
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "cmux'tan Çık"
+            "value": "tinymux'tan Çık"
           }
         },
         "uk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Завершити cmux"
+            "value": "Завершити tinymux"
           }
         }
       }

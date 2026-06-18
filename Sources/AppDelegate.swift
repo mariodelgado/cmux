@@ -12211,6 +12211,20 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
         guard let appMenu = NSApp.mainMenu?.items.first?.submenu else { return }
         appMenu.delegate = self
         configureReloadConfigurationMenuItem(in: appMenu)
+        applyBrandToAppMenuTitle()
+    }
+
+    /// The bold application menu title is derived by AppKit from CFBundleName /
+    /// the process name, which stays "cmux …" for build isolation. Override the
+    /// visible title with the brand (CFBundleDisplayName, e.g. "tinymux …") so the
+    /// menu bar matches the Dock and About panel without touching PRODUCT_NAME.
+    private func applyBrandToAppMenuTitle() {
+        guard let appMenuItem = NSApp.mainMenu?.items.first else { return }
+        let brand = (Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String)?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        guard let brand, !brand.isEmpty else { return }
+        appMenuItem.title = brand
+        appMenuItem.submenu?.title = brand
     }
 
     private func scheduleReloadConfigurationMenuItemRefresh() {
