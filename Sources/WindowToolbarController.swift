@@ -224,8 +224,14 @@ final class WindowToolbarController: NSObject, NSToolbarDelegate {
             String(localized: "parsedView.toggle.parsed", defaultValue: "Parsed"),
             forSegment: ParsedPaneSegment.parsed.rawValue
         )
-        segmented.setWidth(76, forSegment: ParsedPaneSegment.terminal.rawValue)
-        segmented.setWidth(68, forSegment: ParsedPaneSegment.parsed.rawValue)
+        segmented.setWidth(72, forSegment: ParsedPaneSegment.terminal.rawValue)
+        segmented.setWidth(64, forSegment: ParsedPaneSegment.parsed.rawValue)
+        // Pin an intrinsic size so AppKit reserves a dedicated trailing slot for
+        // the toggle instead of letting it grow/shrink into the neighbouring
+        // toolbar items (#titlebar-overlap).
+        segmented.translatesAutoresizingMaskIntoConstraints = false
+        segmented.setContentHuggingPriority(.required, for: .horizontal)
+        segmented.setContentCompressionResistancePriority(.required, for: .horizontal)
         segmented.setToolTip(
             String(localized: "parsedView.toggle.terminal", defaultValue: "Terminal"),
             forSegment: ParsedPaneSegment.terminal.rawValue
@@ -239,12 +245,23 @@ final class WindowToolbarController: NSObject, NSToolbarDelegate {
         segmented.setAccessibilityIdentifier("ParsedPaneModeTitlebarToggle")
         segmented.setAccessibilityLabel(String(localized: "parsedView.toggle.accessibility", defaultValue: "Pane view"))
 
+        // Give the toggle its own padded slot so it can't visually collide with
+        // the trailing toolbar items (layout-mode control / focused-command
+        // label) or the window's traffic lights. The stack reserves horizontal
+        // gutters on both sides and a fixed height that matches the compact
+        // unified titlebar so AppKit lays it out beside, not on top of, its
+        // siblings at any window width.
         let container = NSStackView(views: [segmented])
         container.orientation = .horizontal
         container.alignment = .centerY
         container.distribution = .gravityAreas
-        container.edgeInsets = NSEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        container.spacing = 0
+        container.edgeInsets = NSEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
         container.identifier = parsedPaneAccessoryIdentifier
+        container.translatesAutoresizingMaskIntoConstraints = false
+        container.setContentHuggingPriority(.required, for: .horizontal)
+        container.setContentCompressionResistancePriority(.required, for: .horizontal)
+        container.heightAnchor.constraint(equalToConstant: 28).isActive = true
 
         let accessory = NSTitlebarAccessoryViewController()
         // NSTitlebarAccessoryViewController.layoutAttribute only accepts
@@ -254,6 +271,9 @@ final class WindowToolbarController: NSObject, NSToolbarDelegate {
         accessory.layoutAttribute = .trailing
         accessory.view = container
         accessory.isHidden = true
+        // Keep the accessory at its intrinsic width so the titlebar reserves a
+        // standalone trailing slot for it rather than overlapping the toolbar.
+        accessory.fullScreenMinHeight = 0
         window.addTitlebarAccessoryViewController(accessory)
 
         let key = ObjectIdentifier(window)

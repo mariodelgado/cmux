@@ -16360,6 +16360,36 @@ private struct SidebarLiquidGlassBackdrop: View {
     let fallbackMaterial: NSVisualEffectView.Material
     let fallbackBlendingMode: NSVisualEffectView.BlendingMode
 
+    @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
+    @Environment(\.colorSchemeContrast) private var colorSchemeContrast
+
+    // Catppuccin Mocha `base` (#1E1E2E): the canonical dark backing color for the
+    // sidebar content. A low-opacity fill of this color forms a subtle scrim
+    // between the translucent glass and the text so labels stay legible (per
+    // Apple's "text on Liquid Glass" guidance) without making the panel opaque.
+    private static let scrimColor = Color(
+        red: 0x1E / 255.0,
+        green: 0x1E / 255.0,
+        blue: 0x2E / 255.0
+    )
+
+    /// When the user has enabled Reduce Transparency or Increase Contrast, fall
+    /// back to a near-solid backing for full legibility.
+    private var prefersNearSolidBacking: Bool {
+        reduceTransparency || colorSchemeContrast == .increased
+    }
+
+    /// Scrim opacity layered over the glass to back the text. Higher in dark
+    /// mode (more legibility headroom) and near-solid under accessibility
+    /// transparency/contrast preferences.
+    private var scrimOpacity: Double {
+        if prefersNearSolidBacking {
+            return colorScheme == .dark ? 0.92 : 0.86
+        }
+        return colorScheme == .dark ? 0.42 : 0.22
+    }
+
     var body: some View {
         let shape = RoundedRectangle(
             cornerRadius: materialPolicy.cornerRadius,
@@ -16368,16 +16398,32 @@ private struct SidebarLiquidGlassBackdrop: View {
 
 #if compiler(>=6.2)
         if #available(macOS 26.0, *) {
-            shape
-                .fill(Color.clear)
-                .glassEffect(
-                    .regular.tint(materialPolicy.nativeLiquidGlassTint),
-                    in: shape
-                )
-                .overlay {
-                    shape.stroke(Color.white.opacity(0.18), lineWidth: 0.6)
-                }
-                .opacity(Double(WindowAppearanceSnapshot.clampedOpacity(materialPolicy.opacity)))
+            if prefersNearSolidBacking {
+                // Reduce Transparency / Increase Contrast: skip the glass and
+                // paint a near-solid backing for maximum legibility.
+                shape
+                    .fill(Self.scrimColor.opacity(scrimOpacity))
+                    .overlay {
+                        shape.stroke(Color.white.opacity(0.22), lineWidth: 0.6)
+                    }
+            } else {
+                shape
+                    .fill(Color.clear)
+                    .glassEffect(
+                        .regular.tint(materialPolicy.nativeLiquidGlassTint),
+                        in: shape
+                    )
+                    .overlay {
+                        // Subtle dimming scrim between the glass and the
+                        // foreground text so labels always have a legible
+                        // backing while preserving the glass look.
+                        shape.fill(Self.scrimColor.opacity(scrimOpacity))
+                    }
+                    .overlay {
+                        shape.stroke(Color.white.opacity(0.18), lineWidth: 0.6)
+                    }
+                    .opacity(Double(WindowAppearanceSnapshot.clampedOpacity(materialPolicy.opacity)))
+            }
         } else {
             fallback(shape)
         }
@@ -16397,6 +16443,9 @@ private struct SidebarLiquidGlassBackdrop: View {
                 cornerRadius: materialPolicy.cornerRadius
             )
             shape.fill(Color(nsColor: materialPolicy.tintColor))
+            // Match the glass path's text-backing scrim so the fallback path
+            // keeps the same legibility contract.
+            shape.fill(Self.scrimColor.opacity(scrimOpacity))
         }
     }
 }

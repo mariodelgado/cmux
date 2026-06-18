@@ -1,15 +1,19 @@
 import SwiftUI
 
 struct SidebarRollingOutputPreviewLine: View, Equatable {
+    // Brightened from Catppuccin subtext0 (#A6ADC8) toward subtext1/text so the
+    // preview stays legible on translucent Liquid Glass instead of washing out.
     private static let normalColor = Color(
-        red: 0xA6 / 255.0,
-        green: 0xAD / 255.0,
-        blue: 0xC8 / 255.0
+        red: 0xCD / 255.0,
+        green: 0xD6 / 255.0,
+        blue: 0xF4 / 255.0
     )
+    // Brightened from Catppuccin overlay0 (#6C7086, too dim on glass) up to
+    // overlay2 (#9399B2) so faded/idle output is still readable.
     private static let idleColor = Color(
-        red: 0x6C / 255.0,
-        green: 0x70 / 255.0,
-        blue: 0x86 / 255.0
+        red: 0x93 / 255.0,
+        green: 0x99 / 255.0,
+        blue: 0xB2 / 255.0
     )
     private static let idleInterval: TimeInterval = 9
     private static let freshInterval: TimeInterval = 0.75
@@ -55,8 +59,8 @@ struct SidebarRollingOutputPreviewLine: View, Equatable {
     private func opacity(isFresh: Bool, isIdle: Bool) -> Double {
         if isFresh { return 1 }
         if isIdle {
-            return differentiateWithoutColor || reduceTransparency ? 0.74 : 0.54
+            return differentiateWithoutColor || reduceTransparency ? 0.85 : 0.7
         }
-        return 0.88
+        return 0.94
     }
 }
