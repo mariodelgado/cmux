@@ -33,6 +33,8 @@ public struct SettingCatalog: SettingCatalogSection {
     public let automation = AutomationCatalogSection()
     public let ai = AICatalogSection()
     public let browser = BrowserCatalogSection()
+    /// Settings for the TinyFish cloud browser integration.
+    public let tinyfish = TinyFishCatalogSection()
     /// Settings for the empty new-terminal destination launcher.
     public let newTerminalLauncher = NewTerminalLauncherCatalogSection()
     /// Settings for the per-pane native parsed terminal view.

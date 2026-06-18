@@ -70,6 +70,9 @@ final class FileExplorerStateModePersistenceTests: XCTestCase {
         XCTAssertEqual(RightSidebarMode.from(cliArgument: "dock"), .dock)
         XCTAssertEqual(RightSidebarMode.from(cliArgument: "inspector"), .inspector)
         XCTAssertEqual(RightSidebarMode.from(cliArgument: "openrouter"), .inspector)
+        XCTAssertEqual(RightSidebarMode.from(cliArgument: "tinyfish"), .tinyfish)
+        XCTAssertEqual(RightSidebarMode.from(cliArgument: "tinyfish-browser"), .tinyfish)
+        XCTAssertEqual(RightSidebarMode.from(cliArgument: "remote-browser"), .tinyfish)
         XCTAssertEqual(RightSidebarMode.from(cliArgument: " Vault "), .sessions)
         XCTAssertNil(RightSidebarMode.from(cliArgument: "unknown"))
     }

@@ -31,15 +31,28 @@ public struct BrowserSection: View {
     @State private var httpAllowlist: DefaultsValueModel<String>
     @State private var importHint: DefaultsValueModel<Bool>
     @State private var reactGrab: DefaultsValueModel<String>
+    @State private var tinyFishEnabled: JSONValueModel<Bool>
+    @State private var tinyFishTimeout: JSONValueModel<Int>
+    @State private var tinyFishAPIKey: KeychainSecretValueModel
 
     @State private var confirmClearHistory: Bool = false
     @State private var httpAllowlistDraft: String = ""
     @State private var httpAllowlistSyncedValue: String = ""
     @State private var httpAllowlistLoaded: Bool = false
+    @State private var tinyFishAPIKeyDraft: String = ""
+    @State private var tinyFishAPIKeyStatus: TinyFishAPIKeyStatus?
+
+    private struct TinyFishAPIKeyStatus: Equatable {
+        let message: String
+        let isError: Bool
+    }
 
     public init(
         defaultsStore: UserDefaultsSettingsStore,
+        jsonStore: JSONConfigStore,
+        keychainSecretStore: KeychainSecretStore,
         catalog: SettingCatalog,
+        errorLog: SettingsErrorLog,
         hostActions: SettingsHostActions,
         importAnchorID: String? = nil
     ) {
@@ -61,6 +74,13 @@ public struct BrowserSection: View {
         _httpAllowlist = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.browser.insecureHttpHostsAllowedInEmbeddedBrowser))
         _importHint = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.browser.showImportHintOnBlankTabs))
         _reactGrab = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.browser.reactGrabVersion))
+        _tinyFishEnabled = State(initialValue: JSONValueModel(store: jsonStore, key: catalog.tinyfish.enabled, errorLog: errorLog))
+        _tinyFishTimeout = State(initialValue: JSONValueModel(store: jsonStore, key: catalog.tinyfish.timeoutSeconds, errorLog: errorLog))
+        _tinyFishAPIKey = State(initialValue: KeychainSecretValueModel(
+            store: keychainSecretStore,
+            key: catalog.tinyfish.apiKey,
+            errorLog: errorLog
+        ))
     }
 
     private static let columnWidth: CGFloat = 196
@@ -272,6 +292,10 @@ public struct BrowserSection: View {
             .settingsSearchHighlight([importAnchorID, "setting:browserImport:import-data"].compactMap { $0 })
             SettingsCardDivider()
 
+            tinyFishRemoteBrowserBlock()
+                .settingsSearchAnchors(["setting:browser:tinyfish"])
+            SettingsCardDivider()
+
             // React Grab Version
             SettingsCardRow(
                 configurationReview: .json("browser.reactGrabVersion"),
@@ -305,6 +329,122 @@ public struct BrowserSection: View {
                 .disabled(historyCount == 0)
             }
         }
+    }
+
+    @ViewBuilder
+    private func tinyFishRemoteBrowserBlock() -> some View {
+        let hasKey = !tinyFishAPIKey.current.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        VStack(alignment: .leading, spacing: 0) {
+            SettingsCardRow(
+                configurationReview: .json("tinyfish.enabled"),
+                searchAnchorID: "setting:browser:tinyfish",
+                String(localized: "settings.browser.tinyfish.enabled", defaultValue: "TinyFish Remote Browser"),
+                subtitle: hasKey
+                    ? String(localized: "settings.browser.tinyfish.enabled.subtitleReady", defaultValue: "Shows the TinyFish cloud browser in the right sidebar.")
+                    : String(localized: "settings.browser.tinyfish.enabled.subtitleNeedsKey", defaultValue: "Add a TinyFish API key before enabling the remote browser sidebar mode.")
+            ) {
+                Toggle("", isOn: Binding(get: { tinyFishEnabled.current && hasKey }, set: { tinyFishEnabled.set($0 && hasKey) }))
+                    .labelsHidden()
+                    .controlSize(.small)
+                    .disabled(!hasKey)
+                    .accessibilityIdentifier("SettingsTinyFishEnabledToggle")
+            }
+            SettingsCardDivider()
+            SettingsCardRow(
+                configurationReview: .keychainSecret,
+                String(localized: "settings.browser.tinyfish.apiKey", defaultValue: "TinyFish API Key"),
+                subtitle: hasKey
+                    ? String(localized: "settings.browser.tinyfish.apiKey.subtitleSet", defaultValue: "Stored in macOS Keychain.")
+                    : String(localized: "settings.browser.tinyfish.apiKey.subtitleUnset", defaultValue: "No API key set. Existing plaintext tinyfish.apiKey in cmux.json is still read as a fallback.")
+            ) {
+                HStack(spacing: 8) {
+                    SecureField(
+                        String(localized: "settings.browser.tinyfish.apiKey.placeholder", defaultValue: "API key"),
+                        text: $tinyFishAPIKeyDraft
+                    )
+                    .textFieldStyle(.roundedBorder)
+                    .frame(width: 210)
+                    Button(
+                        hasKey
+                            ? String(localized: "settings.browser.tinyfish.apiKey.change", defaultValue: "Change")
+                            : String(localized: "settings.browser.tinyfish.apiKey.set", defaultValue: "Set")
+                    ) {
+                        saveTinyFishAPIKey()
+                    }
+                    .buttonStyle(.bordered)
+                    .controlSize(.small)
+                    .disabled(tinyFishAPIKeyDraft.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                    if hasKey {
+                        Button(String(localized: "settings.browser.tinyfish.apiKey.clear", defaultValue: "Clear")) {
+                            clearTinyFishAPIKey()
+                        }
+                        .buttonStyle(.bordered)
+                        .controlSize(.small)
+                    }
+                }
+            }
+            if let status = tinyFishAPIKeyStatus {
+                Text(status.message)
+                    .font(.caption)
+                    .foregroundStyle(status.isError ? Color.red : Color.secondary)
+                    .padding(.horizontal, 14)
+                    .padding(.bottom, 8)
+            }
+            SettingsCardDivider()
+            SettingsCardRow(
+                configurationReview: .json("tinyfish.timeoutSeconds"),
+                String(localized: "settings.browser.tinyfish.timeout", defaultValue: "Session Timeout"),
+                subtitle: String(localized: "settings.browser.tinyfish.timeout.subtitle", defaultValue: "Seconds before TinyFish closes an idle cloud browser session. TinyFish accepts 5 to 86400.")
+            ) {
+                HStack(spacing: 8) {
+                    Text("\(clampedTinyFishTimeout)")
+                        .font(.system(.body, design: .monospaced))
+                        .monospacedDigit()
+                        .frame(width: 54, alignment: .trailing)
+                    Stepper(
+                        "",
+                        value: Binding(
+                            get: { clampedTinyFishTimeout },
+                            set: { tinyFishTimeout.set(Self.clampedTinyFishTimeout($0)) }
+                        ),
+                        in: 5...86_400,
+                        step: 60
+                    )
+                    .labelsHidden()
+                }
+                .accessibilityIdentifier("SettingsTinyFishTimeoutStepper")
+            }
+        }
+    }
+
+    private var clampedTinyFishTimeout: Int {
+        Self.clampedTinyFishTimeout(tinyFishTimeout.current)
+    }
+
+    private static func clampedTinyFishTimeout(_ value: Int) -> Int {
+        min(max(value, 5), 86_400)
+    }
+
+    private func saveTinyFishAPIKey() {
+        let trimmed = tinyFishAPIKeyDraft.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+        tinyFishAPIKey.set(trimmed)
+        tinyFishEnabled.set(true)
+        tinyFishAPIKeyDraft = ""
+        tinyFishAPIKeyStatus = TinyFishAPIKeyStatus(
+            message: String(localized: "settings.browser.tinyfish.apiKey.saved", defaultValue: "Saved to Keychain and enabled TinyFish Browser."),
+            isError: false
+        )
+    }
+
+    private func clearTinyFishAPIKey() {
+        tinyFishAPIKey.reset()
+        tinyFishEnabled.set(false)
+        tinyFishAPIKeyDraft = ""
+        tinyFishAPIKeyStatus = TinyFishAPIKeyStatus(
+            message: String(localized: "settings.browser.tinyfish.apiKey.cleared", defaultValue: "Cleared from Keychain and disabled TinyFish Browser."),
+            isError: false
+        )
     }
 
     @ViewBuilder

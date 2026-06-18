@@ -4,13 +4,14 @@ import Foundation
 /// describes how the row's value persists.
 ///
 /// Mirrors the legacy enum: tells "Show JSON paths" UIs which
-/// dotted cmux.json paths the row writes through, distinguishes
-/// rows that are pure UserDefaults (`.settingsOnly`), rows that
-/// trigger a one-shot action (`.action`), and rows that only
+/// dotted cmux.json paths the row writes through, distinguishes rows that are
+/// pure UserDefaults (`.settingsOnly`), Keychain-backed secrets
+/// (`.keychainSecret`), one-shot actions (`.action`), and rows that only
 /// surface in debug builds (`.debugOnly`).
 public enum SettingsConfigurationReview: Equatable, Sendable {
     case settingsFile([String])
     case settingsOnly
+    case keychainSecret
     case action
     case debugOnly
 

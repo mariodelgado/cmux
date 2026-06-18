@@ -97,6 +97,25 @@ public struct LiveSetting<Value: SettingCodable>: @preconcurrency DynamicPropert
         }
     }
 
+    /// Binds to a Keychain-backed secret setting. Secrets are always strings, so
+    /// this overload is only available when `Value` is `String`.
+    ///
+    /// - Parameter keyPath: Key path to the catalog's ``KeychainSecretKey``.
+    public init(_ keyPath: KeyPath<SettingCatalog, KeychainSecretKey>) where Value == String {
+        _value = State(initialValue: SettingCatalog()[keyPath: keyPath].defaultValue)
+        makeStream = { runtime in
+            runtime.keychainSecretStore.values(for: runtime.catalog[keyPath: keyPath])
+        }
+        persist = { runtime, newValue in
+            let key = runtime.catalog[keyPath: keyPath]
+            let errorLog = runtime.errorLog
+            Task {
+                do { try await runtime.keychainSecretStore.set(newValue, for: key) }
+                catch { errorLog.record(error, keyID: key.id) }
+            }
+        }
+    }
+
     /// The current setting value.
     ///
     /// Reads return the latest value the observation stream has delivered into

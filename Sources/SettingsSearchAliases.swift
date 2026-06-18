@@ -146,6 +146,7 @@ enum SettingsSearchAliasIndex {
         "browser:host-whitelist": localized("settings.search.alias.setting.browser.host-whitelist", defaultValue: "browser.hostsToOpenInEmbeddedBrowser allowlist whitelist host wildcard domain embedded browser"),
         "browser:external-patterns": localized("settings.search.alias.setting.browser.external-patterns", defaultValue: "browser.urlsToAlwaysOpenExternally denylist blocklist regex rules external default browser"),
         "browser:http-allowlist": localized("settings.search.alias.setting.browser.http-allowlist", defaultValue: "browser.insecureHttpHostsAllowedInEmbeddedBrowser insecure http allowlist localhost localtest non-https warning"),
+        "browser:tinyfish": localized("settings.search.alias.setting.browser.tinyfish", defaultValue: "tinyfish.enabled tinyfish.apiKey tinyfish.timeoutSeconds remote cloud browser screenshot cdp api key"),
         "browserImport:import-data": localized("settings.search.alias.setting.browserImport.import-data", defaultValue: "chrome safari firefox brave edge arc bookmarks history cookies profiles migration"),
         "browserImport:import-hint": localized("settings.search.alias.setting.browserImport.import-hint", defaultValue: "browser.showImportHintOnBlankTabs blank tab onboarding hint import prompt dismiss"),
         "browser:react-grab": localized("settings.search.alias.setting.browser.react-grab", defaultValue: "browser.reactGrabVersion react grab npm version toolbar cmd-shift-g inspect component"),

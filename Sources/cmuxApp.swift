@@ -130,6 +130,7 @@ struct cmuxApp: App {
             ),
             jsonStore: JSONConfigStore(fileURL: configFileURL),
             secretStore: secretStore,
+            keychainSecretStore: KeychainSecretStore(),
             errorLog: SettingsErrorLog(),
             accountFlow: HostAccountFlow(
                 coordinator: authComposition.coordinator,

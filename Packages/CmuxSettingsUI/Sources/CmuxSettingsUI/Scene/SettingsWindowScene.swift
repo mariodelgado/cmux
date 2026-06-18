@@ -82,6 +82,7 @@ public struct SettingsWindowRoot: View {
     private var defaultsStore: UserDefaultsSettingsStore { runtime.userDefaultsStore }
     private var jsonStore: JSONConfigStore { runtime.jsonStore }
     private var secretStore: SecretFileStore { runtime.secretStore }
+    private var keychainSecretStore: KeychainSecretStore { runtime.keychainSecretStore }
     private var catalog: SettingCatalog { runtime.catalog }
     private var hostActions: SettingsHostActions { runtime.hostActions }
     private var accountFlow: AccountFlow? { runtime.accountFlow }
@@ -484,7 +485,10 @@ public struct SettingsWindowRoot: View {
 
         BrowserSection(
             defaultsStore: defaultsStore,
+            jsonStore: jsonStore,
+            keychainSecretStore: keychainSecretStore,
             catalog: catalog,
+            errorLog: runtime.errorLog,
             hostActions: hostActions,
             importAnchorID: anchorID(for: .browserImport)
         )

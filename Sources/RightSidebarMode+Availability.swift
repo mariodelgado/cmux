@@ -16,6 +16,8 @@ extension RightSidebarMode {
             return .dock
         case "inspector", "openrouter":
             return .inspector
+        case "tinyfish", "tinyfish-browser", "remote-browser":
+            return .tinyfish
         default:
             return nil
         }
@@ -25,24 +27,27 @@ extension RightSidebarMode {
         availableModes(
             feedEnabled: RightSidebarBetaFeatureSettings.isFeedEnabled(defaults: defaults),
             dockEnabled: RightSidebarBetaFeatureSettings.isDockEnabled(defaults: defaults),
-            inspectorEnabled: inspectorEnabledFromConfig()
+            inspectorEnabled: inspectorEnabledFromConfig(),
+            tinyFishEnabled: tinyFishEnabledFromConfig()
         )
     }
 
     static func availableModes(feedEnabled: Bool, dockEnabled: Bool) -> [RightSidebarMode] {
-        availableModes(feedEnabled: feedEnabled, dockEnabled: dockEnabled, inspectorEnabled: true)
+        availableModes(feedEnabled: feedEnabled, dockEnabled: dockEnabled, inspectorEnabled: true, tinyFishEnabled: false)
     }
 
     static func availableModes(
         feedEnabled: Bool,
         dockEnabled: Bool,
-        inspectorEnabled: Bool
+        inspectorEnabled: Bool,
+        tinyFishEnabled: Bool
     ) -> [RightSidebarMode] {
         allCases.filter {
             $0.isAvailable(
                 feedEnabled: feedEnabled,
                 dockEnabled: dockEnabled,
-                inspectorEnabled: inspectorEnabled
+                inspectorEnabled: inspectorEnabled,
+                tinyFishEnabled: tinyFishEnabled
             )
         }
     }
@@ -51,6 +56,9 @@ extension RightSidebarMode {
         if self == .inspector {
             return Self.inspectorEnabledFromConfig()
         }
+        if self == .tinyfish {
+            return Self.tinyFishEnabledFromConfig()
+        }
         return isAvailable(
             feedEnabled: RightSidebarBetaFeatureSettings.isFeedEnabled(defaults: defaults),
             dockEnabled: RightSidebarBetaFeatureSettings.isDockEnabled(defaults: defaults)
@@ -58,13 +66,14 @@ extension RightSidebarMode {
     }
 
     func isAvailable(feedEnabled: Bool, dockEnabled: Bool) -> Bool {
-        isAvailable(feedEnabled: feedEnabled, dockEnabled: dockEnabled, inspectorEnabled: true)
+        isAvailable(feedEnabled: feedEnabled, dockEnabled: dockEnabled, inspectorEnabled: true, tinyFishEnabled: false)
     }
 
     func isAvailable(
         feedEnabled: Bool,
         dockEnabled: Bool,
-        inspectorEnabled: Bool
+        inspectorEnabled: Bool,
+        tinyFishEnabled: Bool
     ) -> Bool {
         switch self {
         case .files, .find, .sessions:
@@ -75,6 +84,8 @@ extension RightSidebarMode {
             return dockEnabled
         case .inspector:
             return inspectorEnabled
+        case .tinyfish:
+            return tinyFishEnabled
         }
     }
 
@@ -82,5 +93,17 @@ extension RightSidebarMode {
         let catalog = SettingCatalog()
         let store = JSONConfigStore(fileURL: CmuxConfigLocation().userConfigFile)
         return store.snapshotValue(for: catalog.inspector.enabled)
+    }
+
+    private static func tinyFishEnabledFromConfig() -> Bool {
+        let catalog = SettingCatalog()
+        let store = JSONConfigStore(fileURL: CmuxConfigLocation().userConfigFile)
+        guard store.snapshotValue(for: catalog.tinyfish.enabled) else { return false }
+        if let keychainKey = try? KeychainSecretStore().snapshotValue(for: catalog.tinyfish.apiKey),
+           !keychainKey.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            return true
+        }
+        let legacyKey = JSONKey<String>(id: "tinyfish.apiKey", defaultValue: "")
+        return !store.snapshotValue(for: legacyKey).trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 }

@@ -116,6 +116,12 @@ extension CmuxSettingsFileStore {
                 ],
             ],
             [
+                "tinyfish": [
+                    "enabled": SettingCatalog().tinyfish.enabled.defaultValue,
+                    "timeoutSeconds": SettingCatalog().tinyfish.timeoutSeconds.defaultValue,
+                ],
+            ],
+            [
                 "notifications": [
                     "dockBadge": NotificationBadgeSettings.defaultDockBadgeEnabled,
                     "showInMenuBar": MenuBarExtraSettings.defaultShowInMenuBar,

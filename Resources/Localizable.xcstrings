@@ -204181,6 +204181,314 @@
         "en": { "stringUnit": { "state": "translated", "value": "Character disable failed: %@" } },
         "ja": { "stringUnit": { "state": "translated", "value": "Character の無効化に失敗しました: %@" } }
       }
+    },
+    "rightSidebar.mode.tinyfish": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "TinyFish" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "TinyFish" } }
+      }
+    },
+    "settings.browser.tinyfish.enabled": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "TinyFish Remote Browser" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "TinyFish リモートブラウザ" } }
+      }
+    },
+    "settings.browser.tinyfish.enabled.subtitleReady": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Shows the TinyFish cloud browser in the right sidebar." } },
+        "ja": { "stringUnit": { "state": "translated", "value": "右サイドバーに TinyFish クラウドブラウザを表示します。" } }
+      }
+    },
+    "settings.browser.tinyfish.enabled.subtitleNeedsKey": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Add a TinyFish API key before enabling the remote browser sidebar mode." } },
+        "ja": { "stringUnit": { "state": "translated", "value": "リモートブラウザのサイドバーモードを有効にする前に TinyFish API キーを追加してください。" } }
+      }
+    },
+    "settings.browser.tinyfish.apiKey": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "TinyFish API Key" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "TinyFish API キー" } }
+      }
+    },
+    "settings.browser.tinyfish.apiKey.subtitleSet": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Stored in macOS Keychain." } },
+        "ja": { "stringUnit": { "state": "translated", "value": "macOS キーチェーンに保存されています。" } }
+      }
+    },
+    "settings.browser.tinyfish.apiKey.subtitleUnset": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "No API key set. Existing plaintext tinyfish.apiKey in cmux.json is still read as a fallback." } },
+        "ja": { "stringUnit": { "state": "translated", "value": "API キーは未設定です。cmux.json に既存の平文 tinyfish.apiKey がある場合はフォールバックとして読み取ります。" } }
+      }
+    },
+    "settings.browser.tinyfish.apiKey.placeholder": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "API key" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "API キー" } }
+      }
+    },
+    "settings.browser.tinyfish.apiKey.change": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Change" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "変更" } }
+      }
+    },
+    "settings.browser.tinyfish.apiKey.set": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Set" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "設定" } }
+      }
+    },
+    "settings.browser.tinyfish.apiKey.clear": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Clear" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "消去" } }
+      }
+    },
+    "settings.browser.tinyfish.apiKey.saved": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Saved to Keychain and enabled TinyFish Browser." } },
+        "ja": { "stringUnit": { "state": "translated", "value": "キーチェーンに保存し、TinyFish Browser を有効にしました。" } }
+      }
+    },
+    "settings.browser.tinyfish.apiKey.cleared": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Cleared from Keychain and disabled TinyFish Browser." } },
+        "ja": { "stringUnit": { "state": "translated", "value": "キーチェーンから消去し、TinyFish Browser を無効にしました。" } }
+      }
+    },
+    "settings.browser.tinyfish.timeout": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Session Timeout" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "セッションタイムアウト" } }
+      }
+    },
+    "settings.browser.tinyfish.timeout.subtitle": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Seconds before TinyFish closes an idle cloud browser session. TinyFish accepts 5 to 86400." } },
+        "ja": { "stringUnit": { "state": "translated", "value": "TinyFish がアイドル状態のクラウドブラウザセッションを閉じるまでの秒数です。TinyFish は 5 から 86400 まで受け付けます。" } }
+      }
+    },
+    "settings.search.alias.setting.browser.tinyfish": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "tinyfish.enabled tinyfish.apiKey tinyfish.timeoutSeconds remote cloud browser screenshot cdp api key" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "tinyfish.enabled tinyfish.apiKey tinyfish.timeoutSeconds リモート クラウド ブラウザ スクリーンショット cdp api キー" } }
+      }
+    },
+    "schemaDescriptions.tinyfish.enabled": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Show the TinyFish cloud browser mode in the right sidebar when an API key is available." } },
+        "ja": { "stringUnit": { "state": "translated", "value": "API キーが利用可能なとき、右サイドバーに TinyFish クラウドブラウザモードを表示します。" } }
+      }
+    },
+    "schemaDescriptions.tinyfish.apiKey": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Optional plaintext TinyFish Browser API key fallback. Prefer storing the key in macOS Keychain through Settings." } },
+        "ja": { "stringUnit": { "state": "translated", "value": "任意の平文 TinyFish Browser API キーフォールバックです。設定から macOS キーチェーンに保存する方法を推奨します。" } }
+      }
+    },
+    "schemaDescriptions.tinyfish.timeoutSeconds": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Session timeout in seconds passed to TinyFish when creating a remote browser. TinyFish accepts values from 5 to 86400." } },
+        "ja": { "stringUnit": { "state": "translated", "value": "リモートブラウザ作成時に TinyFish へ渡すセッションタイムアウト秒数です。TinyFish は 5 から 86400 まで受け付けます。" } }
+      }
+    },
+    "tinyfish.panel.url.placeholder": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "https://example.com" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "https://example.com" } }
+      }
+    },
+    "tinyfish.panel.navigate": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Navigate" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "移動" } }
+      }
+    },
+    "tinyfish.panel.newSession": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "New session" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "新規セッション" } }
+      }
+    },
+    "tinyfish.panel.closeSession": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Close session" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "セッションを閉じる" } }
+      }
+    },
+    "tinyfish.panel.refresh": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Refresh screenshot" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "スクリーンショットを更新" } }
+      }
+    },
+    "tinyfish.panel.toggleOverlay": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Toggle element overlay" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "要素オーバーレイを切り替え" } }
+      }
+    },
+    "tinyfish.panel.scrollUp": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Scroll up" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "上にスクロール" } }
+      }
+    },
+    "tinyfish.panel.scrollDown": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Scroll down" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "下にスクロール" } }
+      }
+    },
+    "tinyfish.panel.type.placeholder": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Type into selected element" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "選択した要素に入力" } }
+      }
+    },
+    "tinyfish.panel.type": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Type text" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "テキストを入力" } }
+      }
+    },
+    "tinyfish.panel.refreshUsage": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Refresh usage" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "使用量を更新" } }
+      }
+    },
+    "tinyfish.panel.disabled.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "TinyFish Browser unavailable" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "TinyFish Browser は利用できません" } }
+      }
+    },
+    "tinyfish.panel.disabled.subtitle": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Enable TinyFish and add an API key in Settings." } },
+        "ja": { "stringUnit": { "state": "translated", "value": "設定で TinyFish を有効にし、API キーを追加してください。" } }
+      }
+    },
+    "tinyfish.panel.noSession": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "No session" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "セッションなし" } }
+      }
+    },
+    "tinyfish.panel.empty": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "No remote browser frame" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "リモートブラウザフレームがありません" } }
+      }
+    },
+    "tinyfish.error.missingAPIKey": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "TinyFish API key is not configured." } },
+        "ja": { "stringUnit": { "state": "translated", "value": "TinyFish API キーが設定されていません。" } }
+      }
+    },
+    "tinyfish.error.unexpectedStatus": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "TinyFish returned HTTP %lld." } },
+        "ja": { "stringUnit": { "state": "translated", "value": "TinyFish が HTTP %lld を返しました。" } }
+      }
+    },
+    "tinyfish.error.pageTargetUnavailable": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "TinyFish session did not expose a page target." } },
+        "ja": { "stringUnit": { "state": "translated", "value": "TinyFish セッションにページターゲットが公開されていません。" } }
+      }
+    },
+    "tinyfish.error.loadTimeout": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Timed out waiting for the remote page to load." } },
+        "ja": { "stringUnit": { "state": "translated", "value": "リモートページの読み込み待機がタイムアウトしました。" } }
+      }
+    },
+    "tinyfish.error.missingSessionID": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "CDP attach response did not include a session id." } },
+        "ja": { "stringUnit": { "state": "translated", "value": "CDP attach レスポンスにセッション ID が含まれていません。" } }
+      }
+    },
+    "tinyfish.error.missingScreenshot": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "CDP screenshot response did not include PNG data." } },
+        "ja": { "stringUnit": { "state": "translated", "value": "CDP スクリーンショットレスポンスに PNG データが含まれていません。" } }
+      }
+    },
+    "tinyfish.error.cdpNotConnected": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "CDP client is not connected." } },
+        "ja": { "stringUnit": { "state": "translated", "value": "CDP クライアントが接続されていません。" } }
+      }
+    },
+    "tinyfish.error.commandEncoding": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Could not encode a CDP command." } },
+        "ja": { "stringUnit": { "state": "translated", "value": "CDP コマンドをエンコードできませんでした。" } }
+      }
+    },
+    "tinyfish.error.missingOverlay": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "CDP overlay evaluation did not return a value." } },
+        "ja": { "stringUnit": { "state": "translated", "value": "CDP オーバーレイ評価が値を返しませんでした。" } }
+      }
+    },
+    "tinyfish.error.nonHTTPResponse": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "TinyFish returned a non-HTTP response." } },
+        "ja": { "stringUnit": { "state": "translated", "value": "TinyFish が HTTP 以外のレスポンスを返しました。" } }
+      }
     }
   }
 }

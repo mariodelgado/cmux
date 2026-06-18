@@ -567,6 +567,34 @@
         }
       }
     },
+    "tinyfish": {
+      "title": "tinyfish",
+      "description": "TinyFish remote browser settings.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": false,
+          "descriptionKey": "schemaDescriptions.tinyfish.enabled",
+          "description": "Show the TinyFish cloud browser mode in the right sidebar when an API key is available."
+        },
+        "apiKey": {
+          "type": "string",
+          "default": "",
+          "descriptionKey": "schemaDescriptions.tinyfish.apiKey",
+          "description": "Optional plaintext TinyFish Browser API key fallback. Prefer storing the key in macOS Keychain through Settings."
+        },
+        "timeoutSeconds": {
+          "type": "integer",
+          "minimum": 5,
+          "maximum": 86400,
+          "default": 300,
+          "descriptionKey": "schemaDescriptions.tinyfish.timeoutSeconds",
+          "description": "Session timeout in seconds passed to TinyFish when creating a remote browser."
+        }
+      }
+    },
     "notifications": {
       "title": "notifications",
       "description": "Notification behavior from Settings > Notifications.",

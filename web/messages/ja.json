@@ -890,6 +890,11 @@
         "newTerminalLauncher": {
           "enabled": "新しく作成した空のターミナルでシェルを開始する前に、ローカルシェルと最近使った SSH ホストのランチャーを表示します。"
         },
+        "tinyfish": {
+          "enabled": "API キーが利用可能なとき、右サイドバーに TinyFish クラウドブラウザモードを表示します。",
+          "apiKey": "任意の平文 TinyFish Browser API キーフォールバックです。設定から macOS キーチェーンに保存する方法を推奨します。",
+          "timeoutSeconds": "リモートブラウザ作成時に TinyFish へ渡すセッションタイムアウト秒数です。TinyFish は 5 から 86400 まで受け付けます。"
+        },
         "app": {
           "confirmQuit": "cmux の終了前に確認を求めるタイミングを制御します。DEV ビルドではこの設定に関係なく常にすぐ終了します。従来の app.warnBeforeQuit も boolean フォールバックとして引き続き受け付けます。",
           "windowTitleTemplate": "任意の NSWindow タイトルテンプレートです。空欄のままなら、現在のディレクトリへのフォールバックを含む cmux 既存の既定タイトル動作を保ちます。対応するプレースホルダー: '{windowId}', '{windowToken}', '{activeWorkspace}', '{activeDirectory}', '{defaultTitle}', '{appName}'。",

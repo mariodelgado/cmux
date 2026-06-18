@@ -4,6 +4,7 @@ import CMUXWorkstream
 import CmuxFoundation
 import CmuxSettings
 import CmuxSettingsUI
+import CmuxTinyFish
 import SwiftUI
 
 private func rightSidebarDebugResponder(_ responder: NSResponder?) -> String {
@@ -19,6 +20,7 @@ nonisolated enum RightSidebarMode: String, CaseIterable, Codable, Sendable {
     case feed
     case dock
     case inspector
+    case tinyfish
 
     var label: String {
         switch self {
@@ -28,6 +30,7 @@ nonisolated enum RightSidebarMode: String, CaseIterable, Codable, Sendable {
         case .feed: return String(localized: "rightSidebar.mode.feed", defaultValue: "Feed")
         case .dock: return String(localized: "rightSidebar.mode.dock", defaultValue: "Dock")
         case .inspector: return String(localized: "rightSidebar.mode.inspector", defaultValue: "Inspector")
+        case .tinyfish: return String(localized: "rightSidebar.mode.tinyfish", defaultValue: "TinyFish")
         }
     }
 
@@ -39,6 +42,7 @@ nonisolated enum RightSidebarMode: String, CaseIterable, Codable, Sendable {
         case .feed: return "dot.radiowaves.left.and.right"
         case .dock: return "dock.rectangle"
         case .inspector: return "gauge.with.dots.needle.33percent"
+        case .tinyfish: return "cloud"
         }
     }
 
@@ -49,7 +53,7 @@ nonisolated enum RightSidebarMode: String, CaseIterable, Codable, Sendable {
         case .sessions: return .switchRightSidebarToSessions
         case .feed: return .switchRightSidebarToFeed
         case .dock: return .switchRightSidebarToDock
-        case .inspector: return nil
+        case .inspector, .tinyfish: return nil
         }
     }
 }
@@ -74,7 +78,7 @@ nonisolated enum FileExplorerRootSyncPolicy {
         switch mode {
         case .files, .find:
             return true
-        case .sessions, .feed, .dock, .inspector:
+        case .sessions, .feed, .dock, .inspector, .tinyfish:
             return false
         }
     }
@@ -212,6 +216,11 @@ struct RightSidebarPanelView: View {
     @LiveSetting(\.inspector.enabled) private var inspectorEnabled
     @LiveSetting(\.inspector.character) private var inspectorCharacterEnabled
     @LiveSetting(\.inspector.host) private var inspectorHost
+    @LiveSetting(\.tinyfish.enabled) private var tinyFishEnabled
+    @LiveSetting(\.tinyfish.timeoutSeconds) private var tinyFishTimeoutSeconds
+    @LiveSetting(\.tinyfish.apiKey) private var tinyFishKeychainAPIKey
+    @Environment(\.settingsRuntime) private var settingsRuntime
+    @State private var tinyFishJSONAPIKey: String = ""
     @AppStorage(RightSidebarBetaFeatureSettings.feedEnabledKey)
     private var feedEnabled = RightSidebarBetaFeatureSettings.defaultFeedEnabled
     @AppStorage(RightSidebarBetaFeatureSettings.dockEnabledKey)
@@ -228,8 +237,19 @@ struct RightSidebarPanelView: View {
         RightSidebarMode.availableModes(
             feedEnabled: feedEnabled,
             dockEnabled: dockEnabled,
-            inspectorEnabled: inspectorEnabled
+            inspectorEnabled: inspectorEnabled,
+            tinyFishEnabled: tinyFishAvailable
         )
+    }
+
+    private var tinyFishAvailable: Bool {
+        tinyFishEnabled && !resolvedTinyFishAPIKey.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+
+    private var resolvedTinyFishAPIKey: String {
+        let keychain = tinyFishKeychainAPIKey.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !keychain.isEmpty { return keychain }
+        return tinyFishJSONAPIKey.trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
     private var isInspectorActive: Bool {
@@ -312,6 +332,12 @@ struct RightSidebarPanelView: View {
         .onChange(of: feedEnabled) { _, _ in refreshModeAvailabilityAndFocusIfNeeded() }
         .onChange(of: dockEnabled) { _, _ in refreshModeAvailabilityAndFocusIfNeeded() }
         .onChange(of: inspectorEnabled) { _, _ in refreshModeAvailabilityAndFocusIfNeeded() }
+        .onChange(of: tinyFishEnabled) { _, _ in refreshModeAvailabilityAndFocusIfNeeded() }
+        .onChange(of: tinyFishKeychainAPIKey) { _, _ in refreshModeAvailabilityAndFocusIfNeeded() }
+        .onChange(of: tinyFishJSONAPIKey) { _, _ in refreshModeAvailabilityAndFocusIfNeeded() }
+        .task {
+            await observeTinyFishJSONAPIKeyFallback()
+        }
     }
 
     private var modeBar: some View {
@@ -505,6 +531,12 @@ struct RightSidebarPanelView: View {
                     host: inspectorHost,
                     characterEnabled: inspectorCharacterEnabled
                 )
+            case .tinyfish:
+                TinyFishBrowserPanelView(
+                    apiKey: resolvedTinyFishAPIKey,
+                    enabled: tinyFishAvailable,
+                    timeoutSeconds: tinyFishTimeoutSeconds
+                )
             }
         } else {
             Color.clear
@@ -562,6 +594,15 @@ struct RightSidebarPanelView: View {
             focusFirstItem: false,
             preferredWindow: window
         )
+    }
+
+    @MainActor
+    private func observeTinyFishJSONAPIKeyFallback() async {
+        guard let settingsRuntime else { return }
+        let key = JSONKey<String>(id: "tinyfish.apiKey", defaultValue: "")
+        for await value in settingsRuntime.jsonStore.values(for: key) {
+            tinyFishJSONAPIKey = value
+        }
     }
 }
 

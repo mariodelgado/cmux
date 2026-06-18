@@ -931,6 +931,11 @@
         "newTerminalLauncher": {
           "enabled": "Show a launcher with Local Shell and recent SSH hosts before newly created empty terminals start a shell."
         },
+        "tinyfish": {
+          "enabled": "Show the TinyFish cloud browser mode in the right sidebar when an API key is available.",
+          "apiKey": "Optional plaintext TinyFish Browser API key fallback. Prefer storing the key in macOS Keychain through Settings.",
+          "timeoutSeconds": "Session timeout in seconds passed to TinyFish when creating a remote browser. TinyFish accepts values from 5 to 86400."
+        },
         "app": {
           "confirmQuit": "Control when cmux asks for confirmation before quitting. DEV builds always quit immediately regardless of this setting. Legacy app.warnBeforeQuit is still accepted as a boolean fallback.",
           "windowTitleTemplate": "Optional NSWindow title template. Blank preserves cmux's existing default title behavior, including the current-directory fallback. Supported placeholders: '{windowId}', '{windowToken}', '{activeWorkspace}', '{activeDirectory}', '{defaultTitle}', '{appName}'.",

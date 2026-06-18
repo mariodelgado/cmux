@@ -1,6 +1,6 @@
 import Foundation
 
-/// Type-erased view onto a ``DefaultsKey``, ``JSONKey``, or ``SecretFileKey``.
+/// Type-erased view onto a ``DefaultsKey``, ``JSONKey``, ``SecretFileKey``, or ``KeychainSecretKey``.
 ///
 /// Used to enumerate every catalog entry uniformly — for example when running
 /// legacy-key migrations at app startup, building schema docs, or driving the
@@ -32,6 +32,13 @@ public struct AnySettingKey: Sendable {
         /// - Parameter fileName: The secret's file name under the secret
         ///   store's base directory.
         case secretFile(fileName: String)
+
+        /// The key persists in macOS Keychain.
+        ///
+        /// - Parameters:
+        ///   - service: The Keychain service name.
+        ///   - account: The Keychain account name.
+        case keychainSecret(service: String, account: String)
     }
 
     /// The dotted identifier from the underlying key.
@@ -90,6 +97,16 @@ public struct AnySettingKey: Sendable {
         self.resetInJSON = { _ in }
     }
 
+    /// Wraps a Keychain-backed secret key. Secrets are reset through
+    /// ``KeychainSecretStore`` rather than ``JSONConfigStore``, so
+    /// ``resetInJSON`` is a no-op here.
+    public init(_ key: KeychainSecretKey) {
+        self.id = key.id
+        self.kind = .keychainSecret(service: key.service, account: key.account)
+        self.migrateUserDefaultsLegacyKeys = { _ in }
+        self.resetInJSON = { _ in }
+    }
+
     private static func migrateLegacyDefaultsKey<Value>(
         _ key: DefaultsKey<Value>,
         defaults: UserDefaults
@@ -140,5 +157,9 @@ extension JSONKey: AnySettingKeyConvertible {
 }
 
 extension SecretFileKey: AnySettingKeyConvertible {
+    var asAnySettingKey: AnySettingKey { AnySettingKey(self) }
+}
+
+extension KeychainSecretKey: AnySettingKeyConvertible {
     var asAnySettingKey: AnySettingKey { AnySettingKey(self) }
 }

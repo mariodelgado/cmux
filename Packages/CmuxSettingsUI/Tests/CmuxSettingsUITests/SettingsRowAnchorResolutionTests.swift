@@ -79,6 +79,7 @@ struct SettingsRowAnchorResolutionTests {
         "browser.showSearchSuggestions",
         "browser.theme",
         "browser.urlsToAlwaysOpenExternally",
+        "tinyfish.enabled",
         "customSidebars.renderer",
         "fileEditor.wordWrap",
         "newTerminalLauncher.enabled",

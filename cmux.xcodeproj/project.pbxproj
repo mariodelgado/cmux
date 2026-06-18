@@ -305,6 +305,7 @@
 		C750300000000000000000A3 /* CmuxTerminalEngine in Frameworks */ = {isa = PBXBuildFile; productRef = C750300000000000000000A2 /* CmuxTerminalEngine */; };
 		C750400000000000000000A3 /* CmuxTerminalServices in Frameworks */ = {isa = PBXBuildFile; productRef = C750400000000000000000A2 /* CmuxTerminalServices */; };
 		CFF12E0000000000000000A3 /* CmuxTestSupport in Frameworks */ = {isa = PBXBuildFile; productRef = CFF12E0000000000000000A2 /* CmuxTestSupport */; };
+		7F4653480000000000000003 /* CmuxTinyFish in Frameworks */ = {isa = PBXBuildFile; productRef = 7F4653480000000000000002 /* CmuxTinyFish */; };
 		C7A510000000000000000002 /* CmuxTopMemoryDiagnostics.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A510000000000000000001 /* CmuxTopMemoryDiagnostics.swift */; };
 		B35750000000000000000004 /* CmuxTopProcessArguments.swift in Sources */ = {isa = PBXBuildFile; fileRef = B35750000000000000000003 /* CmuxTopProcessArguments.swift */; };
 		C7A50C000000000000000002 /* CmuxTopProcessCPUTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A50C000000000000000001 /* CmuxTopProcessCPUTests.swift */; };
@@ -2033,6 +2034,7 @@
 				C750300000000000000000A3 /* CmuxTerminalEngine in Frameworks */,
 				C750400000000000000000A3 /* CmuxTerminalServices in Frameworks */,
 				CFF12E0000000000000000A3 /* CmuxTestSupport in Frameworks */,
+				7F4653480000000000000003 /* CmuxTinyFish in Frameworks */,
 				CDFEED0300000000CDFEED03 /* CmuxUpdater in Frameworks */,
 				CDFEED0600000000CDFEED06 /* CmuxUpdaterUI in Frameworks */,
 				5E55200000000000000000B3 /* CmuxWindowing in Frameworks */,
@@ -3187,6 +3189,7 @@
 				E3B7A3000000000000000102 /* CmuxWorkspaces */,
 				A500D013A1B2C3D4E5F60718 /* CMUXDebugLog */,
 				CD0CFE5200000000CD0CFE52 /* CmuxSettings */,
+				7F4653480000000000000002 /* CmuxTinyFish */,
 				CFF11E0000000000000000A2 /* CmuxFileOpen */,
 				CFF12E0000000000000000A2 /* CmuxTestSupport */,
 				CD0CFE5500000000CD0CFE55 /* CmuxSettingsUI */,
@@ -3389,6 +3392,7 @@
 				C750400000000000000000D1 /* XCLocalSwiftPackageReference "CmuxWorkspaceWindow" */,
 				C750500000000000000000A1 /* XCLocalSwiftPackageReference "CmuxTerminal" */,
 				CD0CFE5100000000CD0CFE51 /* XCLocalSwiftPackageReference "CmuxSettings" */,
+				7F4653480000000000000001 /* XCLocalSwiftPackageReference "CmuxTinyFish" */,
 				CFF11E0000000000000000A1 /* XCLocalSwiftPackageReference "CmuxFileOpen" */,
 				CFF12E0000000000000000A1 /* XCLocalSwiftPackageReference "CmuxTestSupport" */,
 				CD0CFE5400000000CD0CFE54 /* XCLocalSwiftPackageReference "CmuxSettingsUI" */,
@@ -4996,6 +5000,10 @@
 			isa = XCLocalSwiftPackageReference;
 			relativePath = Packages/CmuxCommandPalette;
 		};
+		7F4653480000000000000001 /* XCLocalSwiftPackageReference "CmuxTinyFish" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/CmuxTinyFish;
+		};
 		C8000301C8000301C8000301 /* XCLocalSwiftPackageReference "CmuxProcess" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = Packages/CmuxProcess;
@@ -5370,6 +5378,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 5E55500000000000000000E1 /* XCLocalSwiftPackageReference "CmuxCommandPalette" */;
 			productName = CmuxCommandPalette;
+		};
+		7F4653480000000000000002 /* CmuxTinyFish */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7F4653480000000000000001 /* XCLocalSwiftPackageReference "CmuxTinyFish" */;
+			productName = CmuxTinyFish;
 		};
 		C750200000000000000000A2 /* CmuxTerminalCore */ = {
 			isa = XCSwiftPackageProductDependency;

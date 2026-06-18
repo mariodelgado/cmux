@@ -16,6 +16,7 @@ public struct SettingsRuntime: @unchecked Sendable {
     public let userDefaultsStore: UserDefaultsSettingsStore
     public let jsonStore: JSONConfigStore
     public let secretStore: SecretFileStore
+    public let keychainSecretStore: KeychainSecretStore
     public let errorLog: SettingsErrorLog
     public let accountFlow: AccountFlow?
     public let hostActions: SettingsHostActions
@@ -26,6 +27,7 @@ public struct SettingsRuntime: @unchecked Sendable {
         userDefaultsStore: UserDefaultsSettingsStore,
         jsonStore: JSONConfigStore,
         secretStore: SecretFileStore,
+        keychainSecretStore: KeychainSecretStore = KeychainSecretStore(),
         errorLog: SettingsErrorLog,
         accountFlow: AccountFlow? = nil,
         hostActions: SettingsHostActions = NoopSettingsHostActions()
@@ -34,6 +36,7 @@ public struct SettingsRuntime: @unchecked Sendable {
         self.userDefaultsStore = userDefaultsStore
         self.jsonStore = jsonStore
         self.secretStore = secretStore
+        self.keychainSecretStore = keychainSecretStore
         self.errorLog = errorLog
         self.accountFlow = accountFlow
         self.hostActions = hostActions

@@ -615,3 +615,51 @@ Verification:
   AppKit `NSTitlebarViewController` assertion in
   `WindowToolbarController.installParsedPaneAccessory` before the selected
   inspector tests could complete.
+
+## TinyFish remote browser panel
+
+Added a TinyFish Browser mode to the right sidebar. It is separate from the
+local WKWebView browser panel and is only available when `tinyfish.enabled` is
+true and a TinyFish API key resolves from Keychain or the legacy plaintext
+`cmux.json` fallback.
+
+The new `CmuxTinyFish` package contains the REST client, mockable service
+protocol, URLSession WebSocket CDP client, screenshot/overlay model, and
+SwiftUI panel. The CDP client creates and attaches to page targets, enables
+Page/Runtime/DOM, navigates with a load deadline, captures PNG screenshots,
+evaluates a small interactive-element overlay, dispatches mouse clicks,
+inserts text, and scrolls.
+
+Settings > Browser now has a TinyFish Remote Browser block with a
+Keychain-backed API-key field, enable toggle, and timeout stepper. `cmux.json`
+schema/path support covers `tinyfish.enabled`, optional plaintext fallback
+`tinyfish.apiKey`, and `tinyfish.timeoutSeconds`; the generated template
+includes only non-secret defaults.
+
+Configuration and safety:
+
+- API keys are never hardcoded, and the generated config template does not
+  write `tinyfish.apiKey`.
+- Network and CDP work is isolated behind async actors/protocols; UI receives
+  snapshots through a main-actor model.
+- No typing-hot-path files were changed.
+- All new Settings, right-sidebar, TinyFish panel, error, and schema strings
+  were localized in English and Japanese.
+
+Verification:
+
+- `xcodebuild -project cmux.xcodeproj -scheme cmux -configuration Debug -destination platform=macOS -derivedDataPath /tmp/cmux-codex build`: `BUILD SUCCEEDED`.
+- `swift test --package-path Packages/CmuxTinyFish`: passed 3 Swift Testing
+  tests.
+- `swift test --package-path Packages/CmuxSettings --filter SettingCatalogTests`:
+  passed 5 Swift Testing tests.
+- `swift test --package-path Packages/CmuxSettings`: passed 150 Swift Testing
+  tests.
+- `swift test --package-path Packages/CmuxSettingsUI`: the TinyFish Settings
+  entry is reachable, but the package still fails on pre-existing duplicate
+  `setting:automation:ai-local-hub` row-anchor assertions.
+- `scripts/check-pbxproj.sh`: succeeded.
+- `python3 -m json.tool Resources/Localizable.xcstrings`: succeeded.
+- `python3 -m json.tool web/data/cmux.schema.json`: succeeded.
+- `python3 -m json.tool web/messages/en.json`: succeeded.
+- `python3 -m json.tool web/messages/ja.json`: succeeded.
