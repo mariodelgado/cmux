@@ -204538,6 +204538,482 @@
         "en": { "stringUnit": { "state": "translated", "value": "TinyFish returned a non-HTTP response." } },
         "ja": { "stringUnit": { "state": "translated", "value": "TinyFish が HTTP 以外のレスポンスを返しました。" } }
       }
+    },
+    "settings.sidebarAppearance.rightPanelTranslucent": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Translucent Right Panel"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "右パネルを半透明にする"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Translucent Right Panel"
+          }
+        },
+        "bs": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Translucent Right Panel"
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Translucent Right Panel"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Translucent Right Panel"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Translucent Right Panel"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Translucent Right Panel"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Translucent Right Panel"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Translucent Right Panel"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Translucent Right Panel"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Translucent Right Panel"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Translucent Right Panel"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Translucent Right Panel"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Translucent Right Panel"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Translucent Right Panel"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Translucent Right Panel"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Translucent Right Panel"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "Translucent Right Panel"
+          }
+        }
+      }
+    },
+    "settings.sidebarAppearance.rightPanelTranslucent.subtitleOff": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The right panel uses a solid, opaque background for maximum text contrast. The left sidebar is unaffected."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "右パネルにソリッドで不透明な背景を使用し、テキストのコントラストを最大化します。左サイドバーには影響しません。"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The right panel uses a solid, opaque background for maximum text contrast. The left sidebar is unaffected."
+          }
+        },
+        "bs": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The right panel uses a solid, opaque background for maximum text contrast. The left sidebar is unaffected."
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The right panel uses a solid, opaque background for maximum text contrast. The left sidebar is unaffected."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The right panel uses a solid, opaque background for maximum text contrast. The left sidebar is unaffected."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The right panel uses a solid, opaque background for maximum text contrast. The left sidebar is unaffected."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The right panel uses a solid, opaque background for maximum text contrast. The left sidebar is unaffected."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The right panel uses a solid, opaque background for maximum text contrast. The left sidebar is unaffected."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The right panel uses a solid, opaque background for maximum text contrast. The left sidebar is unaffected."
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The right panel uses a solid, opaque background for maximum text contrast. The left sidebar is unaffected."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The right panel uses a solid, opaque background for maximum text contrast. The left sidebar is unaffected."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The right panel uses a solid, opaque background for maximum text contrast. The left sidebar is unaffected."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The right panel uses a solid, opaque background for maximum text contrast. The left sidebar is unaffected."
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The right panel uses a solid, opaque background for maximum text contrast. The left sidebar is unaffected."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The right panel uses a solid, opaque background for maximum text contrast. The left sidebar is unaffected."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The right panel uses a solid, opaque background for maximum text contrast. The left sidebar is unaffected."
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The right panel uses a solid, opaque background for maximum text contrast. The left sidebar is unaffected."
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The right panel uses a solid, opaque background for maximum text contrast. The left sidebar is unaffected."
+          }
+        }
+      }
+    },
+    "settings.sidebarAppearance.rightPanelTranslucent.subtitleOn": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The right panel (Inspector, Dock, Vault, TinyFish) uses a translucent material background."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "右パネル（インスペクタ、Dock、Vault、TinyFish）に半透明のマテリアル背景を使用します。"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The right panel (Inspector, Dock, Vault, TinyFish) uses a translucent material background."
+          }
+        },
+        "bs": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The right panel (Inspector, Dock, Vault, TinyFish) uses a translucent material background."
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The right panel (Inspector, Dock, Vault, TinyFish) uses a translucent material background."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The right panel (Inspector, Dock, Vault, TinyFish) uses a translucent material background."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The right panel (Inspector, Dock, Vault, TinyFish) uses a translucent material background."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The right panel (Inspector, Dock, Vault, TinyFish) uses a translucent material background."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The right panel (Inspector, Dock, Vault, TinyFish) uses a translucent material background."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The right panel (Inspector, Dock, Vault, TinyFish) uses a translucent material background."
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The right panel (Inspector, Dock, Vault, TinyFish) uses a translucent material background."
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The right panel (Inspector, Dock, Vault, TinyFish) uses a translucent material background."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The right panel (Inspector, Dock, Vault, TinyFish) uses a translucent material background."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The right panel (Inspector, Dock, Vault, TinyFish) uses a translucent material background."
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The right panel (Inspector, Dock, Vault, TinyFish) uses a translucent material background."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The right panel (Inspector, Dock, Vault, TinyFish) uses a translucent material background."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The right panel (Inspector, Dock, Vault, TinyFish) uses a translucent material background."
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The right panel (Inspector, Dock, Vault, TinyFish) uses a translucent material background."
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "The right panel (Inspector, Dock, Vault, TinyFish) uses a translucent material background."
+          }
+        }
+      }
+    },
+    "settings.search.alias.setting.sidebarAppearance.right-panel-translucent": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "rightPanel.translucent right sidebar panel opaque solid translucent material glass inspector dock vault tinyfish contrast"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "rightPanel.translucent right sidebar panel opaque solid translucent material glass inspector dock vault tinyfish contrast 右パネル 右サイドバー 不透明 ソリッド 半透明 マテリアル ガラス コントラスト"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "rightPanel.translucent right sidebar panel opaque solid translucent material glass inspector dock vault tinyfish contrast"
+          }
+        },
+        "bs": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "rightPanel.translucent right sidebar panel opaque solid translucent material glass inspector dock vault tinyfish contrast"
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "rightPanel.translucent right sidebar panel opaque solid translucent material glass inspector dock vault tinyfish contrast"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "rightPanel.translucent right sidebar panel opaque solid translucent material glass inspector dock vault tinyfish contrast"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "rightPanel.translucent right sidebar panel opaque solid translucent material glass inspector dock vault tinyfish contrast"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "rightPanel.translucent right sidebar panel opaque solid translucent material glass inspector dock vault tinyfish contrast"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "rightPanel.translucent right sidebar panel opaque solid translucent material glass inspector dock vault tinyfish contrast"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "rightPanel.translucent right sidebar panel opaque solid translucent material glass inspector dock vault tinyfish contrast"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "rightPanel.translucent right sidebar panel opaque solid translucent material glass inspector dock vault tinyfish contrast"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "rightPanel.translucent right sidebar panel opaque solid translucent material glass inspector dock vault tinyfish contrast"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "rightPanel.translucent right sidebar panel opaque solid translucent material glass inspector dock vault tinyfish contrast"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "rightPanel.translucent right sidebar panel opaque solid translucent material glass inspector dock vault tinyfish contrast"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "rightPanel.translucent right sidebar panel opaque solid translucent material glass inspector dock vault tinyfish contrast"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "rightPanel.translucent right sidebar panel opaque solid translucent material glass inspector dock vault tinyfish contrast"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "rightPanel.translucent right sidebar panel opaque solid translucent material glass inspector dock vault tinyfish contrast"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "rightPanel.translucent right sidebar panel opaque solid translucent material glass inspector dock vault tinyfish contrast"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "needs_review",
+            "value": "rightPanel.translucent right sidebar panel opaque solid translucent material glass inspector dock vault tinyfish contrast"
+          }
+        }
+      }
     }
   }
 }

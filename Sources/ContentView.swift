@@ -998,6 +998,7 @@ struct ContentView: View {
     @AppStorage(MinimalModeTitlebarDebugSettings.trafficLightTabBarInsetKey) private var titlebarTrafficLightTabBarInset = MinimalModeTitlebarDebugSettings.defaultTrafficLightTabBarInset
     @AppStorage(MinimalModeTitlebarDebugSettings.trafficLightTitlebarLeadingInsetKey) private var titlebarTrafficLightTitlebarLeadingInset = MinimalModeTitlebarDebugSettings.defaultTrafficLightTitlebarLeadingInset
     @LiveSetting(\.shortcuts.showModifierHoldHints) private var showModifierHoldHints
+    @LiveSetting(\.sidebarAppearance.rightPanelTranslucent) private var rightPanelTranslucent
     @State private var sidebarWidth: CGFloat = CGFloat(SessionPersistencePolicy.defaultSidebarWidth)
     @State private var hoveredResizerHandles: Set<SidebarResizerHandle> = []
     @State private var isResizerDragging = false
@@ -1909,7 +1910,7 @@ struct ContentView: View {
         case .leftSidebar:
             leftSidebarLiquidGlassBackdrop(appearance: appearance)
         case .rightSidebar:
-            RightSidebarCatppuccinMochaPalette.panelBackground
+            RightSidebarCatppuccinMochaPalette.panelBackdropLayer(translucent: rightPanelTranslucent)
         case .windowRoot, .terminalCanvas, .bonsplitChrome, .titlebar, .browserSurface:
             WindowBackdropLayer(role: role, snapshot: appearance)
         }
@@ -1996,7 +1997,11 @@ struct ContentView: View {
         .environment(\.colorScheme, .dark)
         .foregroundStyle(RightSidebarCatppuccinMochaPalette.text)
         .tint(RightSidebarCatppuccinMochaPalette.mauve)
-        .background(RightSidebarCatppuccinMochaPalette.panelBackdrop)
+        .background(
+            rightPanelTranslucent
+                ? RightSidebarCatppuccinMochaPalette.panelBackdrop
+                : RightSidebarCatppuccinMochaPalette.solidPanelBackdrop
+        )
         .transaction { $0.animation = nil }
         .onAppear {
             let sanitized = normalizedRightSidebarWidth(fileExplorerState.width)

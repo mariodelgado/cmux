@@ -16,6 +16,7 @@ public struct SidebarSection: View {
     @State private var fontSaveFailed = false
     @State private var fontSaveTask: Task<Void, Never>?
     @State private var matchTerminal: DefaultsValueModel<Bool>
+    @State private var rightPanelTranslucent: DefaultsValueModel<Bool>
     @State private var hideAll: DefaultsValueModel<Bool>
     @State private var wrapTitles: DefaultsValueModel<Bool>
     @State private var showDesc: DefaultsValueModel<Bool>
@@ -42,6 +43,7 @@ public struct SidebarSection: View {
         self.hostActions = hostActions
         _sidebarFont = State(initialValue: hostActions.sidebarFontSize())
         _matchTerminal = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.sidebarAppearance.matchTerminalBackground))
+        _rightPanelTranslucent = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.sidebarAppearance.rightPanelTranslucent))
         _hideAll = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.sidebar.hideAllDetails))
         _wrapTitles = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.sidebar.wrapWorkspaceTitles))
         _showDesc = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.sidebar.showWorkspaceDescription))
@@ -150,6 +152,21 @@ public struct SidebarSection: View {
                     .labelsHidden()
                     .toggleStyle(.switch)
                     .controlSize(.small)
+            }
+            SettingsCardDivider()
+
+            SettingsCardRow(
+                configurationReview: .json("rightPanel.translucent"),
+                String(localized: "settings.sidebarAppearance.rightPanelTranslucent", defaultValue: "Translucent Right Panel"),
+                subtitle: rightPanelTranslucent.current
+                    ? String(localized: "settings.sidebarAppearance.rightPanelTranslucent.subtitleOn", defaultValue: "The right panel (Inspector, Dock, Vault, TinyFish) uses a translucent material background.")
+                    : String(localized: "settings.sidebarAppearance.rightPanelTranslucent.subtitleOff", defaultValue: "The right panel uses a solid, opaque background for maximum text contrast. The left sidebar is unaffected.")
+            ) {
+                Toggle("", isOn: Binding(get: { rightPanelTranslucent.current }, set: { rightPanelTranslucent.set($0) }))
+                    .labelsHidden()
+                    .toggleStyle(.switch)
+                    .controlSize(.small)
+                    .accessibilityIdentifier("SettingsRightPanelTranslucentToggle")
             }
             SettingsCardDivider()
 

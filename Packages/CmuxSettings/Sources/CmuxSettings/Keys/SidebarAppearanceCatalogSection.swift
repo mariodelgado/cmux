@@ -68,5 +68,15 @@ public struct SidebarAppearanceCatalogSection: SettingCatalogSection {
         userDefaultsKey: "sidebarState"
     )
 
+    /// When `true`, the right sidebar panel restores its prior translucent
+    /// material look (gradient backdrop, vibrant cards). Defaults to `false`
+    /// so the right panel is a solid, fully opaque Catppuccin Mocha fill that
+    /// keeps text legible. The left sidebar is unaffected (always Liquid Glass).
+    public let rightPanelTranslucent = DefaultsKey<Bool>(
+        id: "rightPanel.translucent",
+        defaultValue: false,
+        userDefaultsKey: "rightPanelTranslucent"
+    )
+
     public init() {}
 }

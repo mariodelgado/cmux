@@ -51,12 +51,32 @@ struct RightSidebarCatppuccinMochaPalette {
     static let insetGroupFill = surface0
     static let panelBackdrop = mantle
 
+    /// Solid, fully opaque fill used for the right panel content area when the
+    /// panel is opaque (the default). Catppuccin Mocha base (#1E1E2E).
+    static let solidPanelBackdrop = base
+
+    /// Solid, fully opaque fill used for the right panel chrome (mode bar) when
+    /// the panel is opaque (the default). Catppuccin Mocha mantle (#181825).
+    static let solidPanelChrome = mantle
+
     static var panelBackground: LinearGradient {
         LinearGradient(
             colors: [mantle, base, base],
             startPoint: .top,
             endPoint: .bottom
         )
+    }
+
+    /// Backdrop for the right sidebar shell. Solid opaque base by default so
+    /// text stays legible; restores the translucent-style gradient only when
+    /// the user opts into `rightPanel.translucent`.
+    @ViewBuilder
+    static func panelBackdropLayer(translucent: Bool) -> some View {
+        if translucent {
+            panelBackground
+        } else {
+            solidPanelBackdrop
+        }
     }
 
     private static func nsColor(red: Int, green: Int, blue: Int, alpha: CGFloat = 1) -> NSColor {

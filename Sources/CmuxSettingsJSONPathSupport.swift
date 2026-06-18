@@ -434,6 +434,7 @@ extension CmuxSettingsFileStore {
         "workspaceColors.paletteOverrides",
         "workspaceColors.customColors",
         "sidebarAppearance.matchTerminalBackground",
+        "rightPanel.translucent",
         "sidebarAppearance.tintColor",
         "sidebarAppearance.lightModeTintColor",
         "sidebarAppearance.darkModeTintColor",

@@ -799,6 +799,9 @@ final class CmuxSettingsFileStore {
         if let value = jsonBool(section["matchTerminalBackground"]) {
             snapshot.managedUserDefaults[SidebarMatchTerminalBackgroundSettings.userDefaultsKey] = .bool(value)
         }
+        if let value = jsonBool(section["rightPanelTranslucent"]) {
+            snapshot.managedUserDefaults[SidebarAppearanceCatalogSection().rightPanelTranslucent.userDefaultsKey] = .bool(value)
+        }
         if let raw = jsonString(section["tintColor"]) {
             guard let normalized = WorkspaceTabColorSettings.normalizedHex(raw) else {
                 logInvalid("sidebarAppearance.tintColor", sourcePath: sourcePath)

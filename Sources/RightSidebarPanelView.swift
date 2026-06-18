@@ -219,6 +219,7 @@ struct RightSidebarPanelView: View {
     @LiveSetting(\.tinyfish.enabled) private var tinyFishEnabled
     @LiveSetting(\.tinyfish.timeoutSeconds) private var tinyFishTimeoutSeconds
     @LiveSetting(\.tinyfish.apiKey) private var tinyFishKeychainAPIKey
+    @LiveSetting(\.sidebarAppearance.rightPanelTranslucent) private var rightPanelTranslucent
     @Environment(\.settingsRuntime) private var settingsRuntime
     @State private var tinyFishJSONAPIKey: String = ""
     @AppStorage(RightSidebarBetaFeatureSettings.feedEnabledKey)
@@ -285,7 +286,11 @@ struct RightSidebarPanelView: View {
         }
         .shortcutHintVisibilityAnimation(value: focusShortcutHintAnimationValue)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(RightSidebarCatppuccinMochaPalette.panelBackdrop)
+        .background(
+            rightPanelTranslucent
+                ? RightSidebarCatppuccinMochaPalette.panelBackdrop
+                : RightSidebarCatppuccinMochaPalette.solidPanelBackdrop
+        )
         .foregroundStyle(RightSidebarCatppuccinMochaPalette.text)
         .tint(RightSidebarCatppuccinMochaPalette.mauve)
         .environment(\.colorScheme, .dark)
