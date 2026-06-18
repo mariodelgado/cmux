@@ -33,6 +33,8 @@ public struct SettingCatalog: SettingCatalogSection {
     public let automation = AutomationCatalogSection()
     public let ai = AICatalogSection()
     public let browser = BrowserCatalogSection()
+    /// Settings for the per-pane native parsed terminal view.
+    public let parsedView = ParsedViewCatalogSection()
     /// Settings for the built-in markdown viewer (the `markdown.*` keys).
     public let markdown = MarkdownCatalogSection()
     /// Settings for the freeform canvas workspace layout (the `canvas.*` keys).

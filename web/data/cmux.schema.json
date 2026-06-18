@@ -1013,6 +1013,20 @@
         }
       }
     },
+    "parsedView": {
+      "title": "parsedView",
+      "description": "Native parsed terminal-pane view settings.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": true,
+          "descriptionKey": "schemaDescriptions.parsedView.enabled",
+          "description": "Enable the per-pane Parsed view toggle that renders terminal output as native structured widgets."
+        }
+      }
+    },
     "browser": {
       "title": "browser",
       "description": "Embedded browser settings from Settings > Browser.",

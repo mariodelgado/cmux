@@ -191,6 +191,11 @@ extension CmuxSettingsFileStore {
                 ],
             ],
             [
+                "parsedView": [
+                    "enabled": SettingCatalog().parsedView.enabled.defaultValue,
+                ],
+            ],
+            [
                 "browser": [
                     "defaultSearchEngine": BrowserSearchSettingsStore.defaultSearchEngine.rawValue,
                     "customSearchEngineName": BrowserSearchSettingsStore.defaultCustomSearchEngineName,

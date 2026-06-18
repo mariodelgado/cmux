@@ -377,6 +377,9 @@ final class CmuxSettingsFileStore {
         if let aiSection = root["ai"] as? [String: Any] {
             parseAISection(aiSection, sourcePath: sourcePath, snapshot: &snapshot)
         }
+        if let parsedViewSection = root["parsedView"] as? [String: Any] {
+            parseParsedViewSection(parsedViewSection, sourcePath: sourcePath, snapshot: &snapshot)
+        }
         if let browserSection = root["browser"] as? [String: Any] {
             parseBrowserSection(browserSection, sourcePath: sourcePath, snapshot: &snapshot)
         }
@@ -881,6 +884,14 @@ final class CmuxSettingsFileStore {
         } else if section.keys.contains("endpoint") {
             logInvalid("ai.endpoint", sourcePath: sourcePath)
         }
+    }
+
+    private func parseParsedViewSection(
+        _ section: [String: Any],
+        sourcePath: String,
+        snapshot: inout ResolvedSettingsSnapshot
+    ) {
+        applyBooleanSettings(ParsedViewSettingsFileMapping.booleanSettings, from: section, sourcePath: sourcePath, snapshot: &snapshot)
     }
 
     private func parseBrowserSection(

@@ -172,6 +172,18 @@ enum TerminalSettingsFileMapping {
     ]
 }
 
+enum ParsedViewSettingsFileMapping {
+    private static let parsedView = ParsedViewCatalogSection()
+
+    static let booleanSettings: [SettingsFileBooleanMapping] = [
+        .init(
+            jsonKey: "enabled",
+            defaultsKey: parsedView.enabled.userDefaultsKey,
+            invalidPath: "parsedView.enabled"
+        ),
+    ]
+}
+
 enum SidebarSettingsFileMapping {
     private static let sidebar = SidebarCatalogSection()
 
@@ -426,6 +438,7 @@ extension CmuxSettingsFileStore {
         "ai.appIntents",
         "ai.services",
         "ai.menuBar",
+        "parsedView.enabled",
         "browser.defaultSearchEngine",
         "browser.customSearchEngineName",
         "browser.customSearchEngineURLTemplate",

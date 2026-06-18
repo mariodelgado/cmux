@@ -925,6 +925,9 @@
           "services": "Expose local AI actions in the macOS Services menu for selected text.",
           "menuBar": "Show local AI triage status and a quick prompt in the macOS menu bar."
         },
+        "parsedView": {
+          "enabled": "Enable the per-pane Parsed view toggle that renders terminal output as native structured widgets."
+        },
         "app": {
           "confirmQuit": "Control when cmux asks for confirmation before quitting. DEV builds always quit immediately regardless of this setting. Legacy app.warnBeforeQuit is still accepted as a boolean fallback.",
           "windowTitleTemplate": "Optional NSWindow title template. Blank preserves cmux's existing default title behavior, including the current-directory fallback. Supported placeholders: '{windowId}', '{windowToken}', '{activeWorkspace}', '{activeDirectory}', '{defaultTitle}', '{appName}'.",
