@@ -182,6 +182,12 @@ extension CmuxSettingsFileStore {
                 ],
             ],
             [
+                "inspector": [
+                    "enabled": SettingCatalog().inspector.enabled.defaultValue,
+                    "host": SettingCatalog().inspector.host.defaultValue,
+                ],
+            ],
+            [
                 "ai": [
                     "enabled": SettingCatalog().ai.enabled.defaultValue,
                     "endpoint": SettingCatalog().ai.endpoint.defaultValue,

@@ -433,6 +433,8 @@ extension CmuxSettingsFileStore {
         "automation.kiroNotificationLevel",
         "automation.portBase",
         "automation.portRange",
+        "inspector.enabled",
+        "inspector.host",
         "ai.enabled",
         "ai.endpoint",
         "ai.appIntents",

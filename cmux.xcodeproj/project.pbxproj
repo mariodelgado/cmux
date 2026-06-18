@@ -570,6 +570,11 @@
 		A9F200000000000000000018 /* OpenCodeEventTextAccumulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F100000000000000000018 /* OpenCodeEventTextAccumulator.swift */; };
 		A5E01203A1B2C3D4E5F60718 /* OpenCodeHookRegressionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E01204A1B2C3D4E5F60718 /* OpenCodeHookRegressionTests.swift */; };
 		A9F200000000000000000019 /* OpenCodeProcessOutputDisposition.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F100000000000000000019 /* OpenCodeProcessOutputDisposition.swift */; };
+		0A0B0C0D0000000000001001 /* OpenRouterInspectorModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0B0C0D0000000000001002 /* OpenRouterInspectorModels.swift */; };
+		0A0B0C0D0000000000001003 /* OpenRouterInspectorSSHService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0B0C0D0000000000001004 /* OpenRouterInspectorSSHService.swift */; };
+		0A0B0C0D0000000000001005 /* OpenRouterInspectorStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0B0C0D0000000000001006 /* OpenRouterInspectorStore.swift */; };
+		0A0B0C0D0000000000001011 /* OpenRouterInspectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0B0C0D0000000000001012 /* OpenRouterInspectorTests.swift */; };
+		0A0B0C0D0000000000001007 /* OpenRouterInspectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A0B0C0D0000000000001008 /* OpenRouterInspectorView.swift */; };
 		D0B1001CA1B2C3D4E5F60001 /* PaneDropRoutingSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0B1001DA1B2C3D4E5F60001 /* PaneDropRoutingSupport.swift */; };
 		A5001400 /* Panel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5001410 /* Panel.swift */; };
 		A5001405 /* PanelContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5001415 /* PanelContentView.swift */; };
@@ -1537,6 +1542,11 @@
 		A9F100000000000000000018 /* OpenCodeEventTextAccumulator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Panels/OpenCodeEventTextAccumulator.swift; sourceTree = "<group>"; };
 		A5E01204A1B2C3D4E5F60718 /* OpenCodeHookRegressionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenCodeHookRegressionTests.swift; sourceTree = "<group>"; };
 		A9F100000000000000000019 /* OpenCodeProcessOutputDisposition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Panels/OpenCodeProcessOutputDisposition.swift; sourceTree = "<group>"; };
+		0A0B0C0D0000000000001002 /* OpenRouterInspectorModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenRouterInspectorModels.swift; sourceTree = "<group>"; };
+		0A0B0C0D0000000000001004 /* OpenRouterInspectorSSHService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenRouterInspectorSSHService.swift; sourceTree = "<group>"; };
+		0A0B0C0D0000000000001006 /* OpenRouterInspectorStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenRouterInspectorStore.swift; sourceTree = "<group>"; };
+		0A0B0C0D0000000000001012 /* OpenRouterInspectorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenRouterInspectorTests.swift; sourceTree = "<group>"; };
+		0A0B0C0D0000000000001008 /* OpenRouterInspectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenRouterInspectorView.swift; sourceTree = "<group>"; };
 		D0B1001DA1B2C3D4E5F60001 /* PaneDropRoutingSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaneDropRoutingSupport.swift; sourceTree = "<group>"; };
 		A5001410 /* Panel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Panels/Panel.swift; sourceTree = "<group>"; };
 		A5001415 /* PanelContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Panels/PanelContentView.swift; sourceTree = "<group>"; };
@@ -2723,6 +2733,10 @@
 				B7F9A603B7F9A603B7F9A603 /* WindowChromeMetrics.swift */,
 				B37A00000000000000000004 /* RightSidebarMode+Availability.swift */,
 				B37A0000000000000000000E /* RightSidebarRemoteCommand.swift */,
+				0A0B0C0D0000000000001002 /* OpenRouterInspectorModels.swift */,
+				0A0B0C0D0000000000001004 /* OpenRouterInspectorSSHService.swift */,
+				0A0B0C0D0000000000001006 /* OpenRouterInspectorStore.swift */,
+				0A0B0C0D0000000000001008 /* OpenRouterInspectorView.swift */,
 				FE003003 /* RightSidebarPanelView.swift */,
 				FE0030A3 /* RightSidebarToolPanel.swift */,
 				D0C0D0C0D0C0D0C0D0C0D002 /* DockPanelView.swift */,
@@ -2977,6 +2991,7 @@
 				0A17C0DE0A17C0DE0A17C003 /* RemoteTmuxAuthTests.swift */,
 				5F5553CA5553CA5553CA0002 /* RemoteTmuxCapabilitiesTests.swift */,
 				5F5553CB5553CB5553CB0002 /* RightSidebarRemoteCommandTests.swift */,
+				0A0B0C0D0000000000001012 /* OpenRouterInspectorTests.swift */,
 				3F704ED4F177122D7DCD0BCC /* RemoteTmuxSessionListParserTests.swift */,
 				31FFFE3EFCDCCD6BDF405370 /* RemoteTmuxSessionSnapshotTests.swift */,
 				08850489C70ECFACA540C2F3 /* WorkspaceTerminalWorkingDirectoryFallbackTests.swift */,
@@ -3794,6 +3809,10 @@
 				A9F200000000000000000017 /* OpenCodeEventStreamParser.swift in Sources */,
 				A9F200000000000000000018 /* OpenCodeEventTextAccumulator.swift in Sources */,
 				A9F200000000000000000019 /* OpenCodeProcessOutputDisposition.swift in Sources */,
+				0A0B0C0D0000000000001001 /* OpenRouterInspectorModels.swift in Sources */,
+				0A0B0C0D0000000000001003 /* OpenRouterInspectorSSHService.swift in Sources */,
+				0A0B0C0D0000000000001005 /* OpenRouterInspectorStore.swift in Sources */,
+				0A0B0C0D0000000000001007 /* OpenRouterInspectorView.swift in Sources */,
 				D0B1001CA1B2C3D4E5F60001 /* PaneDropRoutingSupport.swift in Sources */,
 				A5001400 /* Panel.swift in Sources */,
 				A5001405 /* PanelContentView.swift in Sources */,
@@ -4308,6 +4327,7 @@
 				9637C6D3170F4BE1A7EF6243 /* OmnibarSubmitDecisionTests.swift in Sources */,
 				0A0F00550000000000000001 /* OmpSupportTests.swift in Sources */,
 				A5E01203A1B2C3D4E5F60718 /* OpenCodeHookRegressionTests.swift in Sources */,
+				0A0B0C0D0000000000001011 /* OpenRouterInspectorTests.swift in Sources */,
 				C44550000000000000000001 /* PanelOwnedNativeViewSessionTests.swift in Sources */,
 				D27D0D070000000000000001 /* ParsedViewDetectorTests.swift in Sources */,
 				D1F0A00300000000000000C1 /* PhonePushPresenceGateTests.swift in Sources */,
@@ -4330,7 +4350,7 @@
 					F5410004A1B2C3D4E5F60718 /* RestorableAgentHookProviderHermesTests.swift in Sources */,
 					F5410000A1B2C3D4E5F60718 /* RestorableAgentHookProviderResumeTests.swift in Sources */,
 					F5410002A1B2C3D4E5F60718 /* RestorableAgentNonInteractiveTests.swift in Sources */,
-					F5410006A1B2C3D4E5F60718 /* RestorableAgentSessionIndexTests.swift in Sources */,
+				F5410006A1B2C3D4E5F60718 /* RestorableAgentSessionIndexTests.swift in Sources */,
 				C3408A000000000000000003 /* RightSidebarCommandPaletteTests.swift in Sources */,
 				5F5553CB5553CB5553CB0001 /* RightSidebarRemoteCommandTests.swift in Sources */,
 				C46790000000000000000007 /* RosettaNativeRelaunchTests.swift in Sources */,

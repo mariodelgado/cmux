@@ -974,6 +974,24 @@
         }
       }
     },
+    "inspector": {
+      "title": "inspector",
+      "description": "OpenRouter / Claude Code inspector settings.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show the OpenRouter inspector mode in the right sidebar."
+        },
+        "host": {
+          "type": "string",
+          "default": "mario.servarica",
+          "description": "SSH host used for the remote Claude Code inspector helper scripts."
+        }
+      }
+    },
     "ai": {
       "title": "ai",
       "description": "Local AI settings for OpenAI-compatible MLX hub summaries and triage.",

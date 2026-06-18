@@ -93,6 +93,14 @@ extension TerminalControllerSocketSecurityTests {
                 RightSidebarRemoteRequest(command: .setMode(.sessions, focus: true), target: RightSidebarRemoteTarget())
             ),
             (
+                "right_sidebar set inspector",
+                RightSidebarRemoteRequest(command: .setMode(.inspector, focus: true), target: RightSidebarRemoteTarget())
+            ),
+            (
+                "right_sidebar openrouter",
+                RightSidebarRemoteRequest(command: .setMode(.inspector, focus: true), target: RightSidebarRemoteTarget())
+            ),
+            (
                 "right_sidebar mode",
                 RightSidebarRemoteRequest(command: .getState, target: RightSidebarRemoteTarget())
             ),

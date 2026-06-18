@@ -47,7 +47,7 @@ struct ParsedViewDetectorTests {
 
     @Test func detectsClaudeTranscriptToolsAndQuestions() {
         let lines = [
-            assistantLine(uuid: "a-1", blocks: [
+            Self.assistantLine(uuid: "a-1", blocks: [
                 ["type": "tool_use", "id": "toolu_b", "name": "Bash", "input": ["command": "swift test"]],
                 ["type": "tool_use", "id": "toolu_q", "name": "AskUserQuestion", "input": [
                     "questions": [[
@@ -60,8 +60,8 @@ struct ParsedViewDetectorTests {
                 ]],
                 ["type": "tool_use", "id": "toolu_x", "name": "WebSearch", "input": ["query": "cmux parsed view"]],
             ]),
-            toolResultLine(toolUseID: "toolu_b", content: "Test Suite 'All tests' passed"),
-            toolResultLine(toolUseID: "toolu_x", content: "Found relevant docs"),
+            Self.toolResultLine(toolUseID: "toolu_b", content: "Test Suite 'All tests' passed"),
+            Self.toolResultLine(toolUseID: "toolu_x", content: "Found relevant docs"),
         ]
         let snapshot = ParsedViewDetector().detect(ParsedPaneContent.make(rawText: lines.joined(separator: "\n")))
 

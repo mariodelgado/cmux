@@ -399,3 +399,83 @@ Verification:
   `Resources/Localizable.xcstrings`; touched Swift files were scanned for new
   bare user-facing `Text`, `Button`, `Label`, `Picker`, `Toggle`, segmented
   label, tooltip, and accessibility-label strings.
+
+## OpenRouter inspector
+
+Added a right-sidebar Inspector mode for remote Claude Code sessions running
+through OpenRouter. The inspector polls the configured SSH host only while the
+right panel is visible, runs the existing `~/.tmux/cc-inspector.sh` helper, and
+decodes the JSON payload into tolerant Codable snapshots. Model switching uses
+the existing `~/.tmux/cc-switch.sh` remote helper for both restart-and-resume
+session switches and default model/profile updates.
+
+The UI uses the existing Catppuccin Mocha right-panel chrome and shows an
+OpenRouter balance/usage/limit meter, recent spend rate, detected
+`session:window` rows with running state/profile/model, recent generations, and
+per-session model/profile menus. SSH execution and JSON parsing live behind a
+single actor-backed service with queueing and throttle behavior; the SwiftUI
+store receives results from explicit reload/action completions, and row views
+receive value snapshots plus closure actions only.
+
+Configuration and safety:
+
+- `inspector.enabled` defaults to true and controls right-sidebar Inspector
+  availability.
+- `inspector.host` defaults to `mario.servarica` and is used as the SSH
+  destination for both inspection and switch actions.
+- Both settings are wired through `cmux.json` template/path support, the web
+  schema, and the Automation settings section.
+- The typing-latency hot paths called out in `CLAUDE.md`
+  (`TerminalSurface.forceRefresh`, `TabItemView`, and
+  `WindowTerminalHostView.hitTest`) were not changed.
+
+Touched files:
+- `Sources/OpenRouterInspectorModels.swift`
+- `Sources/OpenRouterInspectorSSHService.swift`
+- `Sources/OpenRouterInspectorStore.swift`
+- `Sources/OpenRouterInspectorView.swift`
+- `Sources/RightSidebarPanelView.swift`
+- `Sources/RightSidebarMode+Availability.swift`
+- `Sources/RightSidebarRemoteCommand.swift`
+- `Sources/ContentView+RightSidebarCommandPalette.swift`
+- `Sources/KeyboardShortcutSettingsFileStore+Template.swift`
+- `Sources/CmuxSettingsJSONPathSupport.swift`
+- `Sources/MainWindowFocusController.swift`
+- `Sources/RightSidebarToolPanel.swift`
+- `Packages/CmuxSettings/Sources/CmuxSettings/Keys/InspectorCatalogSection.swift`
+- `Packages/CmuxSettings/Sources/CmuxSettings/Keys/SettingCatalog.swift`
+- `Packages/CmuxSettingsUI/Sources/CmuxSettingsUI/Sections/AutomationSection.swift`
+- `Resources/Localizable.xcstrings`
+- `web/data/cmux.schema.json`
+- `cmuxTests/OpenRouterInspectorTests.swift`
+- `cmuxTests/FileExplorerStateModePersistenceTests.swift`
+- `cmuxTests/RightSidebarCommandPaletteTests.swift`
+- `cmuxTests/RightSidebarRemoteCommandTests.swift`
+- `cmuxTests/ParsedViewDetectorTests.swift`
+- `cmuxTests/SidebarWorkspaceSnapshotRefreshPolicyTests.swift`
+- `cmux.xcodeproj/project.pbxproj`
+- `SUMMARY-macos27.md`
+
+Verification:
+- `xcodebuild -project cmux.xcodeproj -scheme cmux -configuration Debug -destination platform=macOS -derivedDataPath /tmp/cmux-codex build`: `BUILD SUCCEEDED`.
+- `./scripts/reload.sh --tag macos27-codex`: succeeded in 219s (log:
+  `/tmp/cmux-reload-macos27-codex.log`; app:
+  `/Users/marioelysian/Library/Developer/Xcode/DerivedData/cmux-macos27-codex/Build/Products/Debug/cmux DEV macos27-codex.app`).
+- `scripts/check-pbxproj.sh`: succeeded.
+- `scripts/lint-pbxproj-test-wiring.sh`: succeeded.
+- `python3 -m json.tool Resources/Localizable.xcstrings`: succeeded.
+- `python3 -m json.tool web/data/cmux.schema.json`: succeeded.
+- Localization audit: new OpenRouter inspector right-sidebar strings, Settings
+  rows, command usage text, action/error messages, and accessibility/help text
+  have English and Japanese entries in `Resources/Localizable.xcstrings`; the
+  touched Swift UI files were scanned for newly introduced bare user-facing
+  `Text`, `Button`, `Label`, `Toggle`, `SettingsCardRow`, help, and
+  accessibility strings.
+- `xcodebuild test -project cmux.xcodeproj -scheme cmux-unit -destination platform=macOS -derivedDataPath /tmp/cmux-codex -only-testing:cmuxTests/OpenRouterInspectorTests`:
+  the new inspector tests compiled, but the test run was interrupted after the
+  host app hit an existing AppKit `NSTitlebarViewController` assertion in
+  `WindowToolbarController.installParsedPaneAccessory`. Two stale test-target
+  compile blockers were repaired first:
+  `SidebarWorkspaceSnapshotRefreshPolicyTests` now passes
+  `rollingOutputPreview: nil`, and `ParsedViewDetectorTests` now qualifies
+  static helper calls with `Self`.

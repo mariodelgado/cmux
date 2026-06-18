@@ -13,6 +13,8 @@ public struct AutomationSection: View {
 
     @State private var socketPasswordModel: SecretValueModel
     @State private var modeModel: DefaultsValueModel<SocketControlMode>
+    @State private var inspectorEnabledModel: JSONValueModel<Bool>
+    @State private var inspectorHostModel: JSONValueModel<String>
     @State private var claudeCodeModel: DefaultsValueModel<Bool>
     @State private var claudePathModel: DefaultsValueModel<String>
     @State private var autoNamingModel: DefaultsValueModel<Bool>
@@ -57,6 +59,8 @@ public struct AutomationSection: View {
             errorLog: errorLog
         ))
         _modeModel = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.automation.socketControlMode))
+        _inspectorEnabledModel = State(initialValue: JSONValueModel(store: jsonStore, key: catalog.inspector.enabled, errorLog: errorLog))
+        _inspectorHostModel = State(initialValue: JSONValueModel(store: jsonStore, key: catalog.inspector.host, errorLog: errorLog))
         _claudeCodeModel = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.integrations.claudeCodeHooksEnabled))
         _claudePathModel = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.integrations.claudeCodeCustomClaudePath))
         _autoNamingModel = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.automation.workspaceAutoNaming))
@@ -94,6 +98,7 @@ public struct AutomationSection: View {
             SettingsSectionHeader(String(localized: "settings.section.automation", defaultValue: "Automation"), section: .automation)
 
             socketControlCard
+            inspectorCard
             claudeCodeCard
             claudePathCard
             autoNamingCard
@@ -133,6 +138,41 @@ public struct AutomationSection: View {
                 localized: "settings.automation.openAccess.dialog.message",
                 defaultValue: "This disables ancestry and password checks and opens the socket to all local users. Only enable when you understand the risk."
             ))
+        }
+    }
+
+    @ViewBuilder
+    private var inspectorCard: some View {
+        SettingsCard {
+            SettingsCardRow(
+                configurationReview: .json("inspector.enabled"),
+                String(localized: "settings.automation.openRouterInspector", defaultValue: "OpenRouter Inspector"),
+                subtitle: inspectorEnabledModel.current
+                    ? String(localized: "settings.automation.openRouterInspector.subtitleOn", defaultValue: "Right sidebar shows remote Claude Code sessions and OpenRouter spend.")
+                    : String(localized: "settings.automation.openRouterInspector.subtitleOff", defaultValue: "Right sidebar inspector mode is hidden.")
+            ) {
+                Toggle("", isOn: Binding(get: { inspectorEnabledModel.current }, set: { inspectorEnabledModel.set($0) }))
+                    .labelsHidden()
+                    .controlSize(.small)
+                    .accessibilityIdentifier("SettingsOpenRouterInspectorToggle")
+            }
+            SettingsCardDivider()
+            SettingsCardRow(
+                configurationReview: .json("inspector.host"),
+                String(localized: "settings.automation.openRouterInspector.host", defaultValue: "Inspector Host"),
+                subtitle: String(localized: "settings.automation.openRouterInspector.host.subtitle", defaultValue: "SSH destination used for the remote Claude Code inspector scripts.")
+            ) {
+                TextField(
+                    String(localized: "settings.automation.openRouterInspector.host.placeholder", defaultValue: "mario.servarica"),
+                    text: Binding(get: { inspectorHostModel.current }, set: { inspectorHostModel.set($0) })
+                )
+                .textFieldStyle(.roundedBorder)
+                .frame(width: 200)
+                .disabled(!inspectorEnabledModel.current)
+                .accessibilityIdentifier("SettingsOpenRouterInspectorHostField")
+            }
+            SettingsCardDivider()
+            SettingsCardNote(String(localized: "settings.automation.openRouterInspector.note", defaultValue: "The right sidebar polls the configured host only while the inspector is visible and runs the existing remote helper scripts over SSH."))
         }
     }
 

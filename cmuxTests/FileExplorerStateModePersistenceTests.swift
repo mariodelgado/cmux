@@ -68,6 +68,8 @@ final class FileExplorerStateModePersistenceTests: XCTestCase {
         XCTAssertEqual(RightSidebarMode.from(cliArgument: "sessions"), .sessions)
         XCTAssertEqual(RightSidebarMode.from(cliArgument: "feed"), .feed)
         XCTAssertEqual(RightSidebarMode.from(cliArgument: "dock"), .dock)
+        XCTAssertEqual(RightSidebarMode.from(cliArgument: "inspector"), .inspector)
+        XCTAssertEqual(RightSidebarMode.from(cliArgument: "openrouter"), .inspector)
         XCTAssertEqual(RightSidebarMode.from(cliArgument: " Vault "), .sessions)
         XCTAssertNil(RightSidebarMode.from(cliArgument: "unknown"))
     }

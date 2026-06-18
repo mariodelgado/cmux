@@ -41,6 +41,8 @@ public struct SettingCatalog: SettingCatalogSection {
     public let canvas = CanvasCatalogSection()
     /// Settings for the built-in plain-text file editor (the `fileEditor.*` keys).
     public let fileEditor = FileEditorCatalogSection()
+    /// Settings for the OpenRouter / Claude Code inspector.
+    public let inspector = InspectorCatalogSection()
     /// Settings for Mobile pairing and sync.
     public let mobile = MobileCatalogSection()
     public let betaFeatures = BetaFeaturesCatalogSection()

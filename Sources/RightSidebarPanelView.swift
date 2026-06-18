@@ -18,6 +18,7 @@ nonisolated enum RightSidebarMode: String, CaseIterable, Codable, Sendable {
     case sessions
     case feed
     case dock
+    case inspector
 
     var label: String {
         switch self {
@@ -26,6 +27,7 @@ nonisolated enum RightSidebarMode: String, CaseIterable, Codable, Sendable {
         case .sessions: return String(localized: "rightSidebar.mode.sessions", defaultValue: "Vault")
         case .feed: return String(localized: "rightSidebar.mode.feed", defaultValue: "Feed")
         case .dock: return String(localized: "rightSidebar.mode.dock", defaultValue: "Dock")
+        case .inspector: return String(localized: "rightSidebar.mode.inspector", defaultValue: "Inspector")
         }
     }
 
@@ -36,6 +38,7 @@ nonisolated enum RightSidebarMode: String, CaseIterable, Codable, Sendable {
         case .sessions: return "books.vertical"
         case .feed: return "dot.radiowaves.left.and.right"
         case .dock: return "dock.rectangle"
+        case .inspector: return "gauge.with.dots.needle.33percent"
         }
     }
 
@@ -46,6 +49,7 @@ nonisolated enum RightSidebarMode: String, CaseIterable, Codable, Sendable {
         case .sessions: return .switchRightSidebarToSessions
         case .feed: return .switchRightSidebarToFeed
         case .dock: return .switchRightSidebarToDock
+        case .inspector: return nil
         }
     }
 }
@@ -70,7 +74,7 @@ nonisolated enum FileExplorerRootSyncPolicy {
         switch mode {
         case .files, .find:
             return true
-        case .sessions, .feed, .dock:
+        case .sessions, .feed, .dock, .inspector:
             return false
         }
     }
@@ -205,6 +209,8 @@ struct RightSidebarPanelView: View {
     private let focusShortcutHintXOffset = ShortcutHintDebugSettings.defaultRightSidebarFocusHintX
     private let focusShortcutHintYOffset = ShortcutHintDebugSettings.defaultRightSidebarFocusHintY
     @LiveSetting(\.shortcuts.showModifierHoldHints) private var showModifierHoldHints
+    @LiveSetting(\.inspector.enabled) private var inspectorEnabled
+    @LiveSetting(\.inspector.host) private var inspectorHost
     @AppStorage(RightSidebarBetaFeatureSettings.feedEnabledKey)
     private var feedEnabled = RightSidebarBetaFeatureSettings.defaultFeedEnabled
     @AppStorage(RightSidebarBetaFeatureSettings.dockEnabledKey)
@@ -218,7 +224,15 @@ struct RightSidebarPanelView: View {
     }
 
     private var availableModes: [RightSidebarMode] {
-        RightSidebarMode.availableModes(feedEnabled: feedEnabled, dockEnabled: dockEnabled)
+        RightSidebarMode.availableModes(
+            feedEnabled: feedEnabled,
+            dockEnabled: dockEnabled,
+            inspectorEnabled: inspectorEnabled
+        )
+    }
+
+    private var isInspectorActive: Bool {
+        fileExplorerState.isVisible && fileExplorerState.mode == .inspector
     }
 
     private var focusShortcutHintAnimationValue: Bool {
@@ -296,6 +310,7 @@ struct RightSidebarPanelView: View {
         }
         .onChange(of: feedEnabled) { _, _ in refreshModeAvailabilityAndFocusIfNeeded() }
         .onChange(of: dockEnabled) { _, _ in refreshModeAvailabilityAndFocusIfNeeded() }
+        .onChange(of: inspectorEnabled) { _, _ in refreshModeAvailabilityAndFocusIfNeeded() }
     }
 
     private var modeBar: some View {
@@ -483,6 +498,8 @@ struct RightSidebarPanelView: View {
                 FeedPanelView()
             case .dock:
                 DockPanelView(rootDirectory: dockRootDirectory, workspaceId: workspaceId, store: dockStore)
+            case .inspector:
+                OpenRouterInspectorView(isActive: isInspectorActive, host: inspectorHost)
             }
         } else {
             Color.clear
