@@ -19,6 +19,10 @@ struct NewTerminalLauncherCardView: View {
                         .foregroundStyle(iconColor)
                         .frame(width: 26, height: 26)
 
+                    if snapshot.tailscalePresence != nil {
+                        tailscaleStatusDot
+                    }
+
                     Spacer(minLength: 8)
 
                     if let lastUsedText {
@@ -45,6 +49,7 @@ struct NewTerminalLauncherCardView: View {
             .padding(16)
             .frame(minHeight: 132, maxHeight: 148, alignment: .topLeading)
             .frame(maxWidth: .infinity, alignment: .leading)
+            .opacity(contentOpacity)
             .contentShape(shape)
         }
         .buttonStyle(.plain)
@@ -134,6 +139,15 @@ struct NewTerminalLauncherCardView: View {
             return "terminal.fill"
         case .ssh:
             return "server.rack"
+        case .tailscale:
+            switch snapshot.tailscaleOS {
+            case "macos":
+                return "laptopcomputer"
+            case "linux":
+                return "server.rack"
+            default:
+                return "network"
+            }
         }
     }
 
@@ -143,7 +157,30 @@ struct NewTerminalLauncherCardView: View {
             return RightSidebarCatppuccinMochaPalette.mauve
         case .ssh:
             return RightSidebarCatppuccinMochaPalette.blue
+        case .tailscale:
+            return RightSidebarCatppuccinMochaPalette.teal
         }
+    }
+
+    @ViewBuilder
+    private var tailscaleStatusDot: some View {
+        let online = snapshot.tailscalePresence == .online
+        Circle()
+            .fill(online
+                  ? RightSidebarCatppuccinMochaPalette.green
+                  : RightSidebarCatppuccinMochaPalette.overlay0)
+            .frame(width: 9, height: 9)
+            .padding(.top, 8)
+            .accessibilityLabel(
+                online
+                ? String(localized: "newTerminalLauncher.tailscale.online", defaultValue: "Online")
+                : String(localized: "newTerminalLauncher.tailscale.offline", defaultValue: "Offline")
+            )
+    }
+
+    /// Dim cards backed by an offline Tailscale device.
+    private var contentOpacity: Double {
+        snapshot.tailscalePresence == .offline ? 0.55 : 1.0
     }
 
     private var lastUsedText: String? {

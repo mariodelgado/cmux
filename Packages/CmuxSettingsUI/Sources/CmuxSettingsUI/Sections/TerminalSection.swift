@@ -18,6 +18,7 @@ public struct TerminalSection: View {
     @State private var copyOnSelect: DefaultsValueModel<Bool>
     @State private var autoResume: DefaultsValueModel<Bool>
     @State private var newTerminalLauncher: DefaultsValueModel<Bool>
+    @State private var newTerminalLauncherTailscale: DefaultsValueModel<Bool>
     @State private var parsedView: DefaultsValueModel<Bool>
     @State private var hibernation: DefaultsValueModel<Bool>
     @State private var idleSeconds: DefaultsValueModel<Double>
@@ -40,6 +41,7 @@ public struct TerminalSection: View {
         _copyOnSelect = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.terminal.copyOnSelect))
         _autoResume = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.terminal.autoResumeAgentSessions))
         _newTerminalLauncher = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.newTerminalLauncher.enabled))
+        _newTerminalLauncherTailscale = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.newTerminalLauncher.tailscale))
         _parsedView = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.parsedView.enabled))
         _hibernation = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.terminal.agentHibernationEnabled))
         _idleSeconds = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.terminal.agentHibernationIdleSeconds))
@@ -189,6 +191,19 @@ public struct TerminalSection: View {
                     .labelsHidden()
                     .controlSize(.small)
                     .accessibilityIdentifier("SettingsNewTerminalLauncherEnabledToggle")
+            }
+            SettingsCardDivider()
+            SettingsCardRow(
+                configurationReview: .json("newTerminalLauncher.tailscale"),
+                String(localized: "settings.newTerminalLauncher.tailscale", defaultValue: "Tailscale Devices in Launcher"),
+                subtitle: newTerminalLauncherTailscale.current
+                    ? String(localized: "settings.newTerminalLauncher.tailscale.subtitleOn", defaultValue: "The launcher discovers Tailscale devices on your tailnet and merges them into the host cards.")
+                    : String(localized: "settings.newTerminalLauncher.tailscale.subtitleOff", defaultValue: "The launcher only shows Local Shell and recent SSH destinations.")
+            ) {
+                Toggle("", isOn: Binding(get: { newTerminalLauncherTailscale.current }, set: { newTerminalLauncherTailscale.set($0) }))
+                    .labelsHidden()
+                    .controlSize(.small)
+                    .accessibilityIdentifier("SettingsNewTerminalLauncherTailscaleToggle")
             }
             SettingsCardDivider()
             SettingsCardRow(

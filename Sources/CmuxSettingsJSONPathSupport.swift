@@ -179,6 +179,11 @@ enum NewTerminalLauncherSettingsFileMapping {
             defaultsKey: NewTerminalLauncherSettings.enabledKey,
             invalidPath: "newTerminalLauncher.enabled"
         ),
+        .init(
+            jsonKey: "tailscale",
+            defaultsKey: NewTerminalLauncherSettings.tailscaleKey,
+            invalidPath: "newTerminalLauncher.tailscale"
+        ),
     ]
 }
 
@@ -390,6 +395,7 @@ extension CmuxSettingsFileStore {
         "terminal.textBoxMaxLines",
         "terminal.resumeCommands",
         "newTerminalLauncher.enabled",
+        "newTerminalLauncher.tailscale",
         "tinyfish.enabled",
         "tinyfish.apiKey",
         "tinyfish.timeoutSeconds",

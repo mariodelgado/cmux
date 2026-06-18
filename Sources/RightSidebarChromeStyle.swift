@@ -31,6 +31,8 @@ struct RightSidebarCatppuccinMochaPalette {
     static let overlay0NS = nsColor(red: 0x6c, green: 0x70, blue: 0x86)
     static let mauveNS = nsColor(red: 0xcb, green: 0xa6, blue: 0xf7)
     static let blueNS = nsColor(red: 0x89, green: 0xb4, blue: 0xfa)
+    static let tealNS = nsColor(red: 0x94, green: 0xe2, blue: 0xd5)
+    static let greenNS = nsColor(red: 0xa6, green: 0xe3, blue: 0xa1)
 
     static let base = Color(nsColor: baseNS)
     static let mantle = Color(nsColor: mantleNS)
@@ -42,6 +44,8 @@ struct RightSidebarCatppuccinMochaPalette {
     static let overlay0 = Color(nsColor: overlay0NS)
     static let mauve = Color(nsColor: mauveNS)
     static let blue = Color(nsColor: blueNS)
+    static let teal = Color(nsColor: tealNS)
+    static let green = Color(nsColor: greenNS)
     static let hairline = surface1.opacity(0.52)
     static let softHairline = surface1.opacity(0.38)
     static let insetGroupFill = surface0

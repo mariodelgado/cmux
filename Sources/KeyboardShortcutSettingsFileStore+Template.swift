@@ -113,6 +113,7 @@ extension CmuxSettingsFileStore {
             [
                 "newTerminalLauncher": [
                     "enabled": NewTerminalLauncherSettings.defaultEnabled,
+                    "tailscale": NewTerminalLauncherSettings.defaultTailscaleEnabled,
                 ],
             ],
             [

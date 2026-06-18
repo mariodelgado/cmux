@@ -203923,6 +203923,27 @@
         "ja": { "stringUnit": { "state": "translated", "value": "新しく作成した空のターミナルでシェルを開始する前に、ローカルシェルと最近使った SSH ホストのランチャーを表示します。" } }
       }
     },
+    "schemaDescriptions.newTerminalLauncher.tailscale": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Discover Tailscale devices on your tailnet and merge them into the new terminal launcher cards." } },
+        "ja": { "stringUnit": { "state": "translated", "value": "テールネット上の Tailscale デバイスを検出し、新しいターミナルランチャーのカードに統合します。" } }
+      }
+    },
+    "newTerminalLauncher.tailscale.online": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Online" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "オンライン" } }
+      }
+    },
+    "newTerminalLauncher.tailscale.offline": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Offline" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "オフライン" } }
+      }
+    },
     "settings.newTerminalLauncher.enabled": {
       "extractionState": "manual",
       "localizations": {
@@ -203949,6 +203970,34 @@
       "localizations": {
         "en": { "stringUnit": { "state": "translated", "value": "newTerminalLauncher.enabled ssh hosts local shell new terminal launcher cards" } },
         "ja": { "stringUnit": { "state": "translated", "value": "newTerminalLauncher.enabled ssh ホスト ローカルシェル 新しいターミナル ランチャー カード" } }
+      }
+    },
+    "settings.search.alias.setting.terminal.new-terminal-launcher-tailscale": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "newTerminalLauncher.tailscale tailscale devices tailnet magicdns ssh hosts new terminal launcher cards" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "newTerminalLauncher.tailscale tailscale デバイス テールネット magicdns ssh ホスト 新しいターミナル ランチャー カード" } }
+      }
+    },
+    "settings.newTerminalLauncher.tailscale": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Tailscale Devices in Launcher" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "ランチャーの Tailscale デバイス" } }
+      }
+    },
+    "settings.newTerminalLauncher.tailscale.subtitleOff": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "The launcher only shows Local Shell and recent SSH destinations." } },
+        "ja": { "stringUnit": { "state": "translated", "value": "ランチャーはローカルシェルと最近の SSH 接続先のみを表示します。" } }
+      }
+    },
+    "settings.newTerminalLauncher.tailscale.subtitleOn": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "The launcher discovers Tailscale devices on your tailnet and merges them into the host cards." } },
+        "ja": { "stringUnit": { "state": "translated", "value": "ランチャーはテールネット上の Tailscale デバイスを検出し、ホストカードに統合します。" } }
       }
     },
     "settings.automation.openRouterInspector.character": {

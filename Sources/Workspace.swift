@@ -8372,7 +8372,7 @@ final class Workspace: Identifiable, ObservableObject {
             panel.completeNewTerminalLauncherSelection()
             focusPanel(panelId)
             panel.focus()
-        case .ssh:
+        case .ssh, .tailscale:
             guard let destination = card.destination?.trimmingCharacters(in: .whitespacesAndNewlines),
                   !destination.isEmpty else {
                 return

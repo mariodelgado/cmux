@@ -83,6 +83,7 @@ struct SettingsRowAnchorResolutionTests {
         "customSidebars.renderer",
         "fileEditor.wordWrap",
         "newTerminalLauncher.enabled",
+        "newTerminalLauncher.tailscale",
         "notifications.command",
         "notifications.dockBadge",
         "notifications.paneFlash",

@@ -663,3 +663,53 @@ Verification:
 - `python3 -m json.tool web/data/cmux.schema.json`: succeeded.
 - `python3 -m json.tool web/messages/en.json`: succeeded.
 - `python3 -m json.tool web/messages/ja.json`: succeeded.
+
+## Tailscale discovery in new-terminal launcher
+
+Extended the new-terminal SSH-host launcher (commit 986c162f) to also discover
+Tailscale devices on your tailnet and merge them into the existing Liquid Glass
+host cards.
+
+- New `tailscale status --json` client (`NewTerminalLauncherTailscaleClient`):
+  resolves the CLI at `/Applications/Tailscale.app/Contents/MacOS/Tailscale`
+  with PATH fallback (`tailscale`), runs it off-main with a timeout, drains
+  stdout concurrently, and is a graceful no-op (`[]`) when Tailscale is absent,
+  not running, times out, or emits unparseable output.
+- `NewTerminalLauncherTailscaleStatus` decodes the `Self.DNSName` + `Peer{}`
+  subset (DNSName, HostName, TailscaleIPs, OS, Online, ExitNode).
+- `NewTerminalLauncherTailscaleFilter` computes the tailnet domain from `Self`
+  (e.g. `tailbedcfa.ts.net`) and keeps only same-tailnet peers, EXCLUDING any
+  DNSName containing `mullvad` and any `ExitNode == true` (the ~540 Mullvad exit
+  nodes never appear), hiding non-{linux, macOS} hosts (phones/tablets) by
+  default, sorting online first then offline.
+- `NewTerminalLauncherCandidateResolver` merges devices with the ssh-config +
+  history cards, DE-DUPED by destination: an ssh-config Host / history entry that
+  matches a device's MagicDNS name, first label, or 100.x IP shows ONE card,
+  enriched with a Tailscale online/offline dot and OS icon; Tailscale-only
+  devices get their own cards. Local Shell stays first.
+- Click action: ssh-config / history cards keep existing `cmux ssh <alias>`
+  behavior; Tailscale-only cards open SSH to the MagicDNS name (or 100.x IP)
+  through the same `.ssh` workspace path (`Workspace.openNewTerminalLauncherDestination`).
+- Caching: the candidate cache re-runs `tailscale status` at most once per
+  30 s (throttled, off-main on the cache actor) and folds device count / online
+  count into its input signature so card rebuilds are skipped when nothing
+  changed.
+- Feature flag `newTerminalLauncher.tailscale` (default true): wired through the
+  settings catalog, `NewTerminalLauncherSettings.isTailscaleEnabled()`, the
+  cmux.json file store (template, boolean mapping, supported-paths set), the web
+  schema + en/ja messages, the Terminal settings section toggle, and search
+  navigation/aliases.
+- New Catppuccin Mocha `teal` / `green` palette colors back the OS icon and the
+  online dot. All new user-facing strings localized (English + Japanese).
+
+Verification:
+
+- `xcodebuild -project cmux.xcodeproj -scheme cmux -configuration Debug -destination platform=macOS -derivedDataPath /tmp/cmux-tailscale build`: `BUILD SUCCEEDED`.
+- `xcodebuild ... build-for-testing`: `TEST BUILD SUCCEEDED`.
+- `scripts/lint-pbxproj-test-wiring.sh`: ok (the new
+  `NewTerminalLauncherTailscaleFilterTests.swift` is wired into the cmuxTests
+  target).
+- Filter + merge/de-dupe logic verified standalone (all assertions pass) and the
+  live client run against the real tailnet returned 12 filtered devices with
+  zero Mullvad leaks and exit nodes / phones excluded.
+- `./scripts/reload.sh --tag macos27-codex`: reload succeeded.

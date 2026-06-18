@@ -929,7 +929,8 @@
           "enabled": "Enable the per-pane Parsed view toggle that renders terminal output as native structured widgets."
         },
         "newTerminalLauncher": {
-          "enabled": "Show a launcher with Local Shell and recent SSH hosts before newly created empty terminals start a shell."
+          "enabled": "Show a launcher with Local Shell and recent SSH hosts before newly created empty terminals start a shell.",
+          "tailscale": "Discover Tailscale devices on your tailnet and merge them into the new terminal launcher cards."
         },
         "tinyfish": {
           "enabled": "Show the TinyFish cloud browser mode in the right sidebar when an API key is available.",

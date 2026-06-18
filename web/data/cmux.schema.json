@@ -564,6 +564,12 @@
           "default": true,
           "descriptionKey": "schemaDescriptions.newTerminalLauncher.enabled",
           "description": "Show a launcher with Local Shell and recent SSH hosts before newly created empty terminals start a shell."
+        },
+        "tailscale": {
+          "type": "boolean",
+          "default": true,
+          "descriptionKey": "schemaDescriptions.newTerminalLauncher.tailscale",
+          "description": "Discover Tailscale devices on your tailnet and merge them into the new terminal launcher cards."
         }
       }
     },

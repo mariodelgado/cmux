@@ -567,6 +567,10 @@
 		A6A600000000000000000208 /* NewTerminalLauncherShellHistoryParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6A600000000000000000108 /* NewTerminalLauncherShellHistoryParser.swift */; };
 		A6A600000000000000000205 /* NewTerminalLauncherSSHConfigEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6A600000000000000000105 /* NewTerminalLauncherSSHConfigEntry.swift */; };
 		A6A600000000000000000206 /* NewTerminalLauncherSSHConfigParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6A600000000000000000106 /* NewTerminalLauncherSSHConfigParser.swift */; };
+		A6A600000000000000000210 /* NewTerminalLauncherTailscaleClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6A600000000000000000110 /* NewTerminalLauncherTailscaleClient.swift */; };
+		A6A60000000000000000020F /* NewTerminalLauncherTailscaleDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6A60000000000000000010F /* NewTerminalLauncherTailscaleDevice.swift */; };
+		A6A600000000000000000304 /* NewTerminalLauncherTailscaleFilterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6A600000000000000000303 /* NewTerminalLauncherTailscaleFilterTests.swift */; };
+		A6A60000000000000000020E /* NewTerminalLauncherTailscaleStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6A60000000000000000010E /* NewTerminalLauncherTailscaleStatus.swift */; };
 		A6A60000000000000000020C /* NewTerminalLauncherView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6A60000000000000000010C /* NewTerminalLauncherView.swift */; };
 		A6A60000000000000000020B /* NewTerminalLauncherViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6A60000000000000000010B /* NewTerminalLauncherViewModel.swift */; };
 		734F49D37E543DD01C2F4FEF /* NotificationAndMenuBarTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2C075029771815DD5DA1332 /* NotificationAndMenuBarTests.swift */; };
@@ -1553,6 +1557,10 @@
 		A6A600000000000000000108 /* NewTerminalLauncherShellHistoryParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTerminalLauncher/NewTerminalLauncherShellHistoryParser.swift; sourceTree = "<group>"; };
 		A6A600000000000000000105 /* NewTerminalLauncherSSHConfigEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTerminalLauncher/NewTerminalLauncherSSHConfigEntry.swift; sourceTree = "<group>"; };
 		A6A600000000000000000106 /* NewTerminalLauncherSSHConfigParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTerminalLauncher/NewTerminalLauncherSSHConfigParser.swift; sourceTree = "<group>"; };
+		A6A600000000000000000110 /* NewTerminalLauncherTailscaleClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTerminalLauncher/NewTerminalLauncherTailscaleClient.swift; sourceTree = "<group>"; };
+		A6A60000000000000000010F /* NewTerminalLauncherTailscaleDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTerminalLauncher/NewTerminalLauncherTailscaleDevice.swift; sourceTree = "<group>"; };
+		A6A600000000000000000303 /* NewTerminalLauncherTailscaleFilterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTerminalLauncherTailscaleFilterTests.swift; sourceTree = "<group>"; };
+		A6A60000000000000000010E /* NewTerminalLauncherTailscaleStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTerminalLauncher/NewTerminalLauncherTailscaleStatus.swift; sourceTree = "<group>"; };
 		A6A60000000000000000010C /* NewTerminalLauncherView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTerminalLauncher/NewTerminalLauncherView.swift; sourceTree = "<group>"; };
 		A6A60000000000000000010B /* NewTerminalLauncherViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTerminalLauncher/NewTerminalLauncherViewModel.swift; sourceTree = "<group>"; };
 		D2C075029771815DD5DA1332 /* NotificationAndMenuBarTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationAndMenuBarTests.swift; sourceTree = "<group>"; };
@@ -2557,6 +2565,9 @@
 				A6A60000000000000000010B /* NewTerminalLauncherViewModel.swift */,
 				A6A60000000000000000010C /* NewTerminalLauncherView.swift */,
 				A6A60000000000000000010D /* NewTerminalLauncherCardView.swift */,
+				A6A60000000000000000010E /* NewTerminalLauncherTailscaleStatus.swift */,
+				A6A60000000000000000010F /* NewTerminalLauncherTailscaleDevice.swift */,
+				A6A600000000000000000110 /* NewTerminalLauncherTailscaleClient.swift */,
 				E3309A02 /* AppDelegate+EqualizeSplitsShortcut.swift */,
 				D7AB00000000000000000002 /* AppDelegate+MoveTabToNewWorkspace.swift */,
 				2907A0022907A0022907A002 /* AppDelegate+RecoverableMainWindowRoutes.swift */,
@@ -3066,6 +3077,7 @@
 				A47E00010000000000000002 /* AuthEnvironmentTests.swift */,
 				C3677001000000000000002 /* CmuxSSHURLRequestTests.swift */,
 				A6A600000000000000000301 /* NewTerminalLauncherCandidateResolverTests.swift */,
+				A6A600000000000000000303 /* NewTerminalLauncherTailscaleFilterTests.swift */,
 				491751CE2321474474F27DCF /* TerminalControllerSocketSecurityTests.swift */,
 				9C1BEA3D2E6F49709A71C021 /* TerminalControllerTerminalTextTests.swift */,
 				E7E000000000000000000004 /* CmuxEventBusTests.swift */,
@@ -3860,6 +3872,9 @@
 				A6A600000000000000000208 /* NewTerminalLauncherShellHistoryParser.swift in Sources */,
 				A6A600000000000000000205 /* NewTerminalLauncherSSHConfigEntry.swift in Sources */,
 				A6A600000000000000000206 /* NewTerminalLauncherSSHConfigParser.swift in Sources */,
+				A6A600000000000000000210 /* NewTerminalLauncherTailscaleClient.swift in Sources */,
+				A6A60000000000000000020F /* NewTerminalLauncherTailscaleDevice.swift in Sources */,
+				A6A60000000000000000020E /* NewTerminalLauncherTailscaleStatus.swift in Sources */,
 				A6A60000000000000000020C /* NewTerminalLauncherView.swift in Sources */,
 				A6A60000000000000000020B /* NewTerminalLauncherViewModel.swift in Sources */,
 				B7F00002 /* NotificationSoundSettings.swift in Sources */,
@@ -4379,6 +4394,7 @@
 				9B08F916D7FF7626C6820727 /* MobilePairingConnectionTransitionTests.swift in Sources */,
 				F6448F377504F33956E7E03B /* MobileWorkspaceListFidelityTests.swift in Sources */,
 				A6A600000000000000000302 /* NewTerminalLauncherCandidateResolverTests.swift in Sources */,
+				A6A600000000000000000304 /* NewTerminalLauncherTailscaleFilterTests.swift in Sources */,
 				734F49D37E543DD01C2F4FEF /* NotificationAndMenuBarTests.swift in Sources */,
 				D7AB00000000000000B021 /* NotificationDismissSyncTests.swift in Sources */,
 				4E5F60720000000000000001 /* NotificationSoundSettingsTests.swift in Sources */,

@@ -8,5 +8,11 @@ public struct NewTerminalLauncherCatalogSection: SettingCatalogSection {
         userDefaultsKey: "newTerminalLauncher.enabled"
     )
 
+    public let tailscale = DefaultsKey<Bool>(
+        id: "newTerminalLauncher.tailscale",
+        defaultValue: true,
+        userDefaultsKey: "newTerminalLauncher.tailscale"
+    )
+
     public init() {}
 }
