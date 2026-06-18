@@ -291,3 +291,65 @@ Feature commits:
 - `2e711067a Add local AI App Intents`
 - `bb5660e35 Add local AI macOS Services`
 - `76fbd4996 Add local AI menu bar status`
+
+## Parsed view toggle
+
+Terminal panes now have a per-pane top-center `Terminal | Parsed` segmented
+control in pane chrome. The raw Ghostty surface remains mounted and unchanged;
+Parsed mode overlays a native SwiftUI renderer and switches back instantly.
+
+Detector and renderer registry:
+
+- `ParsedRenderer` defines confidence scoring, snapshot generation, and native
+  SwiftUI view construction. `ParsedRendererRegistry` registers agent transcript,
+  diff, test output, JSON/JSONL, structured logs, file listings, tabular text,
+  and rich reader fallback renderers.
+- `ParsedViewDetector` picks the highest-confidence renderer above threshold and
+  falls back to the rich reader. Agent panes use the existing
+  `ClaudeTranscriptParser` from `Packages/CmuxAgentChat` and render assistant
+  markdown, reasoning blocks, tool cards, TodoWrite checklists, permission
+  prompts, questions, and generic unknown-tool cards.
+
+Data path and throttling:
+
+- Parsed mode samples each visible pane through `TerminalSurface.surfaceText()`
+  with `activeText()` and screen fallbacks, matching the terminal surface
+  snapshot path instead of polling from SwiftUI rendering.
+- Sampling is active only while the pane is visible, Parsed mode is selected,
+  and `parsedView.enabled` is true. Ghostty ticks schedule a debounced parse at
+  roughly 0.28 seconds minimum spacing, capped to recent scrollback text.
+- ANSI/OSC/Kitty control data is sanitized before parsing; OSC8 links and Kitty
+  graphics chunks are preserved for reader rendering. Heavy detection runs off
+  the main actor and publishes immutable render snapshots back to the per-pane
+  view model.
+
+Configuration and safety:
+
+- `parsedView.enabled` defaults to true and is exposed in Settings, the cmux.json
+  parser/template path, web schema docs, and English/Japanese message catalogs.
+- The toggle and parsed overlay are wired through `TerminalPanelView` and
+  `TerminalPanel` state. The typing-latency hot paths called out in `CLAUDE.md`
+  (`TerminalSurface.forceRefresh`, `TabItemView`, and
+  `WindowTerminalHostView.hitTest`) were not changed.
+- Parsed lists render from value snapshots plus closures, preserving the
+  snapshot-boundary rule and avoiding state mutation from view-body projection.
+
+Final verification:
+
+- `xcodebuild -project cmux.xcodeproj -scheme cmux -configuration Debug -destination platform=macOS -derivedDataPath /tmp/cmux-codex build`: `BUILD SUCCEEDED`.
+- `./scripts/reload.sh --tag macos27-codex`: succeeded in 165s (log:
+  `/tmp/cmux-reload-macos27-codex.log`; app:
+  `/Users/marioelysian/Library/Developer/Xcode/DerivedData/cmux-macos27-codex/Build/Products/Debug/cmux DEV macos27-codex.app`).
+- `scripts/check-pbxproj.sh`: succeeded.
+- `scripts/lint-pbxproj-test-wiring.sh`: succeeded.
+- `jq empty web/data/cmux.schema.json web/messages/en.json web/messages/ja.json Resources/Localizable.xcstrings`: succeeded.
+- Localization audit: localized Swift keys used by the Parsed pane and Settings
+  row exist in `Resources/Localizable.xcstrings` with English and Japanese
+  values; web schema descriptions exist in `web/messages/en.json` and
+  `web/messages/ja.json`; the touched Swift UI files were scanned for new bare
+  `Text`, `Button`, `Label`, `Picker`, `Toggle`, `SettingsCardRow`, help, and
+  accessibility strings.
+- Targeted detector tests are wired into `cmuxTests`, but `xcodebuild test`
+  through `cmux-unit` currently stops on an existing
+  `SidebarWorkspaceSnapshotRefreshPolicyTests` compile error for a missing
+  `rollingOutputPreview` argument before `ParsedViewDetectorTests` can run.

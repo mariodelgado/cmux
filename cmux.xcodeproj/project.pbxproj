@@ -575,6 +575,13 @@
 		A5001405 /* PanelContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5001415 /* PanelContentView.swift */; };
 		BB49DF25341706C2A892C27C /* PanelOwnedNativeViewSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE314D9700F6F1C8D4A2FE11 /* PanelOwnedNativeViewSession.swift */; };
 		C44550000000000000000001 /* PanelOwnedNativeViewSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C44550000000000000000002 /* PanelOwnedNativeViewSessionTests.swift */; };
+		D27D0D030000000000000001 /* ParsedPaneDetection.swift in Sources */ = {isa = PBXBuildFile; fileRef = D27D0D030000000000000002 /* ParsedPaneDetection.swift */; };
+		D27D0D010000000000000001 /* ParsedPaneModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = D27D0D010000000000000002 /* ParsedPaneModels.swift */; };
+		D27D0D020000000000000001 /* ParsedPaneTextSanitizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D27D0D020000000000000002 /* ParsedPaneTextSanitizer.swift */; };
+		D27D0D050000000000000001 /* ParsedPaneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D27D0D050000000000000002 /* ParsedPaneView.swift */; };
+		D27D0D040000000000000001 /* ParsedPaneViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D27D0D040000000000000002 /* ParsedPaneViewModel.swift */; };
+		D27D0D070000000000000001 /* ParsedViewDetectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D27D0D070000000000000002 /* ParsedViewDetectorTests.swift */; };
+		D27D0D060000000000000001 /* ParsedViewSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D27D0D060000000000000002 /* ParsedViewSettings.swift */; };
 		A5001425 /* PDFPreviewChromeDebugWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5001424 /* PDFPreviewChromeDebugWindowController.swift */; };
 		D1F0A00400000000000000D1 /* PhoneForwardingMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1F0A00400000000000000D2 /* PhoneForwardingMode.swift */; };
 		D1F0A00100000000000000A1 /* PhonePushClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1F0A00100000000000000A2 /* PhonePushClient.swift */; };
@@ -1535,6 +1542,13 @@
 		A5001415 /* PanelContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Panels/PanelContentView.swift; sourceTree = "<group>"; };
 		CE314D9700F6F1C8D4A2FE11 /* PanelOwnedNativeViewSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Panels/PanelOwnedNativeViewSession.swift; sourceTree = "<group>"; };
 		C44550000000000000000002 /* PanelOwnedNativeViewSessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanelOwnedNativeViewSessionTests.swift; sourceTree = "<group>"; };
+		D27D0D030000000000000002 /* ParsedPaneDetection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParsedPane/ParsedPaneDetection.swift; sourceTree = "<group>"; };
+		D27D0D010000000000000002 /* ParsedPaneModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParsedPane/ParsedPaneModels.swift; sourceTree = "<group>"; };
+		D27D0D020000000000000002 /* ParsedPaneTextSanitizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParsedPane/ParsedPaneTextSanitizer.swift; sourceTree = "<group>"; };
+		D27D0D050000000000000002 /* ParsedPaneView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParsedPane/ParsedPaneView.swift; sourceTree = "<group>"; };
+		D27D0D040000000000000002 /* ParsedPaneViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParsedPane/ParsedPaneViewModel.swift; sourceTree = "<group>"; };
+		D27D0D070000000000000002 /* ParsedViewDetectorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParsedViewDetectorTests.swift; sourceTree = "<group>"; };
+		D27D0D060000000000000002 /* ParsedViewSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParsedPane/ParsedViewSettings.swift; sourceTree = "<group>"; };
 		A5001424 /* PDFPreviewChromeDebugWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Panels/PDFPreviewChromeDebugWindowController.swift; sourceTree = "<group>"; };
 		D1F0A00400000000000000D2 /* PhoneForwardingMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneForwardingMode.swift; sourceTree = "<group>"; };
 		D1F0A00100000000000000A2 /* PhonePushClient.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PhonePushClient.swift; sourceTree = "<group>"; };
@@ -2276,6 +2290,12 @@
 				D27C0D020000000000000002 /* SidebarRollingOutputPreviewFormatter.swift */,
 				D27C0D030000000000000002 /* SidebarRollingOutputPreviewLine.swift */,
 				D27C0D040000000000000002 /* SidebarRollingOutputPreviewSampler.swift */,
+				D27D0D010000000000000002 /* ParsedPaneModels.swift */,
+				D27D0D020000000000000002 /* ParsedPaneTextSanitizer.swift */,
+				D27D0D030000000000000002 /* ParsedPaneDetection.swift */,
+				D27D0D040000000000000002 /* ParsedPaneViewModel.swift */,
+				D27D0D050000000000000002 /* ParsedPaneView.swift */,
+				D27D0D060000000000000002 /* ParsedViewSettings.swift */,
 				A1A1A1020000000000000002 /* SidebarAIInsightCoordinator.swift */,
 				A1A1A1040000000000000002 /* AIBackend.swift */,
 				A1A1A1050000000000000002 /* AIBackendError.swift */,
@@ -2813,6 +2833,7 @@
 				F5000001A1B2C3D4E5F60718 /* SessionPersistenceTests.swift */,
 				B35750000000000000000009 /* PiVaultAgentPersistenceTests.swift */,
 				D3610B010000000000000002 /* AgentSessionAutoResumeSettingsTests.swift */,
+				D27D0D070000000000000002 /* ParsedViewDetectorTests.swift */,
 				A9E010000000000000000005 /* AgentExecutableResolverTests.swift */,
 				A9E010000000000000000010 /* AgentChatTranscriptResolverTests.swift */,
 				A9E030000000000000000001 /* AgentSessionSocketSurfaceTests.swift */,
@@ -3777,6 +3798,12 @@
 				A5001400 /* Panel.swift in Sources */,
 				A5001405 /* PanelContentView.swift in Sources */,
 				BB49DF25341706C2A892C27C /* PanelOwnedNativeViewSession.swift in Sources */,
+				D27D0D030000000000000001 /* ParsedPaneDetection.swift in Sources */,
+				D27D0D010000000000000001 /* ParsedPaneModels.swift in Sources */,
+				D27D0D020000000000000001 /* ParsedPaneTextSanitizer.swift in Sources */,
+				D27D0D050000000000000001 /* ParsedPaneView.swift in Sources */,
+				D27D0D040000000000000001 /* ParsedPaneViewModel.swift in Sources */,
+				D27D0D060000000000000001 /* ParsedViewSettings.swift in Sources */,
 				A5001425 /* PDFPreviewChromeDebugWindowController.swift in Sources */,
 				D1F0A00400000000000000D1 /* PhoneForwardingMode.swift in Sources */,
 				D1F0A00100000000000000A1 /* PhonePushClient.swift in Sources */,
@@ -4282,6 +4309,7 @@
 				0A0F00550000000000000001 /* OmpSupportTests.swift in Sources */,
 				A5E01203A1B2C3D4E5F60718 /* OpenCodeHookRegressionTests.swift in Sources */,
 				C44550000000000000000001 /* PanelOwnedNativeViewSessionTests.swift in Sources */,
+				D27D0D070000000000000001 /* ParsedViewDetectorTests.swift in Sources */,
 				D1F0A00300000000000000C1 /* PhonePushPresenceGateTests.swift in Sources */,
 					B3575000000000000000000A /* PiVaultAgentPersistenceTests.swift in Sources */,
 					D0B10008A1B2C3D4E5F60001 /* PortalTabDragRoutingTests.swift in Sources */,

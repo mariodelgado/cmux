@@ -115,6 +115,20 @@ extension TerminalSurface {
         return Self.readText(surface: surface, pointTag: GHOSTTY_POINT_SCREEN)
     }
 
+    /// The full terminal scrollback/surface text, or nil without a live surface.
+    @MainActor
+    public func surfaceText() -> String? {
+        guard let surface = liveSurfaceForGhosttyAccess(reason: "surfaceText") else { return nil }
+        return Self.readText(surface: surface, pointTag: GHOSTTY_POINT_SURFACE)
+    }
+
+    /// The active prompt/output region text, or nil without a live surface.
+    @MainActor
+    public func activeText() -> String? {
+        guard let surface = liveSurfaceForGhosttyAccess(reason: "activeText") else { return nil }
+        return Self.readText(surface: surface, pointTag: GHOSTTY_POINT_ACTIVE)
+    }
+
     /// Send text with control characters (Return, Tab, etc.) delivered as key
     /// events so the shell processes them, while complete terminal control
     /// sequences are routed through Ghostty's PTY-output parser. Cold surfaces

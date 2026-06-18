@@ -13,6 +13,8 @@ struct TerminalPanelView: View {
     private var notificationPaneRingEnabled = NotificationPaneRingSettings.defaultEnabled
     @AppStorage(TerminalTextBoxInputSettings.maxLinesKey)
     private var textBoxMaxLines = TerminalTextBoxInputSettings.defaultMaxLines
+    @AppStorage(ParsedViewSettings.enabledKey)
+    private var parsedViewEnabled = ParsedViewSettings.defaultEnabled
     @State private var terminalFontSize = GhosttyConfig.load().fontSize
     let paneId: PaneID
     let isFocused: Bool
@@ -61,35 +63,83 @@ struct TerminalPanelView: View {
 
     private var terminalBody: some View {
         VStack(spacing: 0) {
-            // Layering contract: terminal find UI is mounted in GhosttySurfaceScrollView (AppKit portal layer)
-            // via `searchState`. Rendering `SurfaceSearchOverlay` in this SwiftUI container can hide it.
-            GhosttyTerminalView(
-                terminalSurface: panel.surface,
-                paneId: paneId,
-                isActive: isFocused,
-                isVisibleInUI: isVisibleInUI,
-                portalZPriority: portalPriority,
-                showsInactiveOverlay: isSplit && !isFocused,
-                showsUnreadNotificationRing: hasUnreadNotification && notificationPaneRingEnabled,
-                inactiveOverlayColor: appearance.unfocusedOverlayNSColor,
-                inactiveOverlayOpacity: appearance.unfocusedOverlayOpacity,
-                searchState: panel.searchState,
-                reattachToken: panel.viewReattachToken,
-                onFocus: { _ in
-                    panel.terminalDidBecomeFocused()
-                    onFocus()
-                },
-                onTriggerFlash: onTriggerFlash
-            )
-            // Keep the NSViewRepresentable identity stable across bonsplit structural updates.
-            // This prevents transient teardown/recreate that can momentarily detach the hosted terminal view.
-            .id(panel.id)
-            .background(Color.clear)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            ZStack(alignment: .top) {
+                // Layering contract: terminal find UI is mounted in GhosttySurfaceScrollView (AppKit portal layer)
+                // via `searchState`. Rendering `SurfaceSearchOverlay` in this SwiftUI container can hide it.
+                GhosttyTerminalView(
+                    terminalSurface: panel.surface,
+                    paneId: paneId,
+                    isActive: isFocused,
+                    isVisibleInUI: isVisibleInUI,
+                    portalZPriority: portalPriority,
+                    showsInactiveOverlay: isSplit && !isFocused,
+                    showsUnreadNotificationRing: hasUnreadNotification && notificationPaneRingEnabled,
+                    inactiveOverlayColor: appearance.unfocusedOverlayNSColor,
+                    inactiveOverlayOpacity: appearance.unfocusedOverlayOpacity,
+                    searchState: panel.searchState,
+                    reattachToken: panel.viewReattachToken,
+                    onFocus: { _ in
+                        panel.terminalDidBecomeFocused()
+                        onFocus()
+                    },
+                    onTriggerFlash: onTriggerFlash
+                )
+                // Keep the NSViewRepresentable identity stable across bonsplit structural updates.
+                // This prevents transient teardown/recreate that can momentarily detach the hosted terminal view.
+                .id(panel.id)
+                .background(Color.clear)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
 #if DEBUG
-            .reportTerminalViewportGeometryForUITest(panel: panel)
+                .reportTerminalViewportGeometryForUITest(panel: panel)
 #endif
+                if parsedViewEnabled && panel.parsedPaneMode == .parsed {
+                    ParsedPaneView(
+                        viewModel: panel.parsedViewModel,
+                        actions: ParsedPaneActions(
+                            sendInput: { panel.sendParsedPaneInput($0) },
+                            sendReturnTerminatedInput: { panel.sendParsedPaneInput($0 + "\r") }
+                        )
+                    )
+                    .transition(.opacity)
+                    .zIndex(1)
+                }
+
+                if parsedViewEnabled {
+                    ParsedPaneChromeToggle(
+                        selection: Binding(
+                            get: { panel.parsedPaneMode },
+                            set: { mode in
+                                panel.parsedPaneMode = mode
+                                updateParsedViewSampling()
+                            }
+                        )
+                    )
+                    .padding(.top, 6)
+                    .zIndex(2)
+                }
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
             .layoutPriority(1)
+            .onAppear {
+                updateParsedViewSampling()
+            }
+            .onDisappear {
+                panel.parsedViewModel.stop()
+            }
+            .onChange(of: panel.parsedPaneMode) {
+                updateParsedViewSampling()
+            }
+            .onChange(of: isVisibleInUI) {
+                updateParsedViewSampling()
+            }
+            .onChange(of: parsedViewEnabled) { _, enabled in
+                if !enabled {
+                    panel.parsedPaneMode = .terminal
+                    panel.parsedViewModel.stop()
+                } else {
+                    updateParsedViewSampling()
+                }
+            }
 
             if panel.isTextBoxActive {
                 TextBoxInputContainer(
@@ -130,6 +180,14 @@ struct TerminalPanelView: View {
         .onReceive(NotificationCenter.default.publisher(for: .ghosttyConfigDidReload)) { _ in
             terminalFontSize = GhosttyConfig.load().fontSize
         }
+    }
+
+    private func updateParsedViewSampling() {
+        panel.parsedViewModel.configure(
+            panel: panel,
+            isActive: parsedViewEnabled && panel.parsedPaneMode == .parsed,
+            isVisible: isVisibleInUI
+        )
     }
 }
 

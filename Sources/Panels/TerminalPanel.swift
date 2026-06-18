@@ -69,6 +69,14 @@ final class TerminalPanel: Panel, ObservableObject {
     @Published var isTextBoxActive: Bool = false
     @Published var textBoxContent: String = ""
     @Published var textBoxAttachments: [TextBoxAttachment] = []
+    @Published var parsedPaneMode: ParsedPaneMode = .terminal {
+        didSet {
+            if parsedPaneMode == .terminal {
+                parsedViewModel.stop()
+            }
+        }
+    }
+    let parsedViewModel = ParsedPaneViewModel()
     weak var textBoxInputView: TextBoxInputTextView?
     private var shouldFocusTextBoxWhenAvailable = false
     private var shouldOpenTextBoxFilePickerWhenAvailable = false
@@ -613,6 +621,7 @@ final class TerminalPanel: Panel, ObservableObject {
 
     func close() {
         isClosingPanel = true
+        parsedViewModel.stop()
         discardTextBoxContentForClose()
         // The surface will be cleaned up by its deinit
         // Detach from the window portal on real close so stale hosted views
@@ -646,6 +655,8 @@ final class TerminalPanel: Panel, ObservableObject {
         lastActivityAt: Date,
         hibernatedAt: Date = Date()
     ) {
+        parsedViewModel.stop()
+        parsedPaneMode = .terminal
         agentHibernationState = AgentHibernationPanelState(
             agent: agent,
             hibernatedAt: hibernatedAt,
@@ -685,6 +696,10 @@ final class TerminalPanel: Panel, ObservableObject {
     }
 
     func sendInput(_ text: String) {
+        _ = sendInputResult(text)
+    }
+
+    func sendParsedPaneInput(_ text: String) {
         _ = sendInputResult(text)
     }
 
