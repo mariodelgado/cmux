@@ -6,13 +6,13 @@ import SwiftUI
 final class WindowToolbarController: NSObject, NSToolbarDelegate {
     private let commandItemIdentifier = NSToolbarItem.Identifier("cmux.focusedCommand")
     private let layoutModeItemIdentifier = NSToolbarItem.Identifier("cmux.layoutMode")
-    private let parsedPaneAccessoryIdentifier = NSUserInterfaceItemIdentifier("cmux.parsedPaneMode")
+    private let parsedPaneItemIdentifier = NSToolbarItem.Identifier("cmux.parsedPaneMode")
 
     private weak var tabManager: TabManager?
 
     private var commandLabels: [ObjectIdentifier: NSTextField] = [:]
     private var layoutModeControls: [ObjectIdentifier: NSSegmentedControl] = [:]
-    private var parsedPaneAccessories: [ObjectIdentifier: NSTitlebarAccessoryViewController] = [:]
+    private var parsedPaneItems: [ObjectIdentifier: NSToolbarItem] = [:]
     private var parsedPaneControls: [ObjectIdentifier: NSSegmentedControl] = [:]
     private var observers: [NSObjectProtocol] = []
     private var cancellables = Set<AnyCancellable>()
@@ -33,7 +33,7 @@ final class WindowToolbarController: NSObject, NSToolbarDelegate {
     func start(tabManager: TabManager) {
         self.tabManager = tabManager
         guard !didStart else {
-            refreshParsedPaneAccessories()
+            refreshParsedPaneItems()
             scheduleFocusedCommandTextUpdate()
             updateLayoutModeSelection()
             return
@@ -44,13 +44,13 @@ final class WindowToolbarController: NSObject, NSToolbarDelegate {
         SharedLiveAgentIndex.shared.objectWillChange
             .sink { [weak self] _ in
                 Task { @MainActor [weak self] in
-                    self?.refreshParsedPaneAccessories()
+                    self?.refreshParsedPaneItems()
                 }
             }
             .store(in: &cancellables)
         scheduleFocusedCommandTextUpdate()
         updateLayoutModeSelection()
-        refreshParsedPaneAccessories()
+        refreshParsedPaneItems()
     }
 
     private func installObservers() {
@@ -73,7 +73,7 @@ final class WindowToolbarController: NSObject, NSToolbarDelegate {
             Task { @MainActor [weak self] in
                 self?.scheduleFocusedCommandTextUpdate()
                 self?.updateLayoutModeSelection()
-                self?.refreshParsedPaneAccessories()
+                self?.refreshParsedPaneItems()
             }
         })
 
@@ -85,7 +85,7 @@ final class WindowToolbarController: NSObject, NSToolbarDelegate {
             Task { @MainActor [weak self] in
                 self?.scheduleFocusedCommandTextUpdate()
                 self?.updateLayoutModeSelection()
-                self?.refreshParsedPaneAccessories()
+                self?.refreshParsedPaneItems()
             }
         })
 
@@ -96,7 +96,7 @@ final class WindowToolbarController: NSObject, NSToolbarDelegate {
         ) { [weak self] _ in
             Task { @MainActor [weak self] in
                 self?.updateLayoutModeSelection()
-                self?.refreshParsedPaneAccessories()
+                self?.refreshParsedPaneItems()
             }
         })
 
@@ -122,7 +122,7 @@ final class WindowToolbarController: NSObject, NSToolbarDelegate {
             guard let window = notification.object as? NSWindow else { return }
             Task { @MainActor in
                 self?.attach(to: window)
-                self?.refreshParsedPaneAccessories()
+                self?.refreshParsedPaneItems()
             }
         })
 
@@ -134,7 +134,7 @@ final class WindowToolbarController: NSObject, NSToolbarDelegate {
             guard let window = notification.object as? NSWindow else { return }
             Task { @MainActor in
                 self?.attach(to: window)
-                self?.refreshParsedPaneAccessories()
+                self?.refreshParsedPaneItems()
             }
         })
 
@@ -145,7 +145,7 @@ final class WindowToolbarController: NSObject, NSToolbarDelegate {
         ) { [weak self] _ in
             Task { @MainActor [weak self] in
                 self?.updateToolbarVisibilityIfNeeded()
-                self?.refreshParsedPaneAccessories()
+                self?.refreshParsedPaneItems()
             }
         })
     }
@@ -162,7 +162,7 @@ final class WindowToolbarController: NSObject, NSToolbarDelegate {
                 attach(to: window)
             }
         }
-        refreshParsedPaneAccessories()
+        refreshParsedPaneItems()
         // After toolbar changes, force titlebar accessories to recalculate.
         // Toolbar removal/re-addition changes the titlebar geometry, and
         // accessories hidden via isHidden need a layout pass to reappear.
@@ -192,7 +192,6 @@ final class WindowToolbarController: NSObject, NSToolbarDelegate {
     func attach(to window: NSWindow) {
         guard AppDelegate.shared?.contextForMainWindow(window) != nil else { return }
         guard !WorkspacePresentationModeSettings.isMinimal() else { return }
-        installParsedPaneAccessory(on: window)
         guard window.toolbar == nil else { return }
         let toolbar = NSToolbar(identifier: NSToolbar.Identifier("cmux.toolbar"))
         toolbar.delegate = self
@@ -204,81 +203,6 @@ final class WindowToolbarController: NSObject, NSToolbarDelegate {
         window.toolbar = toolbar
         window.toolbarStyle = .unifiedCompact
         window.titleVisibility = .hidden
-    }
-
-    private func installParsedPaneAccessory(on window: NSWindow) {
-        if window.titlebarAccessoryViewControllers.contains(where: { $0.view.identifier == parsedPaneAccessoryIdentifier }) {
-            return
-        }
-
-        let segmented = NSSegmentedControl()
-        segmented.segmentStyle = .texturedRounded
-        segmented.trackingMode = .selectOne
-        segmented.segmentCount = 2
-        segmented.controlSize = .small
-        segmented.setLabel(
-            String(localized: "parsedView.toggle.terminal", defaultValue: "Terminal"),
-            forSegment: ParsedPaneSegment.terminal.rawValue
-        )
-        segmented.setLabel(
-            String(localized: "parsedView.toggle.parsed", defaultValue: "Parsed"),
-            forSegment: ParsedPaneSegment.parsed.rawValue
-        )
-        segmented.setWidth(72, forSegment: ParsedPaneSegment.terminal.rawValue)
-        segmented.setWidth(64, forSegment: ParsedPaneSegment.parsed.rawValue)
-        // Pin an intrinsic size so AppKit reserves a dedicated trailing slot for
-        // the toggle instead of letting it grow/shrink into the neighbouring
-        // toolbar items (#titlebar-overlap).
-        segmented.translatesAutoresizingMaskIntoConstraints = false
-        segmented.setContentHuggingPriority(.required, for: .horizontal)
-        segmented.setContentCompressionResistancePriority(.required, for: .horizontal)
-        segmented.setToolTip(
-            String(localized: "parsedView.toggle.terminal", defaultValue: "Terminal"),
-            forSegment: ParsedPaneSegment.terminal.rawValue
-        )
-        segmented.setToolTip(
-            String(localized: "parsedView.toggle.parsed", defaultValue: "Parsed"),
-            forSegment: ParsedPaneSegment.parsed.rawValue
-        )
-        segmented.target = self
-        segmented.action = #selector(parsedPaneSegmentChanged(_:))
-        segmented.setAccessibilityIdentifier("ParsedPaneModeTitlebarToggle")
-        segmented.setAccessibilityLabel(String(localized: "parsedView.toggle.accessibility", defaultValue: "Pane view"))
-
-        // Give the toggle its own padded slot so it can't visually collide with
-        // the trailing toolbar items (layout-mode control / focused-command
-        // label) or the window's traffic lights. The stack reserves horizontal
-        // gutters on both sides and a fixed height that matches the compact
-        // unified titlebar so AppKit lays it out beside, not on top of, its
-        // siblings at any window width.
-        let container = NSStackView(views: [segmented])
-        container.orientation = .horizontal
-        container.alignment = .centerY
-        container.distribution = .gravityAreas
-        container.spacing = 0
-        container.edgeInsets = NSEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
-        container.identifier = parsedPaneAccessoryIdentifier
-        container.translatesAutoresizingMaskIntoConstraints = false
-        container.setContentHuggingPriority(.required, for: .horizontal)
-        container.setContentCompressionResistancePriority(.required, for: .horizontal)
-        container.heightAnchor.constraint(equalToConstant: 28).isActive = true
-
-        let accessory = NSTitlebarAccessoryViewController()
-        // NSTitlebarAccessoryViewController.layoutAttribute only accepts
-        // .leading/.trailing/.left/.right/.bottom. A .centerX value throws an
-        // uncaught NSInternalInconsistencyException during titlebar layout
-        // (-[NSTitlebarViewController insertChildViewController:atIndex:]).
-        accessory.layoutAttribute = .trailing
-        accessory.view = container
-        accessory.isHidden = true
-        // Keep the accessory at its intrinsic width so the titlebar reserves a
-        // standalone trailing slot for it rather than overlapping the toolbar.
-        accessory.fullScreenMinHeight = 0
-        window.addTitlebarAccessoryViewController(accessory)
-
-        let key = ObjectIdentifier(window)
-        parsedPaneAccessories[key] = accessory
-        parsedPaneControls[key] = segmented
     }
 
     private func scheduleFocusedCommandTextUpdate() {
@@ -309,11 +233,11 @@ final class WindowToolbarController: NSObject, NSToolbarDelegate {
     // MARK: - NSToolbarDelegate
 
     func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-        [layoutModeItemIdentifier, commandItemIdentifier, .flexibleSpace]
+        [layoutModeItemIdentifier, commandItemIdentifier, .flexibleSpace, parsedPaneItemIdentifier]
     }
 
     func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-        [layoutModeItemIdentifier, commandItemIdentifier, .flexibleSpace]
+        [layoutModeItemIdentifier, commandItemIdentifier, .flexibleSpace, parsedPaneItemIdentifier]
     }
 
     func toolbar(_ toolbar: NSToolbar, itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier, willBeInsertedIntoToolbar flag: Bool) -> NSToolbarItem? {
@@ -363,6 +287,45 @@ final class WindowToolbarController: NSObject, NSToolbarDelegate {
             return item
         }
 
+        if itemIdentifier == parsedPaneItemIdentifier {
+            let item = NSToolbarItem(itemIdentifier: itemIdentifier)
+            let segmented = NSSegmentedControl()
+            segmented.segmentStyle = .texturedRounded
+            segmented.trackingMode = .selectOne
+            segmented.segmentCount = 2
+            segmented.controlSize = .small
+            segmented.setLabel(
+                String(localized: "parsedView.toggle.terminal", defaultValue: "Terminal"),
+                forSegment: ParsedPaneSegment.terminal.rawValue
+            )
+            segmented.setLabel(
+                String(localized: "parsedView.toggle.parsed", defaultValue: "Parsed"),
+                forSegment: ParsedPaneSegment.parsed.rawValue
+            )
+            segmented.setWidth(72, forSegment: ParsedPaneSegment.terminal.rawValue)
+            segmented.setWidth(64, forSegment: ParsedPaneSegment.parsed.rawValue)
+            segmented.setToolTip(
+                String(localized: "parsedView.toggle.terminal", defaultValue: "Terminal"),
+                forSegment: ParsedPaneSegment.terminal.rawValue
+            )
+            segmented.setToolTip(
+                String(localized: "parsedView.toggle.parsed", defaultValue: "Parsed"),
+                forSegment: ParsedPaneSegment.parsed.rawValue
+            )
+            segmented.target = self
+            segmented.action = #selector(parsedPaneSegmentChanged(_:))
+            segmented.setAccessibilityIdentifier("ParsedPaneModeTitlebarToggle")
+            segmented.setAccessibilityLabel(String(localized: "parsedView.toggle.accessibility", defaultValue: "Pane view"))
+            item.view = segmented
+            item.label = String(localized: "parsedView.toggle.accessibility", defaultValue: "Pane view")
+            item.visibilityPriority = .high
+            let key = ObjectIdentifier(toolbar)
+            parsedPaneItems[key] = item
+            parsedPaneControls[key] = segmented
+            refreshParsedPaneItems()
+            return item
+        }
+
         return nil
     }
 
@@ -376,30 +339,41 @@ final class WindowToolbarController: NSObject, NSToolbarDelegate {
     @objc private func parsedPaneSegmentChanged(_ sender: NSSegmentedControl) {
         guard let context = activeParsedPaneContext(for: sender.window) else {
             sender.selectedSegment = ParsedPaneSegment.terminal.rawValue
-            refreshParsedPaneAccessories()
+            refreshParsedPaneItems()
             return
         }
         let nextMode: ParsedPaneMode = sender.selectedSegment == ParsedPaneSegment.parsed.rawValue
             ? .parsed
             : .terminal
         context.panel.parsedPaneMode = nextMode
-        refreshParsedPaneAccessories()
+        refreshParsedPaneItems()
     }
 
-    private func refreshParsedPaneAccessories() {
+    private func refreshParsedPaneItems() {
         for window in NSApp.windows {
-            installParsedPaneAccessoryIfPossible(on: window)
-        }
+            guard let toolbar = window.toolbar else { continue }
+            let key = ObjectIdentifier(toolbar)
+            guard let item = parsedPaneItems[key] else { continue }
 
-        for (key, accessory) in parsedPaneAccessories {
-            guard let window = accessory.view.window else { continue }
             let parsedContext = activeParsedPaneContext(for: window)
             let shouldShow = parsedContext != nil
-            accessory.isHidden = !shouldShow
-            accessory.view.isHidden = !shouldShow
-            accessory.view.alphaValue = shouldShow ? 1 : 0
 
             guard let control = parsedPaneControls[key] else { continue }
+
+            // Hide the whole toolbar item (not just the control) so AppKit
+            // reclaims its slot and no empty gap perturbs the trailing layout.
+            // `NSToolbarItem.isHidden` is macOS 15+, so fall back to hiding the
+            // hosted control (which keeps an empty-but-collapsed slot) on 14.
+            if #available(macOS 15.0, *) {
+                if item.isHidden != !shouldShow {
+                    item.isHidden = !shouldShow
+                }
+            } else {
+                if control.isHidden != !shouldShow {
+                    control.isHidden = !shouldShow
+                }
+            }
+
             let mode = parsedContext?.panel.parsedPaneMode ?? .terminal
             let selectedSegment = mode == .parsed
                 ? ParsedPaneSegment.parsed.rawValue
@@ -408,12 +382,6 @@ final class WindowToolbarController: NSObject, NSToolbarDelegate {
                 control.selectedSegment = selectedSegment
             }
         }
-    }
-
-    private func installParsedPaneAccessoryIfPossible(on window: NSWindow) {
-        guard AppDelegate.shared?.contextForMainWindow(window) != nil else { return }
-        guard !WorkspacePresentationModeSettings.isMinimal() else { return }
-        installParsedPaneAccessory(on: window)
     }
 
     private func activeParsedPaneContext(for window: NSWindow?) -> (workspace: Workspace, panel: TerminalPanel)? {
