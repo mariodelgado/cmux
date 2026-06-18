@@ -172,6 +172,16 @@ enum TerminalSettingsFileMapping {
     ]
 }
 
+enum NewTerminalLauncherSettingsFileMapping {
+    static let booleanSettings: [SettingsFileBooleanMapping] = [
+        .init(
+            jsonKey: "enabled",
+            defaultsKey: NewTerminalLauncherSettings.enabledKey,
+            invalidPath: "newTerminalLauncher.enabled"
+        ),
+    ]
+}
+
 enum ParsedViewSettingsFileMapping {
     private static let parsedView = ParsedViewCatalogSection()
 
@@ -379,6 +389,7 @@ extension CmuxSettingsFileStore {
         "terminal.rendererRealization.maxWarmRenderers",
         "terminal.textBoxMaxLines",
         "terminal.resumeCommands",
+        "newTerminalLauncher.enabled",
         "notifications.dockBadge",
         "notifications.showInMenuBar",
         "notifications.unreadPaneRing",

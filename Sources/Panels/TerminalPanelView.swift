@@ -24,14 +24,23 @@ struct TerminalPanelView: View {
     let appearance: PanelAppearance
     let hasUnreadNotification: Bool
     let terminalAgentContext: String
+    let newTerminalLauncherCandidateCache: NewTerminalLauncherCandidateCache?
     let onFocus: () -> Void
     let onResumeAgentHibernation: () -> Void
     let onAutoResumeAgentHibernation: () -> Void
     let onTriggerFlash: () -> Void
+    let onOpenNewTerminalLauncherDestination: (NewTerminalLauncherCardSnapshot) -> Void
 
     var body: some View {
         if let hibernationState = panel.agentHibernationState {
             hibernationBody(hibernationState)
+        } else if panel.isNewTerminalLauncherPending {
+            NewTerminalLauncherView(
+                cache: newTerminalLauncherCandidateCache,
+                localShellSubtitle: Self.localShellSubtitle(),
+                appearance: appearance,
+                onOpen: onOpenNewTerminalLauncherDestination
+            )
         } else {
             terminalBody
         }
@@ -172,6 +181,18 @@ struct TerminalPanelView: View {
             panel: panel,
             isActive: parsedViewEnabled && panel.parsedPaneMode == .parsed,
             isVisible: isVisibleInUI
+        )
+    }
+
+    private static func localShellSubtitle() -> String {
+        let shell = ProcessInfo.processInfo.environment["SHELL"]
+            .flatMap { value -> String? in
+                let name = (value as NSString).lastPathComponent
+                return name.isEmpty ? nil : name
+            } ?? String(localized: "newTerminalLauncher.localShell.shellFallback", defaultValue: "shell")
+        return String.localizedStringWithFormat(
+            String(localized: "newTerminalLauncher.localShell.subtitle", defaultValue: "Default login shell (%@)"),
+            shell
         )
     }
 }

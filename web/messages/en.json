@@ -928,6 +928,9 @@
         "parsedView": {
           "enabled": "Enable the per-pane Parsed view toggle that renders terminal output as native structured widgets."
         },
+        "newTerminalLauncher": {
+          "enabled": "Show a launcher with Local Shell and recent SSH hosts before newly created empty terminals start a shell."
+        },
         "app": {
           "confirmQuit": "Control when cmux asks for confirmation before quitting. DEV builds always quit immediately regardless of this setting. Legacy app.warnBeforeQuit is still accepted as a boolean fallback.",
           "windowTitleTemplate": "Optional NSWindow title template. Blank preserves cmux's existing default title behavior, including the current-directory fallback. Supported placeholders: '{windowId}', '{windowToken}', '{activeWorkspace}', '{activeDirectory}', '{defaultTitle}', '{appName}'.",

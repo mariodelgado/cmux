@@ -956,7 +956,8 @@ class TabManager: ObservableObject {
         initialTerminalCommand: String?,
         initialTerminalInput: String? = nil,
         initialTerminalEnvironment: [String: String],
-        workspaceEnvironment: [String: String] = [:]
+        workspaceEnvironment: [String: String] = [:],
+        showNewTerminalLauncher: Bool = false
     ) -> Workspace {
         Workspace(
             title: title,
@@ -967,8 +968,24 @@ class TabManager: ObservableObject {
             initialTerminalCommand: initialTerminalCommand,
             initialTerminalInput: initialTerminalInput,
             initialTerminalEnvironment: initialTerminalEnvironment,
-            workspaceEnvironment: workspaceEnvironment
+            workspaceEnvironment: workspaceEnvironment,
+            showNewTerminalLauncher: showNewTerminalLauncher
         )
+    }
+
+    private static func shouldShowNewTerminalLauncher(
+        initialSurface: NewWorkspaceInitialSurface,
+        initialTerminalCommand: String?,
+        initialTerminalInput: String?
+    ) -> Bool {
+        guard initialSurface == .terminal,
+              NewTerminalLauncherSettings.isEnabled() else {
+            return false
+        }
+        func hasContent(_ value: String?) -> Bool {
+            value?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false
+        }
+        return !hasContent(initialTerminalCommand) && !hasContent(initialTerminalInput)
     }
 
     func applyCreationChromeInheritance(
@@ -1109,7 +1126,12 @@ class TabManager: ObservableObject {
                 initialTerminalCommand: initialTerminalCommand,
                 initialTerminalInput: initialTerminalInput,
                 initialTerminalEnvironment: initialTerminalEnvironment,
-                workspaceEnvironment: workspaceEnvironment
+                workspaceEnvironment: workspaceEnvironment,
+                showNewTerminalLauncher: Self.shouldShowNewTerminalLauncher(
+                    initialSurface: initialSurface,
+                    initialTerminalCommand: initialTerminalCommand,
+                    initialTerminalInput: initialTerminalInput
+                )
             )
             applyCreationChromeInheritance(
                 to: newWorkspace,

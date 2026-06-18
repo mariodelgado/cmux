@@ -111,6 +111,11 @@ extension CmuxSettingsFileStore {
                 ],
             ],
             [
+                "newTerminalLauncher": [
+                    "enabled": NewTerminalLauncherSettings.defaultEnabled,
+                ],
+            ],
+            [
                 "notifications": [
                     "dockBadge": NotificationBadgeSettings.defaultDockBadgeEnabled,
                     "showInMenuBar": MenuBarExtraSettings.defaultShowInMenuBar,

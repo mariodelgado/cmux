@@ -887,6 +887,9 @@
         "parsedView": {
           "enabled": "ターミナル出力をネイティブの構造化ウィジェットとして表示する、ペインごとの Parsed 表示切り替えを有効にします。"
         },
+        "newTerminalLauncher": {
+          "enabled": "新しく作成した空のターミナルでシェルを開始する前に、ローカルシェルと最近使った SSH ホストのランチャーを表示します。"
+        },
         "app": {
           "confirmQuit": "cmux の終了前に確認を求めるタイミングを制御します。DEV ビルドではこの設定に関係なく常にすぐ終了します。従来の app.warnBeforeQuit も boolean フォールバックとして引き続き受け付けます。",
           "windowTitleTemplate": "任意の NSWindow タイトルテンプレートです。空欄のままなら、現在のディレクトリへのフォールバックを含む cmux 既存の既定タイトル動作を保ちます。対応するプレースホルダー: '{windowId}', '{windowToken}', '{activeWorkspace}', '{activeDirectory}', '{defaultTitle}', '{appName}'。",

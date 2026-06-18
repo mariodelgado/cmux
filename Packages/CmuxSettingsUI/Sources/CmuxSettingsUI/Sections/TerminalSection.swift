@@ -17,6 +17,7 @@ public struct TerminalSection: View {
     @State private var scrollBar: DefaultsValueModel<Bool>
     @State private var copyOnSelect: DefaultsValueModel<Bool>
     @State private var autoResume: DefaultsValueModel<Bool>
+    @State private var newTerminalLauncher: DefaultsValueModel<Bool>
     @State private var parsedView: DefaultsValueModel<Bool>
     @State private var hibernation: DefaultsValueModel<Bool>
     @State private var idleSeconds: DefaultsValueModel<Double>
@@ -38,6 +39,7 @@ public struct TerminalSection: View {
         _scrollBar = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.terminal.showScrollBar))
         _copyOnSelect = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.terminal.copyOnSelect))
         _autoResume = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.terminal.autoResumeAgentSessions))
+        _newTerminalLauncher = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.newTerminalLauncher.enabled))
         _parsedView = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.parsedView.enabled))
         _hibernation = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.terminal.agentHibernationEnabled))
         _idleSeconds = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.terminal.agentHibernationIdleSeconds))
@@ -174,6 +176,19 @@ public struct TerminalSection: View {
                     .labelsHidden()
                     .controlSize(.small)
                     .accessibilityIdentifier("SettingsTerminalAgentAutoResumeToggle")
+            }
+            SettingsCardDivider()
+            SettingsCardRow(
+                configurationReview: .json("newTerminalLauncher.enabled"),
+                String(localized: "settings.newTerminalLauncher.enabled", defaultValue: "New Terminal Launcher"),
+                subtitle: newTerminalLauncher.current
+                    ? String(localized: "settings.newTerminalLauncher.enabled.subtitleOn", defaultValue: "New empty terminals show Local Shell and recent SSH destinations before starting a shell.")
+                    : String(localized: "settings.newTerminalLauncher.enabled.subtitleOff", defaultValue: "New terminals start the local shell immediately.")
+            ) {
+                Toggle("", isOn: Binding(get: { newTerminalLauncher.current }, set: { newTerminalLauncher.set($0) }))
+                    .labelsHidden()
+                    .controlSize(.small)
+                    .accessibilityIdentifier("SettingsNewTerminalLauncherEnabledToggle")
             }
             SettingsCardDivider()
             SettingsCardRow(

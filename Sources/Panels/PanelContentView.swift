@@ -16,11 +16,13 @@ struct PanelContentView: View {
     let appearance: PanelAppearance
     let hasUnreadNotification: Bool
     let terminalAgentContext: String
+    let newTerminalLauncherCandidateCache: NewTerminalLauncherCandidateCache?
     let onFocus: () -> Void
     let onRequestPanelFocus: () -> Void
     let onResumeAgentHibernation: () -> Void
     let onAutoResumeAgentHibernation: () -> Void
     let onTriggerFlash: () -> Void
+    let onOpenNewTerminalLauncherDestination: (UUID, NewTerminalLauncherCardSnapshot) -> Void
 
     var body: some View {
         renderedPanel
@@ -44,10 +46,14 @@ struct PanelContentView: View {
                     appearance: appearance,
                     hasUnreadNotification: hasUnreadNotification,
                     terminalAgentContext: terminalAgentContext,
+                    newTerminalLauncherCandidateCache: newTerminalLauncherCandidateCache,
                     onFocus: onFocus,
                     onResumeAgentHibernation: onResumeAgentHibernation,
                     onAutoResumeAgentHibernation: onAutoResumeAgentHibernation,
-                    onTriggerFlash: onTriggerFlash
+                    onTriggerFlash: onTriggerFlash,
+                    onOpenNewTerminalLauncherDestination: { card in
+                        onOpenNewTerminalLauncherDestination(terminalPanel.id, card)
+                    }
                 )
             }
         case .browser:

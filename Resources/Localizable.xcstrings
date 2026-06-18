@@ -203845,6 +203845,111 @@
           }
         }
       }
+    },
+    "newTerminalLauncher.empty": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "No matching hosts" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "一致するホストがありません" } }
+      }
+    },
+    "newTerminalLauncher.filter.placeholder": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Filter hosts" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "ホストを絞り込み" } }
+      }
+    },
+    "newTerminalLauncher.lastUsed": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Last used %@" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "最終使用 %@" } }
+      }
+    },
+    "newTerminalLauncher.loading": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Loading hosts..." } },
+        "ja": { "stringUnit": { "state": "translated", "value": "ホストを読み込み中..." } }
+      }
+    },
+    "newTerminalLauncher.localShell.shellFallback": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "shell" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "シェル" } }
+      }
+    },
+    "newTerminalLauncher.localShell.subtitle": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Default login shell (%@)" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "既定のログインシェル (%@)" } }
+      }
+    },
+    "newTerminalLauncher.localShell.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Local Shell" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "ローカルシェル" } }
+      }
+    },
+    "newTerminalLauncher.showLess": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Show Less" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "表示を減らす" } }
+      }
+    },
+    "newTerminalLauncher.showMore": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Show %d More" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "さらに %d 件を表示" } }
+      }
+    },
+    "newTerminalLauncher.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "New Terminal" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "新しいターミナル" } }
+      }
+    },
+    "schemaDescriptions.newTerminalLauncher.enabled": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Show a launcher with Local Shell and recent SSH hosts before newly created empty terminals start a shell." } },
+        "ja": { "stringUnit": { "state": "translated", "value": "新しく作成した空のターミナルでシェルを開始する前に、ローカルシェルと最近使った SSH ホストのランチャーを表示します。" } }
+      }
+    },
+    "settings.newTerminalLauncher.enabled": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "New Terminal Launcher" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "新しいターミナルランチャー" } }
+      }
+    },
+    "settings.newTerminalLauncher.enabled.subtitleOff": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "New terminals start the local shell immediately." } },
+        "ja": { "stringUnit": { "state": "translated", "value": "新しいターミナルはすぐにローカルシェルを開始します。" } }
+      }
+    },
+    "settings.newTerminalLauncher.enabled.subtitleOn": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "New empty terminals show Local Shell and recent SSH destinations before starting a shell." } },
+        "ja": { "stringUnit": { "state": "translated", "value": "新しい空のターミナルでは、シェルを開始する前にローカルシェルと最近の SSH 接続先を表示します。" } }
+      }
+    },
+    "settings.search.alias.setting.terminal.new-terminal-launcher": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "newTerminalLauncher.enabled ssh hosts local shell new terminal launcher cards" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "newTerminalLauncher.enabled ssh ホスト ローカルシェル 新しいターミナル ランチャー カード" } }
+      }
     }
   }
 }

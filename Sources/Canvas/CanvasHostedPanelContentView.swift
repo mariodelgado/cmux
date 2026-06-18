@@ -30,11 +30,13 @@ struct CanvasHostedPanelContentView: View {
             appearance: appearance,
             hasUnreadNotification: false,
             terminalAgentContext: "",
+            newTerminalLauncherCandidateCache: nil,
             onFocus: onRequestPanelFocus,
             onRequestPanelFocus: onRequestPanelFocus,
             onResumeAgentHibernation: {},
             onAutoResumeAgentHibernation: {},
-            onTriggerFlash: {}
+            onTriggerFlash: {},
+            onOpenNewTerminalLauncherDestination: { _, _ in }
         )
         // Window-portal content (webviews) floats above the pane's layer
         // border; this inset keeps the focus ring visible around it.

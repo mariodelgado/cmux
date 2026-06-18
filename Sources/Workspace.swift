@@ -2876,6 +2876,7 @@ final class Workspace: Identifiable, ObservableObject {
         initialTerminalInput: String? = nil,
         initialTerminalEnvironment: [String: String] = [:],
         workspaceEnvironment: [String: String] = [:],
+        showNewTerminalLauncher: Bool = false,
         initialDetachedSurface: DetachedSurfaceTransfer? = nil,
         sessionRestorePolicy: WorkspaceSessionRestorePolicyService<SurfaceResumeBindingSnapshot>? = nil
     ) {
@@ -2993,6 +2994,18 @@ final class Workspace: Identifiable, ObservableObject {
                 )
             )
             configureNewTerminalPanel(terminalPanel)
+            if showNewTerminalLauncher,
+               Self.shouldArmNewTerminalLauncher(
+                   initialCommand: initialTerminalCommand,
+                   tmuxStartCommand: nil,
+                   initialInput: initialTerminalInput,
+                   remotePTYSessionID: nil,
+                   restoredSurfaceId: nil,
+                   suppressWorkspaceRemoteStartupCommand: false,
+                   remoteTerminalStartupCommand: nil
+               ) {
+                terminalPanel.armNewTerminalLauncherIfNeeded(enabled: NewTerminalLauncherSettings.isEnabled())
+            }
             panels[terminalPanel.id] = terminalPanel
             panelTitles[terminalPanel.id] = terminalPanel.displayTitle
             seedTerminalInheritanceFontPoints(panelId: terminalPanel.id, configTemplate: configTemplate)
@@ -3413,6 +3426,33 @@ final class Workspace: Identifiable, ObservableObject {
             terminalPanel.showTextBoxInputWhenAvailable()
         }
         configureTerminalPanel(terminalPanel)
+    }
+
+    private static func shouldArmNewTerminalLauncher(
+        initialCommand: String?,
+        tmuxStartCommand: String?,
+        initialInput: String?,
+        remotePTYSessionID: String?,
+        restoredSurfaceId: UUID?,
+        suppressWorkspaceRemoteStartupCommand: Bool,
+        remoteTerminalStartupCommand: String?
+    ) -> Bool {
+        func hasContent(_ value: String?) -> Bool {
+            value?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false
+        }
+        guard NewTerminalLauncherSettings.isEnabled() else { return false }
+        guard !hasContent(initialCommand),
+              !hasContent(tmuxStartCommand),
+              !hasContent(initialInput),
+              !hasContent(remotePTYSessionID),
+              restoredSurfaceId == nil else {
+            return false
+        }
+        if !suppressWorkspaceRemoteStartupCommand,
+           hasContent(remoteTerminalStartupCommand) {
+            return false
+        }
+        return true
     }
 
     private func configureTerminalPanel(_ terminalPanel: TerminalPanel) {
@@ -6819,6 +6859,17 @@ final class Workspace: Identifiable, ObservableObject {
         panels[newPanel.id] = newPanel
         panelTitles[newPanel.id] = newPanel.displayTitle
         let normalizedRemotePTYSessionID = normalizedRemotePTYSessionID(remotePTYSessionID)
+        if Self.shouldArmNewTerminalLauncher(
+            initialCommand: explicitInitialCommand,
+            tmuxStartCommand: tmuxStartCommand,
+            initialInput: nil,
+            remotePTYSessionID: normalizedRemotePTYSessionID,
+            restoredSurfaceId: nil,
+            suppressWorkspaceRemoteStartupCommand: false,
+            remoteTerminalStartupCommand: remoteTerminalStartupCommand
+        ) {
+            newPanel.armNewTerminalLauncherIfNeeded(enabled: true)
+        }
         let tracksRemoteTerminalSurface = remoteTerminalStartupCommand != nil || normalizedRemotePTYSessionID != nil
         if let normalizedRemotePTYSessionID {
             remotePTYSessionIDsByPanelId[newPanel.id] = normalizedRemotePTYSessionID
@@ -7074,6 +7125,17 @@ final class Workspace: Identifiable, ObservableObject {
         panels[newPanel.id] = newPanel
         panelTitles[newPanel.id] = newPanel.displayTitle
         let normalizedRemotePTYSessionID = normalizedRemotePTYSessionID(remotePTYSessionID)
+        if Self.shouldArmNewTerminalLauncher(
+            initialCommand: explicitInitialCommand,
+            tmuxStartCommand: tmuxStartCommand,
+            initialInput: initialInput,
+            remotePTYSessionID: normalizedRemotePTYSessionID,
+            restoredSurfaceId: restoredSurfaceId,
+            suppressWorkspaceRemoteStartupCommand: suppressWorkspaceRemoteStartupCommand,
+            remoteTerminalStartupCommand: remoteTerminalStartupCommand
+        ) {
+            newPanel.armNewTerminalLauncherIfNeeded(enabled: true)
+        }
         let tracksRemoteTerminalSurface = remoteTerminalStartupCommand != nil || normalizedRemotePTYSessionID != nil
         if let normalizedRemotePTYSessionID {
             remotePTYSessionIDsByPanelId[newPanel.id] = normalizedRemotePTYSessionID
@@ -8294,6 +8356,64 @@ final class Workspace: Identifiable, ObservableObject {
         )
 #endif
         return closed
+    }
+
+    func openNewTerminalLauncherDestination(
+        _ card: NewTerminalLauncherCardSnapshot,
+        fromPanelId panelId: UUID
+    ) {
+        guard let panel = terminalPanel(for: panelId),
+              panel.isNewTerminalLauncherPending else {
+            return
+        }
+
+        switch card.kind {
+        case .localShell:
+            panel.completeNewTerminalLauncherSelection()
+            focusPanel(panelId)
+            panel.focus()
+        case .ssh:
+            guard let destination = card.destination?.trimmingCharacters(in: .whitespacesAndNewlines),
+                  !destination.isEmpty else {
+                return
+            }
+            var cliArguments = ["ssh", "--name", card.title]
+            if let manager = owningTabManager,
+               let windowId = AppDelegate.shared?.windowId(for: manager) {
+                cliArguments += ["--window", windowId.uuidString]
+            }
+            cliArguments.append(destination)
+            let preferredWindow = AppDelegate.shared?.mainWindowContainingWorkspace(id)
+                ?? NSApp.keyWindow
+                ?? NSApp.mainWindow
+            let started = CmuxSSHURLProcessLauncher.shared.start(
+                cliArguments: cliArguments,
+                debugTarget: destination,
+                preferredWindow: preferredWindow,
+                onSuccessfulExit: { [weak self] in
+                    self?.closeNewTerminalLauncherPlaceholder(panelId: panelId)
+                }
+            )
+            if started {
+                panel.markNewTerminalLauncherOpeningDestination()
+            }
+        }
+    }
+
+    private func closeNewTerminalLauncherPlaceholder(panelId: UUID) {
+        guard let panel = terminalPanel(for: panelId),
+              panel.isNewTerminalLauncherPending else {
+            return
+        }
+
+        if panels.count <= 1,
+           let manager = owningTabManager,
+           manager.tabs.count > 1 {
+            manager.closeWorkspace(self, recordHistory: false)
+            return
+        }
+
+        _ = closePanel(panelId, force: true)
     }
 
     func requestCloseTab(_ tabId: TabID, force: Bool) -> Bool {

@@ -274,6 +274,20 @@ final class CmuxSSHURLProcessLauncher {
 
     @discardableResult
     func start(request: CmuxSSHURLRequest, preferredWindow: NSWindow?) -> Bool {
+        start(
+            cliArguments: request.cliArguments,
+            debugTarget: request.destination,
+            preferredWindow: preferredWindow
+        )
+    }
+
+    @discardableResult
+    func start(
+        cliArguments: [String],
+        debugTarget: String,
+        preferredWindow: NSWindow?,
+        onSuccessfulExit: (() -> Void)? = nil
+    ) -> Bool {
         let cliURL = Bundle.main.resourceURL?.appendingPathComponent("bin/cmux")
         guard let cliURL,
               FileManager.default.isExecutableFile(atPath: cliURL.path) else {
@@ -291,7 +305,7 @@ final class CmuxSSHURLProcessLauncher {
         let socketPath = resolvedSocketPath()
         let process = Process()
         process.executableURL = cliURL
-        process.arguments = ["--socket", socketPath] + request.cliArguments
+        process.arguments = ["--socket", socketPath] + cliArguments
         var environment = ProcessInfo.processInfo.environment
         environment["CMUX_SOCKET_PATH"] = socketPath
         environment["CMUX_BUNDLED_CLI_PATH"] = cliURL.path
@@ -310,6 +324,10 @@ final class CmuxSSHURLProcessLauncher {
             let terminationStatus = terminatedProcess.terminationStatus
             Task { @MainActor in
                 Self.shared.processes.removeValue(forKey: processIdentifier)
+                if terminationStatus == 0 {
+                    onSuccessfulExit?()
+                    return
+                }
                 guard terminationStatus != 0, !Self.shared.isShuttingDown else { return }
                 let format = String(
                     localized: "dialog.sshURL.launchFailed.exit",
@@ -327,7 +345,7 @@ final class CmuxSSHURLProcessLauncher {
             try process.run()
             processes[process.processIdentifier] = process
 #if DEBUG
-            cmuxDebugLog("sshURL.launchCLI pid=\(process.processIdentifier) socket=\(socketPath) targetLength=\(request.destination.count)")
+            cmuxDebugLog("sshURL.launchCLI pid=\(process.processIdentifier) socket=\(socketPath) targetLength=\(debugTarget.count)")
 #endif
             return true
         } catch {

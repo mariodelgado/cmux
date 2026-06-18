@@ -81,6 +81,7 @@ struct SettingsRowAnchorResolutionTests {
         "browser.urlsToAlwaysOpenExternally",
         "customSidebars.renderer",
         "fileEditor.wordWrap",
+        "newTerminalLauncher.enabled",
         "notifications.command",
         "notifications.dockBadge",
         "notifications.paneFlash",

@@ -553,6 +553,20 @@
         }
       }
     },
+    "newTerminalLauncher": {
+      "title": "newTerminalLauncher",
+      "description": "New terminal launcher settings.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": true,
+          "descriptionKey": "schemaDescriptions.newTerminalLauncher.enabled",
+          "description": "Show a launcher with Local Shell and recent SSH hosts before newly created empty terminals start a shell."
+        }
+      }
+    },
     "notifications": {
       "title": "notifications",
       "description": "Notification behavior from Settings > Notifications.",

@@ -119,6 +119,7 @@ final class TerminalPanel: Panel, ObservableObject {
     @Published var viewReattachToken: UInt64 = 0
 
     @Published private(set) var agentHibernationState: AgentHibernationPanelState?
+    @Published private(set) var newTerminalLauncherState: NewTerminalLauncherPanelState?
 
     var onRequestWorkspacePaneFlash: ((WorkspaceAttentionFlashReason) -> Void)?
     var onRequestAgentHibernationResume: ((Bool) -> Bool)?
@@ -147,6 +148,10 @@ final class TerminalPanel: Panel, ObservableObject {
 
     var isAgentHibernated: Bool {
         agentHibernationState != nil
+    }
+
+    var isNewTerminalLauncherPending: Bool {
+        newTerminalLauncherState != nil
     }
 
     /// The hosted NSView for embedding in SwiftUI
@@ -224,6 +229,21 @@ final class TerminalPanel: Panel, ObservableObject {
     func updateWorkspaceId(_ newWorkspaceId: UUID) {
         workspaceId = newWorkspaceId
         surface.updateWorkspaceId(newWorkspaceId)
+    }
+
+    func armNewTerminalLauncherIfNeeded(enabled: Bool) {
+        guard enabled, newTerminalLauncherState == nil else { return }
+        newTerminalLauncherState = NewTerminalLauncherPanelState()
+    }
+
+    func markNewTerminalLauncherOpeningDestination() {
+        guard var state = newTerminalLauncherState else { return }
+        state.isOpeningDestination = true
+        newTerminalLauncherState = state
+    }
+
+    func completeNewTerminalLauncherSelection() {
+        newTerminalLauncherState = nil
     }
 
     func updateTmuxLayoutReport(_ report: TmuxPaneLayoutReport?) {

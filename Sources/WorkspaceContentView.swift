@@ -270,6 +270,7 @@ struct WorkspaceContentView: View {
                         appearance: appearance,
                         hasUnreadNotification: showsNotificationRing && !usesWorkspacePaneOverlay,
                         terminalAgentContext: Self.terminalAgentContext(panel: panel, workspace: workspace),
+                        newTerminalLauncherCandidateCache: AppDelegate.shared?.newTerminalLauncherCandidateCache,
                         onFocus: {
                             // Keep bonsplit focus in sync with the AppKit first responder for the
                             // active workspace. This prevents divergence between the blue focused-tab
@@ -298,7 +299,11 @@ struct WorkspaceContentView: View {
                             guard workspace.panels[panel.id] != nil else { return }
                             workspace.resumeAgentHibernation(panelId: panel.id, focus: false)
                         },
-                        onTriggerFlash: { workspace.triggerDebugFlash(panelId: panel.id) }
+                        onTriggerFlash: { workspace.triggerDebugFlash(panelId: panel.id) },
+                        onOpenNewTerminalLauncherDestination: { panelId, card in
+                            guard isWorkspaceInputActive else { return }
+                            workspace.openNewTerminalLauncherDestination(card, fromPanelId: panelId)
+                        }
                     )
                     .onTapGesture {
                         workspace.bonsplitController.focusPane(paneId)

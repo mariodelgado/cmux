@@ -359,6 +359,11 @@ final class CmuxSettingsFileStore {
         if let terminalSection = root["terminal"] as? [String: Any] {
             parseTerminalSection(terminalSection, sourcePath: sourcePath, snapshot: &snapshot)
         }
+        if let newTerminalLauncherSection = root["newTerminalLauncher"] as? [String: Any] {
+            parseNewTerminalLauncherSection(newTerminalLauncherSection, sourcePath: sourcePath, snapshot: &snapshot)
+        } else if root.keys.contains("newTerminalLauncher") {
+            logInvalid("newTerminalLauncher", sourcePath: sourcePath)
+        }
         if let notificationsSection = root["notifications"] as? [String: Any] {
             parseNotificationsSection(notificationsSection, sourcePath: sourcePath, snapshot: &snapshot)
         }
@@ -576,6 +581,19 @@ final class CmuxSettingsFileStore {
         } else if section.keys.contains("textBoxMaxLines") {
             logInvalid("terminal.textBoxMaxLines", sourcePath: sourcePath)
         }
+    }
+
+    private func parseNewTerminalLauncherSection(
+        _ section: [String: Any],
+        sourcePath: String,
+        snapshot: inout ResolvedSettingsSnapshot
+    ) {
+        applyBooleanSettings(
+            NewTerminalLauncherSettingsFileMapping.booleanSettings,
+            from: section,
+            sourcePath: sourcePath,
+            snapshot: &snapshot
+        )
     }
 
     private func parseMarkdownSection(

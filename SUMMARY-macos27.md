@@ -479,3 +479,87 @@ Verification:
   `SidebarWorkspaceSnapshotRefreshPolicyTests` now passes
   `rollingOutputPreview: nil`, and `ParsedViewDetectorTests` now qualifies
   static helper calls with `Self`.
+
+## New-terminal SSH-host launcher
+
+Added a Liquid Glass launcher for newly created empty terminal surfaces. New
+terminal/new workspace/new empty-surface flows now pause before starting a
+shell and show a Local Shell card first, followed by recent SSH destinations
+ranked from the user's SSH config and shell history. Existing/restored sessions
+and surfaces with explicit startup commands, pasted input, tmux commands, or
+remote PTY state continue to start through the previous path without showing
+the launcher.
+
+SSH candidates are resolved off-main and cached. The resolver parses
+`~/.ssh/config` `Host` entries, excludes wildcard/negated patterns, merges
+`HostName` and `User`, scans `~/.zsh_history` and `~/.bash_history` for
+`ssh`/`mosh` invocations, deduplicates by destination, and ranks recent and
+frequent destinations ahead of unused config hosts. The card grid receives
+immutable snapshots, supports hover/selection, arrow-key navigation, Enter to
+open, type-to-filter, and a show-more affordance beyond the initial cap.
+
+Opening Local Shell clears the pending empty-state and starts the normal local
+terminal in-place. Opening an SSH card invokes the existing `cmux ssh` launcher
+path with the target window, so SSH sessions reuse the existing cmux session
+model and SSH URL/CLI handling instead of shelling out to raw `ssh`.
+
+Configuration and safety:
+
+- `newTerminalLauncher.enabled` defaults to true and can be toggled in Settings
+  > Terminal.
+- The setting is wired through `cmux.json` parsing/template support, curated
+  Settings search, web schema descriptions, and English/Japanese localization.
+- Launcher candidate parsing happens outside the typing hot paths called out in
+  `CLAUDE.md`; `TerminalSurface.forceRefresh`, `TabItemView`, and
+  `WindowTerminalHostView.hitTest` were not changed.
+
+Touched files:
+- `Sources/NewTerminalLauncher/*`
+- `Sources/Panels/TerminalPanel.swift`
+- `Sources/Panels/TerminalPanelView.swift`
+- `Sources/Panels/PanelContentView.swift`
+- `Sources/Workspace.swift`
+- `Sources/WorkspaceContentView.swift`
+- `Sources/TabManager.swift`
+- `Sources/AppDelegate.swift`
+- `Sources/AppDelegate+CmuxSSHURL.swift`
+- `Sources/Canvas/CanvasHostedPanelContentView.swift`
+- `Sources/RemoteTmuxLayoutContainer.swift`
+- `Sources/CmuxSettingsJSONPathSupport.swift`
+- `Sources/KeyboardShortcutSettingsFileStore.swift`
+- `Sources/KeyboardShortcutSettingsFileStore+Template.swift`
+- `Sources/SettingsNavigation.swift`
+- `Sources/SettingsSearchAliases.swift`
+- `Packages/CmuxSettings/Sources/CmuxSettings/Keys/NewTerminalLauncherCatalogSection.swift`
+- `Packages/CmuxSettings/Sources/CmuxSettings/Keys/SettingCatalog.swift`
+- `Packages/CmuxSettingsUI/Sources/CmuxSettingsUI/Sections/TerminalSection.swift`
+- `Packages/CmuxSettingsUI/Sources/CmuxSettingsUI/Navigation/CuratedSettingEntry+Default.swift`
+- `Resources/Localizable.xcstrings`
+- `web/data/cmux.schema.json`
+- `web/messages/en.json`
+- `web/messages/ja.json`
+- `cmuxTests/NewTerminalLauncherCandidateResolverTests.swift`
+- `cmuxTests/WorkspaceUnitTests.swift`
+- `Packages/CmuxSettingsUI/Tests/CmuxSettingsUITests/SettingsRowAnchorResolutionTests.swift`
+- `cmux.xcodeproj/project.pbxproj`
+- `SUMMARY-macos27.md`
+
+Verification:
+- `xcodebuild -project cmux.xcodeproj -scheme cmux -configuration Debug -destination platform=macOS -derivedDataPath /tmp/cmux-codex build`: `BUILD SUCCEEDED`.
+- `scripts/check-pbxproj.sh`: succeeded.
+- `scripts/lint-pbxproj-test-wiring.sh`: succeeded.
+- `python3 -m json.tool Resources/Localizable.xcstrings`: succeeded.
+- `python3 -m json.tool web/data/cmux.schema.json`: succeeded.
+- `python3 -m json.tool web/messages/en.json`: succeeded.
+- `python3 -m json.tool web/messages/ja.json`: succeeded.
+- Localization audit: launcher UI strings, Settings row/subtitles, Settings
+  search alias, schema descriptions, and web schema messages all have English
+  and Japanese entries; touched Swift UI files were scanned for newly
+  introduced bare user-facing `Text`, `Button`, `Label`, `Toggle`, help, and
+  accessibility strings.
+- `xcodebuild -project cmux.xcodeproj -scheme cmux-unit -configuration Debug -destination platform=macOS -derivedDataPath /tmp/cmux-codex -only-testing:cmuxTests/NewTerminalLauncherCandidateResolverTests test`:
+  the new launcher tests and touched test target sources compiled after
+  updating stale `WorkspaceUnitTests` overrides for the new workspace-creation
+  signature, but the host app exited before XCTest connected because of the
+  existing AppKit `NSTitlebarViewController` assertion in
+  `WindowToolbarController.installParsedPaneAccessory`.

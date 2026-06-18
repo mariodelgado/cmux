@@ -50,10 +50,12 @@ struct RemoteTmuxLayoutContainer: View {
                     appearance: appearance,
                     hasUnreadNotification: false,
                     terminalAgentContext: "",
+                    newTerminalLauncherCandidateCache: nil,
                     onFocus: { mirror.focus(pane: paneId) },
                     onResumeAgentHibernation: {},
                     onAutoResumeAgentHibernation: {},
-                    onTriggerFlash: {}
+                    onTriggerFlash: {},
+                    onOpenNewTerminalLauncherDestination: { _ in }
                 )
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
