@@ -14,6 +14,7 @@ public struct AutomationSection: View {
     @State private var socketPasswordModel: SecretValueModel
     @State private var modeModel: DefaultsValueModel<SocketControlMode>
     @State private var inspectorEnabledModel: JSONValueModel<Bool>
+    @State private var inspectorCharacterModel: JSONValueModel<Bool>
     @State private var inspectorHostModel: JSONValueModel<String>
     @State private var claudeCodeModel: DefaultsValueModel<Bool>
     @State private var claudePathModel: DefaultsValueModel<String>
@@ -60,6 +61,7 @@ public struct AutomationSection: View {
         ))
         _modeModel = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.automation.socketControlMode))
         _inspectorEnabledModel = State(initialValue: JSONValueModel(store: jsonStore, key: catalog.inspector.enabled, errorLog: errorLog))
+        _inspectorCharacterModel = State(initialValue: JSONValueModel(store: jsonStore, key: catalog.inspector.character, errorLog: errorLog))
         _inspectorHostModel = State(initialValue: JSONValueModel(store: jsonStore, key: catalog.inspector.host, errorLog: errorLog))
         _claudeCodeModel = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.integrations.claudeCodeHooksEnabled))
         _claudePathModel = State(initialValue: DefaultsValueModel(store: defaultsStore, key: catalog.integrations.claudeCodeCustomClaudePath))
@@ -155,6 +157,20 @@ public struct AutomationSection: View {
                     .labelsHidden()
                     .controlSize(.small)
                     .accessibilityIdentifier("SettingsOpenRouterInspectorToggle")
+            }
+            SettingsCardDivider()
+            SettingsCardRow(
+                configurationReview: .json("inspector.character"),
+                String(localized: "settings.automation.openRouterInspector.character", defaultValue: "Character Control"),
+                subtitle: inspectorCharacterModel.current
+                    ? String(localized: "settings.automation.openRouterInspector.character.subtitleOn", defaultValue: "Inspector shows Character facade status and per-session pressure controls.")
+                    : String(localized: "settings.automation.openRouterInspector.character.subtitleOff", defaultValue: "Character controls are hidden from the inspector.")
+            ) {
+                Toggle("", isOn: Binding(get: { inspectorCharacterModel.current }, set: { inspectorCharacterModel.set($0) }))
+                    .labelsHidden()
+                    .controlSize(.small)
+                    .disabled(!inspectorEnabledModel.current)
+                    .accessibilityIdentifier("SettingsOpenRouterInspectorCharacterToggle")
             }
             SettingsCardDivider()
             SettingsCardRow(

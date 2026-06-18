@@ -7,6 +7,8 @@ final class OpenRouterInspectorStore {
     private enum ActionKind {
         case switchNow
         case setDefault
+        case characterEnable
+        case characterDisable
     }
 
     var snapshot = OpenRouterInspectorSnapshot.empty
@@ -116,6 +118,41 @@ final class OpenRouterInspectorStore {
         }
     }
 
+    func switchCharacter(
+        session: OpenRouterInspectorSession,
+        enable: Bool,
+        normalProfile: String,
+        host: String
+    ) {
+        guard let window = session.window else {
+            actionMessage = String(localized: "openRouterInspector.switch.missingWindow", defaultValue: "This session has no tmux window number.")
+            actionIsError = true
+            return
+        }
+        let normalizedHost = Self.normalizedHost(host)
+        let fallbackNormalProfile = OpenRouterInspectorProfile.defaultNormalProfileID
+        let trimmedNormalProfile = normalProfile.trimmingCharacters(in: .whitespacesAndNewlines)
+        let target = enable ? OpenRouterInspectorProfile.characterProfileID : (trimmedNormalProfile.nilIfBlank ?? fallbackNormalProfile)
+        isRunningAction = true
+        actionMessage = enable
+            ? String(localized: "openRouterInspector.character.enable.running", defaultValue: "Switching to Character...")
+            : String(localized: "openRouterInspector.character.disable.running", defaultValue: "Switching back to the normal profile...")
+        actionIsError = false
+        Task { [weak self, service] in
+            let outcome = await service.switchNow(
+                host: normalizedHost,
+                session: session.session,
+                window: window,
+                target: target
+            )
+            await self?.applyActionOutcome(
+                outcome,
+                kind: enable ? .characterEnable : .characterDisable,
+                refreshHost: normalizedHost
+            )
+        }
+    }
+
     private func refresh(host: String, force: Bool) async {
         guard !host.isEmpty else {
             lastErrorMessage = OpenRouterInspectorSSHError.blankHost.errorDescription
@@ -161,6 +198,10 @@ final class OpenRouterInspectorStore {
             return String(localized: "openRouterInspector.switch.success", defaultValue: "Switched model and requested restart + resume.")
         case .setDefault:
             return String(localized: "openRouterInspector.default.success", defaultValue: "Default updated for the next session.")
+        case .characterEnable:
+            return String(localized: "openRouterInspector.character.enable.success", defaultValue: "Character enabled; restart + resume requested.")
+        case .characterDisable:
+            return String(localized: "openRouterInspector.character.disable.success", defaultValue: "Character disabled; restart + resume requested.")
         }
     }
 
@@ -174,6 +215,16 @@ final class OpenRouterInspectorStore {
         case .setDefault:
             return String.localizedStringWithFormat(
                 String(localized: "openRouterInspector.default.failed", defaultValue: "Default update failed: %@"),
+                detail
+            )
+        case .characterEnable:
+            return String.localizedStringWithFormat(
+                String(localized: "openRouterInspector.character.enable.failed", defaultValue: "Character enable failed: %@"),
+                detail
+            )
+        case .characterDisable:
+            return String.localizedStringWithFormat(
+                String(localized: "openRouterInspector.character.disable.failed", defaultValue: "Character disable failed: %@"),
                 detail
             )
         }

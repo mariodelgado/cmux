@@ -1,8 +1,15 @@
 import Foundation
 
 nonisolated struct OpenRouterInspectorProfile: Codable, Equatable, Identifiable, Sendable {
+    static let characterProfileID = "claude-character"
+    static let defaultNormalProfileID = "claude-openrouter"
+
     let id: String
     let label: String
+
+    var isCharacterProfile: Bool {
+        id == Self.characterProfileID
+    }
 
     init(id: String, label: String? = nil) {
         self.id = id
@@ -18,6 +25,8 @@ nonisolated struct OpenRouterInspectorProfile: Codable, Equatable, Identifiable,
 }
 
 nonisolated struct OpenRouterInspectorSession: Codable, Equatable, Identifiable, Sendable {
+    static let characterRuntimeProfile = "character"
+
     let session: String
     let window: Int?
     let profile: String?
@@ -34,6 +43,14 @@ nonisolated struct OpenRouterInspectorSession: Codable, Equatable, Identifiable,
             return "\(session):\(window)"
         }
         return session
+    }
+
+    var tmuxIdentityKey: String {
+        "\(session):\(window.map(String.init) ?? "none")"
+    }
+
+    var isCharacterProfile: Bool {
+        profile == Self.characterRuntimeProfile
     }
 
     init(
@@ -156,11 +173,43 @@ nonisolated struct OpenRouterInspectorUsage: Codable, Equatable, Sendable {
     }
 }
 
+nonisolated struct OpenRouterInspectorCharacterStatus: Codable, Equatable, Sendable {
+    let facadeUp: Bool
+    let port: Int?
+    let mode: String?
+
+    static let offline = OpenRouterInspectorCharacterStatus(
+        facadeUp: false,
+        port: nil,
+        mode: nil
+    )
+
+    init(
+        facadeUp: Bool = false,
+        port: Int? = nil,
+        mode: String? = nil
+    ) {
+        self.facadeUp = facadeUp
+        self.port = port
+        self.mode = mode?.nilIfBlank
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.init(
+            facadeUp: container.decodeLossyBoolIfPresent(forKey: .facadeUp) ?? false,
+            port: container.decodeLossyIntIfPresent(forKey: .port),
+            mode: container.decodeLossyStringIfPresent(forKey: .mode)
+        )
+    }
+}
+
 nonisolated struct OpenRouterInspectorSnapshot: Codable, Equatable, Sendable {
     let sessions: [OpenRouterInspectorSession]
     let openrouter: OpenRouterInspectorUsage
     let profiles: [OpenRouterInspectorProfile]
     let models: [String]
+    let character: OpenRouterInspectorCharacterStatus
     let receivedAt: Date
 
     static let empty = OpenRouterInspectorSnapshot(
@@ -168,6 +217,7 @@ nonisolated struct OpenRouterInspectorSnapshot: Codable, Equatable, Sendable {
         openrouter: OpenRouterInspectorUsage(),
         profiles: [],
         models: [],
+        character: .offline,
         receivedAt: .distantPast
     )
 
@@ -176,12 +226,14 @@ nonisolated struct OpenRouterInspectorSnapshot: Codable, Equatable, Sendable {
         openrouter: OpenRouterInspectorUsage,
         profiles: [OpenRouterInspectorProfile],
         models: [String],
+        character: OpenRouterInspectorCharacterStatus = .offline,
         receivedAt: Date
     ) {
         self.sessions = sessions
         self.openrouter = openrouter
         self.profiles = profiles
         self.models = models.compactMap(\.nilIfBlank)
+        self.character = character
         self.receivedAt = receivedAt
     }
 
@@ -190,6 +242,7 @@ nonisolated struct OpenRouterInspectorSnapshot: Codable, Equatable, Sendable {
         case openrouter
         case profiles
         case models
+        case character
         case receivedAt
     }
 
@@ -200,6 +253,7 @@ nonisolated struct OpenRouterInspectorSnapshot: Codable, Equatable, Sendable {
             openrouter: (try? container.decode(OpenRouterInspectorUsage.self, forKey: .openrouter)) ?? OpenRouterInspectorUsage(),
             profiles: (try? container.decode([OpenRouterInspectorProfile].self, forKey: .profiles)) ?? [],
             models: (try? container.decode([String].self, forKey: .models)) ?? [],
+            character: (try? container.decode(OpenRouterInspectorCharacterStatus.self, forKey: .character)) ?? .offline,
             receivedAt: (try? container.decode(Date.self, forKey: .receivedAt)) ?? Date()
         )
     }
@@ -212,6 +266,7 @@ nonisolated struct OpenRouterInspectorSnapshot: Codable, Equatable, Sendable {
             openrouter: decoded.openrouter,
             profiles: decoded.profiles,
             models: decoded.models,
+            character: decoded.character,
             receivedAt: receivedAt
         )
     }

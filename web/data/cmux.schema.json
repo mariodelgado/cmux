@@ -999,6 +999,12 @@
           "default": true,
           "description": "Show the OpenRouter inspector mode in the right sidebar."
         },
+        "character": {
+          "type": "boolean",
+          "default": true,
+          "descriptionKey": "schemaDescriptions.inspector.character",
+          "description": "Show Character facade status and per-session pressure controls in the OpenRouter inspector."
+        },
         "host": {
           "type": "string",
           "default": "mario.servarica",

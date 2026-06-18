@@ -445,6 +445,7 @@ extension CmuxSettingsFileStore {
         "automation.portBase",
         "automation.portRange",
         "inspector.enabled",
+        "inspector.character",
         "inspector.host",
         "ai.enabled",
         "ai.endpoint",

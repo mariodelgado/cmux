@@ -91,6 +91,7 @@ struct SettingCatalogTests {
         #expect(ids.contains("app.appearance"))
         #expect(ids.contains("mobile.iOSPairingHost.enabled"))
         #expect(ids.contains("ai.enabled"))
+        #expect(ids.contains("inspector.character"))
         #expect(ids.contains("automation.socketControlMode"))
         #expect(ids.contains("automation.socketPassword"))
     }
@@ -101,6 +102,7 @@ struct SettingCatalogTests {
         let catalog = SettingCatalog()
         for key in catalog.app.all { #expect(key.id.hasPrefix("app.")) }
         for key in catalog.ai.all { #expect(key.id.hasPrefix("ai.")) }
+        for key in catalog.inspector.all { #expect(key.id.hasPrefix("inspector.")) }
         for key in catalog.mobile.all { #expect(key.id.hasPrefix("mobile.")) }
         for key in catalog.automation.all { #expect(key.id.hasPrefix("automation.")) }
     }

@@ -189,6 +189,7 @@ extension CmuxSettingsFileStore {
             [
                 "inspector": [
                     "enabled": SettingCatalog().inspector.enabled.defaultValue,
+                    "character": SettingCatalog().inspector.character.defaultValue,
                     "host": SettingCatalog().inspector.host.defaultValue,
                 ],
             ],

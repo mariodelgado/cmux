@@ -9,6 +9,11 @@ public struct InspectorCatalogSection: SettingCatalogSection {
         defaultValue: true
     )
 
+    public let character = JSONKey<Bool>(
+        id: "inspector.character",
+        defaultValue: true
+    )
+
     public let host = JSONKey<String>(
         id: "inspector.host",
         defaultValue: Self.defaultHost

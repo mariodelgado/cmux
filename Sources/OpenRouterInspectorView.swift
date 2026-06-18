@@ -3,8 +3,13 @@ import SwiftUI
 struct OpenRouterInspectorView: View {
     let isActive: Bool
     let host: String
+    let characterEnabled: Bool
 
     @State private var store = OpenRouterInspectorStore()
+    @State private var selectedCharacterMode: OpenRouterInspectorCharacterMode = .advisory
+    @State private var normalProfileBySessionKey: [String: String] = [:]
+    @State private var pendingCharacterAction: OpenRouterInspectorPendingCharacterAction?
+    @State private var showsCharacterConfirmation = false
 
     private var palette: RightSidebarCatppuccinMochaPalette.Type {
         RightSidebarCatppuccinMochaPalette.self
@@ -14,6 +19,9 @@ struct OpenRouterInspectorView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: RightSidebarChromeMetrics.sectionSpacing) {
                 headerSection
+                if characterEnabled {
+                    characterSection
+                }
                 sessionsSection
                 recentSection
             }
@@ -32,6 +40,36 @@ struct OpenRouterInspectorView: View {
         }
         .onChange(of: host) { _, nextValue in
             store.synchronize(isActive: isActive, host: nextValue)
+        }
+        .onChange(of: showsCharacterConfirmation) { _, isPresented in
+            if !isPresented {
+                pendingCharacterAction = nil
+            }
+        }
+        .confirmationDialog(
+            characterConfirmationTitle,
+            isPresented: $showsCharacterConfirmation,
+            titleVisibility: .visible
+        ) {
+            if let pendingCharacterAction {
+                Button(characterConfirmationButtonTitle, role: .destructive) {
+                    store.switchCharacter(
+                        session: pendingCharacterAction.session,
+                        enable: pendingCharacterAction.enable,
+                        normalProfile: pendingCharacterAction.normalProfile,
+                        host: host
+                    )
+                    self.pendingCharacterAction = nil
+                }
+            }
+            Button(
+                String(localized: "openRouterInspector.character.confirm.cancel", defaultValue: "Cancel"),
+                role: .cancel
+            ) {
+                pendingCharacterAction = nil
+            }
+        } message: {
+            Text(characterConfirmationMessage)
         }
         .accessibilityIdentifier("OpenRouterInspectorView")
     }
@@ -107,6 +145,64 @@ struct OpenRouterInspectorView: View {
         .rightSidebarInsetGroup(cornerRadius: 8)
     }
 
+    private var characterSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(alignment: .center, spacing: 8) {
+                Text(String(localized: "openRouterInspector.character.title", defaultValue: "Character"))
+                    .font(.system(size: 11, weight: .semibold))
+                    .foregroundStyle(palette.text)
+                Spacer(minLength: 0)
+                characterFacadeStatus
+            }
+
+            if !store.snapshot.character.facadeUp {
+                Text(characterFacadeOfflineHint)
+                    .font(.system(size: 10))
+                    .foregroundStyle(palette.overlay0)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+
+            Picker(
+                String(localized: "openRouterInspector.character.mode.accessibilityLabel", defaultValue: "Character mode"),
+                selection: $selectedCharacterMode
+            ) {
+                ForEach(OpenRouterInspectorCharacterMode.allCases) { mode in
+                    Text(mode.title).tag(mode)
+                }
+            }
+            .pickerStyle(.segmented)
+            .controlSize(.small)
+            .accessibilityIdentifier("OpenRouterInspectorCharacterModePicker")
+
+            if selectedCharacterMode == .full {
+                Text(String(localized: "openRouterInspector.character.fullModeUnavailable", defaultValue: "Full mode needs the full-mode facade (port 8083) — not running"))
+                    .font(.system(size: 10))
+                    .foregroundStyle(palette.subtext0)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 6)
+                    .background(
+                        RoundedRectangle(cornerRadius: 6, style: .continuous)
+                            .fill(palette.crust.opacity(0.78))
+                    )
+            }
+        }
+        .padding(10)
+        .rightSidebarInsetGroup(cornerRadius: 8)
+    }
+
+    private var characterFacadeStatus: some View {
+        HStack(spacing: 5) {
+            Circle()
+                .fill(store.snapshot.character.facadeUp ? Color.green.opacity(0.82) : palette.overlay0.opacity(0.48))
+                .frame(width: 7, height: 7)
+            Text(characterFacadeStatusText)
+                .font(.system(size: 10, weight: .medium))
+                .foregroundStyle(store.snapshot.character.facadeUp ? palette.text : palette.overlay0)
+        }
+        .accessibilityElement(children: .combine)
+    }
+
     private var usageMeter: some View {
         GeometryReader { proxy in
             let ratio = usageRatio
@@ -124,7 +220,9 @@ struct OpenRouterInspectorView: View {
 
     private var sessionsSection: some View {
         let profilesByID = Dictionary(uniqueKeysWithValues: store.snapshot.profiles.map { ($0.id, $0.label) })
+        let characterProfileLabel = store.snapshot.profiles.first(where: \.isCharacterProfile)?.label
         let choices = selectionChoices
+        let normalProfileChoices = characterNormalProfileChoices
         return VStack(alignment: .leading, spacing: 8) {
             sectionHeader(
                 String(localized: "openRouterInspector.sessions.title", defaultValue: "Detected CC Sessions"),
@@ -141,9 +239,24 @@ struct OpenRouterInspectorView: View {
                     ForEach(sessionRows, id: \.offset) { index, session in
                         OpenRouterInspectorSessionRow(
                             session: session,
-                            profileLabel: session.profile.flatMap { profilesByID[$0] },
+                            profileLabel: profileLabel(
+                                for: session,
+                                profilesByID: profilesByID,
+                                characterProfileLabel: characterProfileLabel
+                            ),
                             choices: choices,
+                            characterControlEnabled: characterEnabled,
+                            characterFacadeUp: store.snapshot.character.facadeUp,
+                            characterMode: selectedCharacterMode,
+                            normalProfileChoices: normalProfileChoices,
+                            selectedNormalProfileTitle: normalProfileTitle(for: selectedNormalProfile(for: session)),
                             isActionRunning: store.isRunningAction,
+                            onSetCharacterEnabled: { enable in
+                                requestCharacterSwitch(session: session, enable: enable)
+                            },
+                            onSelectNormalProfile: { profile in
+                                normalProfileBySessionKey[session.tmuxIdentityKey] = profile
+                            },
                             onSwitchNow: { target in
                                 store.switchNow(session: session, target: target, host: host)
                             },
@@ -258,6 +371,72 @@ struct OpenRouterInspectorView: View {
         )
     }
 
+    private var characterFacadeStatusText: String {
+        guard store.snapshot.character.facadeUp else {
+            return String(localized: "openRouterInspector.character.facadeOffline", defaultValue: "facade offline")
+        }
+        return String(localized: "openRouterInspector.character.advisory", defaultValue: "Advisory")
+    }
+
+    private var characterFacadeOfflineHint: String {
+        String.localizedStringWithFormat(
+            String(localized: "openRouterInspector.character.facadeOfflineHint", defaultValue: "ssh %@, systemctl --user status character-facade"),
+            characterHostForHint
+        )
+    }
+
+    private var characterHostForHint: String {
+        host.trimmingCharacters(in: .whitespacesAndNewlines).nilIfBlank ?? "mario.servarica"
+    }
+
+    private var characterNormalProfileChoices: [OpenRouterInspectorChoice] {
+        store.snapshot.profiles
+            .filter { !$0.isCharacterProfile }
+            .map { OpenRouterInspectorChoice(kind: .profile, value: $0.id, title: $0.label) }
+    }
+
+    private var preferredNormalProfile: String {
+        if characterNormalProfileChoices.contains(where: { $0.value == OpenRouterInspectorProfile.defaultNormalProfileID }) {
+            return OpenRouterInspectorProfile.defaultNormalProfileID
+        }
+        return characterNormalProfileChoices.first?.value ?? OpenRouterInspectorProfile.defaultNormalProfileID
+    }
+
+    private var characterConfirmationTitle: String {
+        guard let pendingCharacterAction else {
+            return String(localized: "openRouterInspector.character.confirm.title", defaultValue: "Restart session?")
+        }
+        if pendingCharacterAction.enable {
+            return String(localized: "openRouterInspector.character.confirm.enable.title", defaultValue: "Switch to Character?")
+        }
+        return String(localized: "openRouterInspector.character.confirm.disable.title", defaultValue: "Switch back to normal?")
+    }
+
+    private var characterConfirmationButtonTitle: String {
+        guard let pendingCharacterAction else {
+            return String(localized: "openRouterInspector.character.confirm.restart", defaultValue: "Restart + Resume")
+        }
+        if pendingCharacterAction.enable {
+            return String(localized: "openRouterInspector.character.confirm.enable", defaultValue: "Switch to Character")
+        }
+        return String(localized: "openRouterInspector.character.confirm.disable", defaultValue: "Switch Back")
+    }
+
+    private var characterConfirmationMessage: String {
+        guard let pendingCharacterAction else { return "" }
+        if pendingCharacterAction.enable {
+            return String.localizedStringWithFormat(
+                String(localized: "openRouterInspector.character.confirm.enable.message", defaultValue: "%@ will restart and resume through the Character pressure sidecar."),
+                pendingCharacterAction.session.displayName
+            )
+        }
+        return String.localizedStringWithFormat(
+            String(localized: "openRouterInspector.character.confirm.disable.message", defaultValue: "%@ will restart and resume with %@."),
+            pendingCharacterAction.session.displayName,
+            pendingCharacterAction.normalProfileTitle
+        )
+    }
+
     private var selectionChoices: [OpenRouterInspectorChoice] {
         let profileChoices = store.snapshot.profiles.map {
             OpenRouterInspectorChoice(kind: .profile, value: $0.id, title: $0.label)
@@ -266,6 +445,38 @@ struct OpenRouterInspectorView: View {
             OpenRouterInspectorChoice(kind: .model, value: $0, title: $0)
         }
         return profileChoices + modelChoices
+    }
+
+    private func selectedNormalProfile(for session: OpenRouterInspectorSession) -> String {
+        normalProfileBySessionKey[session.tmuxIdentityKey] ?? preferredNormalProfile
+    }
+
+    private func normalProfileTitle(for profile: String) -> String {
+        characterNormalProfileChoices.first(where: { $0.value == profile })?.title ?? profile
+    }
+
+    private func profileLabel(
+        for session: OpenRouterInspectorSession,
+        profilesByID: [String: String],
+        characterProfileLabel: String?
+    ) -> String? {
+        if session.isCharacterProfile {
+            return characterProfileLabel
+                ?? String(localized: "openRouterInspector.character.profileLabel", defaultValue: "Character - pressure sidecar")
+        }
+        return session.profile.flatMap { profilesByID[$0] }
+    }
+
+    private func requestCharacterSwitch(session: OpenRouterInspectorSession, enable: Bool) {
+        guard selectedCharacterMode != .full || session.isCharacterProfile else { return }
+        let normalProfile = selectedNormalProfile(for: session)
+        pendingCharacterAction = OpenRouterInspectorPendingCharacterAction(
+            session: session,
+            enable: enable,
+            normalProfile: normalProfile,
+            normalProfileTitle: normalProfileTitle(for: normalProfile)
+        )
+        showsCharacterConfirmation = true
     }
 
     private func sectionHeader(_ title: String, count: Int) -> some View {
@@ -333,11 +544,41 @@ private struct OpenRouterInspectorChoice: Identifiable, Equatable {
     }
 }
 
+private enum OpenRouterInspectorCharacterMode: String, CaseIterable, Hashable, Identifiable {
+    case advisory
+    case full
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .advisory:
+            return String(localized: "openRouterInspector.character.advisory", defaultValue: "Advisory")
+        case .full:
+            return String(localized: "openRouterInspector.character.full", defaultValue: "Full")
+        }
+    }
+}
+
+private struct OpenRouterInspectorPendingCharacterAction {
+    let session: OpenRouterInspectorSession
+    let enable: Bool
+    let normalProfile: String
+    let normalProfileTitle: String
+}
+
 private struct OpenRouterInspectorSessionRow: View {
     let session: OpenRouterInspectorSession
     let profileLabel: String?
     let choices: [OpenRouterInspectorChoice]
+    let characterControlEnabled: Bool
+    let characterFacadeUp: Bool
+    let characterMode: OpenRouterInspectorCharacterMode
+    let normalProfileChoices: [OpenRouterInspectorChoice]
+    let selectedNormalProfileTitle: String
     let isActionRunning: Bool
+    let onSetCharacterEnabled: (Bool) -> Void
+    let onSelectNormalProfile: (String) -> Void
     let onSwitchNow: (String) -> Void
     let onSetDefault: (String) -> Void
 
@@ -382,9 +623,97 @@ private struct OpenRouterInspectorSessionRow: View {
                     title: String(localized: "openRouterInspector.model", defaultValue: "Model"),
                     value: session.model ?? String(localized: "openRouterInspector.unknown", defaultValue: "Unknown")
                 )
+                if characterControlEnabled && characterFacadeUp {
+                    characterToggleRow
+                }
             }
         }
         .padding(.vertical, 8)
+    }
+
+    private var characterToggleRow: some View {
+        HStack(spacing: 6) {
+            Text(String(localized: "openRouterInspector.character.rowTitle", defaultValue: "Character"))
+                .font(.system(size: 9, weight: .medium))
+                .foregroundStyle(palette.overlay0)
+
+            Toggle("", isOn: Binding(
+                get: { session.isCharacterProfile },
+                set: { enabled in
+                    onSetCharacterEnabled(enabled)
+                }
+            ))
+            .labelsHidden()
+            .toggleStyle(.switch)
+            .controlSize(.mini)
+            .disabled(characterToggleDisabled)
+            .accessibilityLabel(String(localized: "openRouterInspector.character.toggle.accessibilityLabel", defaultValue: "Character"))
+
+            if session.isCharacterProfile {
+                pressureBadge
+                normalProfileMenu
+            } else if characterMode == .full {
+                Text(String(localized: "openRouterInspector.character.fullShortNote", defaultValue: "Full needs :8083"))
+                    .font(.system(size: 9))
+                    .foregroundStyle(palette.overlay0)
+                    .lineLimit(1)
+            }
+        }
+        .padding(.top, 2)
+    }
+
+    private var characterToggleDisabled: Bool {
+        isActionRunning || session.window == nil || (characterMode == .full && !session.isCharacterProfile)
+    }
+
+    private var pressureBadge: some View {
+        Text(String(localized: "openRouterInspector.character.pressureBadge", defaultValue: "pressure"))
+            .font(.system(size: 8, weight: .semibold))
+            .foregroundStyle(palette.text)
+            .padding(.horizontal, 5)
+            .padding(.vertical, 2)
+            .background(
+                Capsule()
+                    .fill(palette.mauve.opacity(0.26))
+            )
+            .overlay {
+                Capsule()
+                    .stroke(palette.mauve.opacity(0.42), lineWidth: 1)
+            }
+    }
+
+    private var normalProfileMenu: some View {
+        Menu {
+            if normalProfileChoices.isEmpty {
+                Text(String(localized: "openRouterInspector.character.noNormalProfiles", defaultValue: "No normal profiles reported"))
+            } else {
+                ForEach(normalProfileChoices) { choice in
+                    Button(choice.title) {
+                        onSelectNormalProfile(choice.value)
+                    }
+                }
+            }
+        } label: {
+            HStack(spacing: 3) {
+                Text(selectedNormalProfileTitle)
+                    .font(.system(size: 9, design: .monospaced))
+                    .lineLimit(1)
+                    .truncationMode(.middle)
+                Image(systemName: "chevron.down")
+                    .font(.system(size: 7, weight: .semibold))
+            }
+            .foregroundStyle(palette.subtext0)
+            .padding(.horizontal, 5)
+            .padding(.vertical, 2)
+            .background(
+                RoundedRectangle(cornerRadius: 5, style: .continuous)
+                    .fill(palette.crust.opacity(0.78))
+            )
+        }
+        .menuStyle(.borderlessButton)
+        .fixedSize()
+        .disabled(isActionRunning || normalProfileChoices.isEmpty)
+        .safeHelp(String(localized: "openRouterInspector.character.normalProfile.tooltip", defaultValue: "Normal profile used when Character is turned off"))
     }
 
     private var switcherMenu: some View {
@@ -510,4 +839,11 @@ private func relativeTime(_ date: Date) -> String {
     let formatter = RelativeDateTimeFormatter()
     formatter.unitsStyle = .short
     return formatter.localizedString(for: date, relativeTo: Date())
+}
+
+private extension String {
+    var nilIfBlank: String? {
+        let trimmed = trimmingCharacters(in: .whitespacesAndNewlines)
+        return trimmed.isEmpty ? nil : trimmed
+    }
 }

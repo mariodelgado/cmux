@@ -563,3 +563,55 @@ Verification:
   signature, but the host app exited before XCTest connected because of the
   existing AppKit `NSTitlebarViewController` assertion in
   `WindowToolbarController.installParsedPaneAccessory`.
+
+## Character inspector control
+
+Added a Character control to the OpenRouter inspector. The inspector snapshot
+now decodes the optional `character` facade object from `cc-inspector.sh`
+payloads, including `facadeUp`, `port`, and `mode`, while continuing to
+tolerate older payloads with missing fields. Sessions whose remote `profile`
+is `character` are treated as active Character sessions.
+
+The right-sidebar inspector now has a Character section gated by
+`inspector.character` (default true). It shows facade status with a green
+Advisory indicator when the facade is up, an offline hint for checking
+`character-facade` over SSH when it is not, and an Advisory/Full segmented
+control. Full mode is selectable but clearly reports that the full-mode facade
+on port 8083 is not running.
+
+Each detected Claude Code session row receives only immutable session/profile
+snapshots and closure actions. When the facade is online, rows show a Character
+toggle: enabling confirms the restart and routes through
+`~/.tmux/cc-switch.sh <session> <window> restart claude-character`; active
+Character rows show a `pressure` badge and a normal-profile chooser that
+defaults to `claude-openrouter` for switching back.
+
+Configuration and safety:
+
+- `inspector.character` is wired through the typed settings catalog,
+  `cmux.json` template/path support, schema, Settings > Automation, and live
+  right-sidebar settings.
+- SSH action execution still goes through the existing queued
+  `OpenRouterInspectorSSHService` actor; no new main-thread process work was
+  added.
+- The SwiftUI list boundary remains value snapshots plus closure action
+  bundles for session rows; no observable store is passed below the row
+  boundary.
+- The typing hot paths called out in `CLAUDE.md` were not changed.
+
+Verification:
+
+- `xcodebuild -project cmux.xcodeproj -scheme cmux -configuration Debug -destination platform=macOS -derivedDataPath /tmp/cmux-codex build`: `BUILD SUCCEEDED`.
+- `./scripts/reload.sh --tag macos27-codex`: succeeded in 84s.
+- `swift test --package-path Packages/CmuxSettings --filter SettingCatalogTests`: passed 5 Swift Testing tests.
+- `scripts/check-pbxproj.sh`: succeeded.
+- `scripts/lint-pbxproj-test-wiring.sh`: succeeded.
+- `python3 -m json.tool Resources/Localizable.xcstrings`: succeeded.
+- `python3 -m json.tool web/data/cmux.schema.json`: succeeded.
+- Character localization audit verified 33 new keys with English and Japanese
+  entries. The touched Swift UI files were scanned for bare user-facing text.
+- `xcodebuild test -project cmux.xcodeproj -scheme cmux-unit -destination platform=macOS -derivedDataPath /tmp/cmux-codex -only-testing:cmuxTests/OpenRouterInspectorTests`:
+  compiled and launched the host app, but the local test run hit the existing
+  AppKit `NSTitlebarViewController` assertion in
+  `WindowToolbarController.installParsedPaneAccessory` before the selected
+  inspector tests could complete.

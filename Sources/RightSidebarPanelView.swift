@@ -210,6 +210,7 @@ struct RightSidebarPanelView: View {
     private let focusShortcutHintYOffset = ShortcutHintDebugSettings.defaultRightSidebarFocusHintY
     @LiveSetting(\.shortcuts.showModifierHoldHints) private var showModifierHoldHints
     @LiveSetting(\.inspector.enabled) private var inspectorEnabled
+    @LiveSetting(\.inspector.character) private var inspectorCharacterEnabled
     @LiveSetting(\.inspector.host) private var inspectorHost
     @AppStorage(RightSidebarBetaFeatureSettings.feedEnabledKey)
     private var feedEnabled = RightSidebarBetaFeatureSettings.defaultFeedEnabled
@@ -499,7 +500,11 @@ struct RightSidebarPanelView: View {
             case .dock:
                 DockPanelView(rootDirectory: dockRootDirectory, workspaceId: workspaceId, store: dockStore)
             case .inspector:
-                OpenRouterInspectorView(isActive: isInspectorActive, host: inspectorHost)
+                OpenRouterInspectorView(
+                    isActive: isInspectorActive,
+                    host: inspectorHost,
+                    characterEnabled: inspectorCharacterEnabled
+                )
             }
         } else {
             Color.clear

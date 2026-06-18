@@ -17,6 +17,7 @@ struct OpenRouterInspectorTests {
         #expect(snapshot.openrouter.recent.isEmpty)
         #expect(snapshot.profiles.isEmpty)
         #expect(snapshot.models.isEmpty)
+        #expect(snapshot.character == .offline)
         #expect(snapshot.receivedAt == Date(timeIntervalSince1970: 10))
     }
 
@@ -27,7 +28,7 @@ struct OpenRouterInspectorTests {
             {
               "session": "mario-ops",
               "window": "2",
-              "profile": "glm-openrouter",
+              "profile": "character",
               "model": "z-ai/glm-5.2",
               "pid": 1234,
               "running": "true"
@@ -41,7 +42,13 @@ struct OpenRouterInspectorTests {
               {"model": "z-ai/glm-5.2", "cost": "0.012", "tokens": "3456", "ts": 1718000000000}
             ]
           },
+          "character": {
+            "facadeUp": "true",
+            "port": "8082",
+            "mode": "advisory"
+          },
           "profiles": [
+            {"id": "claude-character", "label": "Character — pressure sidecar"},
             {"id": "claude-glm-openrouter", "label": "OpenRouter GLM 5.2 Only"}
           ],
           "models": ["anthropic/claude-sonnet-4.6", "z-ai/glm-5.2"]
@@ -56,13 +63,18 @@ struct OpenRouterInspectorTests {
         #expect(snapshot.sessions.count == 1)
         #expect(snapshot.sessions[0].session == "mario-ops")
         #expect(snapshot.sessions[0].window == 2)
+        #expect(snapshot.sessions[0].isCharacterProfile)
         #expect(snapshot.sessions[0].running)
         #expect(snapshot.openrouter.balance == 12.34)
         #expect(snapshot.openrouter.usage == 7.66)
         #expect(snapshot.openrouter.limit == 20)
         #expect(snapshot.openrouter.recent[0].tokens == 3456)
         #expect(snapshot.openrouter.recent[0].timestamp == Date(timeIntervalSince1970: 1_718_000_000))
-        #expect(snapshot.profiles[0].label == "OpenRouter GLM 5.2 Only")
+        #expect(snapshot.character.facadeUp)
+        #expect(snapshot.character.port == 8082)
+        #expect(snapshot.character.mode == "advisory")
+        #expect(snapshot.profiles[0].isCharacterProfile)
+        #expect(snapshot.profiles[0].label == "Character — pressure sidecar")
         #expect(snapshot.models == ["anthropic/claude-sonnet-4.6", "z-ai/glm-5.2"])
     }
 
@@ -88,6 +100,16 @@ struct OpenRouterInspectorTests {
         ) == [
             "mario.servarica",
             "~/.tmux/cc-switch.sh default 'claude-glm-openrouter'",
+        ])
+
+        #expect(OpenRouterInspectorSSHService.switchNowArguments(
+            host: "mario.servarica",
+            session: "mario-ops",
+            window: 2,
+            target: OpenRouterInspectorProfile.characterProfileID
+        ) == [
+            "mario.servarica",
+            "~/.tmux/cc-switch.sh 'mario-ops' 2 restart 'claude-character'",
         ])
     }
 

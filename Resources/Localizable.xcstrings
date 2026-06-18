@@ -203950,6 +203950,237 @@
         "en": { "stringUnit": { "state": "translated", "value": "newTerminalLauncher.enabled ssh hosts local shell new terminal launcher cards" } },
         "ja": { "stringUnit": { "state": "translated", "value": "newTerminalLauncher.enabled ssh ホスト ローカルシェル 新しいターミナル ランチャー カード" } }
       }
+    },
+    "settings.automation.openRouterInspector.character": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Character Control" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "Character コントロール" } }
+      }
+    },
+    "settings.automation.openRouterInspector.character.subtitleOn": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Inspector shows Character facade status and per-session pressure controls." } },
+        "ja": { "stringUnit": { "state": "translated", "value": "インスペクターに Character ファサードの状態とセッションごとの pressure コントロールを表示します。" } }
+      }
+    },
+    "settings.automation.openRouterInspector.character.subtitleOff": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Character controls are hidden from the inspector." } },
+        "ja": { "stringUnit": { "state": "translated", "value": "インスペクターで Character コントロールを非表示にします。" } }
+      }
+    },
+    "schemaDescriptions.inspector.character": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Show Character facade status and per-session pressure controls in the OpenRouter inspector." } },
+        "ja": { "stringUnit": { "state": "translated", "value": "OpenRouter インスペクターに Character ファサードの状態とセッションごとの pressure コントロールを表示します。" } }
+      }
+    },
+    "openRouterInspector.character.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Character" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "Character" } }
+      }
+    },
+    "openRouterInspector.character.facadeOffline": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "facade offline" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "ファサードはオフライン" } }
+      }
+    },
+    "openRouterInspector.character.facadeOfflineHint": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "ssh %@, systemctl --user status character-facade" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "ssh %@, systemctl --user status character-facade" } }
+      }
+    },
+    "openRouterInspector.character.mode.accessibilityLabel": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Character mode" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "Character モード" } }
+      }
+    },
+    "openRouterInspector.character.advisory": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Advisory" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "アドバイザリー" } }
+      }
+    },
+    "openRouterInspector.character.full": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Full" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "フル" } }
+      }
+    },
+    "openRouterInspector.character.fullModeUnavailable": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Full mode needs the full-mode facade (port 8083) — not running" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "フルモードには full-mode ファサード (ポート 8083) が必要です — 起動していません" } }
+      }
+    },
+    "openRouterInspector.character.profileLabel": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Character - pressure sidecar" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "Character - pressure サイドカー" } }
+      }
+    },
+    "openRouterInspector.character.confirm.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Restart session?" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "セッションを再起動しますか？" } }
+      }
+    },
+    "openRouterInspector.character.confirm.enable.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Switch to Character?" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "Character に切り替えますか？" } }
+      }
+    },
+    "openRouterInspector.character.confirm.disable.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Switch back to normal?" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "通常プロファイルに戻しますか？" } }
+      }
+    },
+    "openRouterInspector.character.confirm.restart": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Restart + Resume" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "再起動 + 再開" } }
+      }
+    },
+    "openRouterInspector.character.confirm.enable": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Switch to Character" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "Character に切り替え" } }
+      }
+    },
+    "openRouterInspector.character.confirm.disable": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Switch Back" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "戻す" } }
+      }
+    },
+    "openRouterInspector.character.confirm.cancel": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Cancel" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "キャンセル" } }
+      }
+    },
+    "openRouterInspector.character.confirm.enable.message": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "%@ will restart and resume through the Character pressure sidecar." } },
+        "ja": { "stringUnit": { "state": "translated", "value": "%@ を再起動し、Character pressure サイドカー経由で再開します。" } }
+      }
+    },
+    "openRouterInspector.character.confirm.disable.message": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "%@ will restart and resume with %@." } },
+        "ja": { "stringUnit": { "state": "translated", "value": "%@ を再起動し、%@ で再開します。" } }
+      }
+    },
+    "openRouterInspector.character.rowTitle": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Character" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "Character" } }
+      }
+    },
+    "openRouterInspector.character.toggle.accessibilityLabel": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Character" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "Character" } }
+      }
+    },
+    "openRouterInspector.character.fullShortNote": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Full needs :8083" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "Full には :8083 が必要です" } }
+      }
+    },
+    "openRouterInspector.character.pressureBadge": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "pressure" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "pressure" } }
+      }
+    },
+    "openRouterInspector.character.noNormalProfiles": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "No normal profiles reported" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "通常プロファイルは報告されていません" } }
+      }
+    },
+    "openRouterInspector.character.normalProfile.tooltip": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Normal profile used when Character is turned off" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "Character をオフにしたときに使う通常プロファイル" } }
+      }
+    },
+    "openRouterInspector.character.enable.running": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Switching to Character..." } },
+        "ja": { "stringUnit": { "state": "translated", "value": "Character に切り替え中..." } }
+      }
+    },
+    "openRouterInspector.character.disable.running": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Switching back to the normal profile..." } },
+        "ja": { "stringUnit": { "state": "translated", "value": "通常プロファイルに戻しています..." } }
+      }
+    },
+    "openRouterInspector.character.enable.success": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Character enabled; restart + resume requested." } },
+        "ja": { "stringUnit": { "state": "translated", "value": "Character を有効にし、再起動 + 再開を要求しました。" } }
+      }
+    },
+    "openRouterInspector.character.disable.success": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Character disabled; restart + resume requested." } },
+        "ja": { "stringUnit": { "state": "translated", "value": "Character を無効にし、再起動 + 再開を要求しました。" } }
+      }
+    },
+    "openRouterInspector.character.enable.failed": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Character enable failed: %@" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "Character の有効化に失敗しました: %@" } }
+      }
+    },
+    "openRouterInspector.character.disable.failed": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Character disable failed: %@" } },
+        "ja": { "stringUnit": { "state": "translated", "value": "Character の無効化に失敗しました: %@" } }
+      }
     }
   }
 }
