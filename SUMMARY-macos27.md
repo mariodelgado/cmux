@@ -353,3 +353,49 @@ Final verification:
   through `cmux-unit` currently stops on an existing
   `SidebarWorkspaceSnapshotRefreshPolicyTests` compile error for a missing
   `rollingOutputPreview` argument before `ParsedViewDetectorTests` can run.
+
+## Parsed pane titlebar fix
+
+The earlier pane-chrome `Terminal | Parsed` control has been removed from
+`TerminalPanelView`. The parsed-pane mode control now lives in the window title
+bar as a centered `NSTitlebarAccessoryViewController`, managed by
+`WindowToolbarController`, using the same small textured segmented-control
+style as the titlebar layout-mode control.
+
+Visibility is now scoped to the active terminal pane. The titlebar control is
+hidden unless Parsed View is enabled and the focused terminal pane is backed by
+a real session signal: a detected running process, an agent-hook binding, or an
+agent-session snapshot. Empty/plain shells and non-terminal panes keep the
+control hidden and force the pane back to terminal mode.
+
+The broken Parsed mode swap was fixed by replacing the SwiftUI overlay with an
+actual `TerminalPanelView` content swap. Parsed mode now unmounts the raw
+`GhosttyTerminalView` and shows `ParsedPaneView`, while Terminal mode restores
+the raw Ghostty surface. Sampling remains active only while the pane is visible,
+Parsed mode is selected, and Parsed View is enabled. Empty sampled scrollback
+now clears stale snapshots and shows a localized empty state instead of leaving
+the parsed view blank or indefinitely loading.
+
+Touched files:
+- `Sources/AppDelegate.swift`
+- `Sources/WindowToolbarController.swift`
+- `Sources/Panels/TerminalPanelView.swift`
+- `Sources/ParsedPane/ParsedPaneView.swift`
+- `Sources/ParsedPane/ParsedPaneViewModel.swift`
+- `Resources/Localizable.xcstrings`
+- `SUMMARY-macos27.md`
+
+Verification:
+- `xcodebuild -project cmux.xcodeproj -scheme cmux -configuration Debug -destination platform=macOS -derivedDataPath /tmp/cmux-codex build`: `BUILD SUCCEEDED`.
+- `./scripts/reload.sh --tag macos27-codex`: succeeded in 81s (log:
+  `/tmp/cmux-reload-macos27-codex.log`; app:
+  `/Users/marioelysian/Library/Developer/Xcode/DerivedData/cmux-macos27-codex/Build/Products/Debug/cmux DEV macos27-codex.app`).
+- `scripts/check-pbxproj.sh`: succeeded.
+- `scripts/lint-pbxproj-test-wiring.sh`: succeeded.
+- `jq empty Resources/Localizable.xcstrings`: succeeded.
+- `git diff --check`: succeeded.
+- Localization audit: new `parsedView.empty` copy and reused
+  `parsedView.toggle.*` titlebar strings have English and Japanese entries in
+  `Resources/Localizable.xcstrings`; touched Swift files were scanned for new
+  bare user-facing `Text`, `Button`, `Label`, `Picker`, `Toggle`, segmented
+  label, tooltip, and accessibility-label strings.

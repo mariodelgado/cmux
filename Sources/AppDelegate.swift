@@ -837,6 +837,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
     let focusLog = FocusLogStore()
     private lazy var updateController = UpdateController(log: updateLog)
     private lazy var titlebarAccessoryController = UpdateTitlebarAccessoryController(updateLog: updateLog, settingsRuntime: settingsRuntime)
+    private lazy var windowToolbarController = WindowToolbarController()
     private let windowDecorationsController = WindowDecorationsController()
     private var menuBarExtraController: MenuBarExtraController?
     private var transientGlobalSearchMenuBarExtraController: MenuBarExtraController?
@@ -1991,6 +1992,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
             browserSignIn: auth.browserSignIn
         )
         auth.start()
+        windowToolbarController.start(tabManager: tabManager)
         ensureMobileWorkspaceListObserver(for: tabManager)
         MobileTerminalRenderObserver.shared.start()
         AgentChatTranscriptService.shared.start()
@@ -11928,6 +11930,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCent
     func attachUpdateAccessory(to window: NSWindow) {
         titlebarAccessoryController.start()
         titlebarAccessoryController.attach(to: window)
+        if let tabManager {
+            windowToolbarController.start(tabManager: tabManager)
+            windowToolbarController.attach(to: window)
+        }
     }
 
     func applyWindowDecorations(to window: NSWindow) {

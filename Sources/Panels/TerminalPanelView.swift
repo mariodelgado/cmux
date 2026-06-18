@@ -63,35 +63,7 @@ struct TerminalPanelView: View {
 
     private var terminalBody: some View {
         VStack(spacing: 0) {
-            ZStack(alignment: .top) {
-                // Layering contract: terminal find UI is mounted in GhosttySurfaceScrollView (AppKit portal layer)
-                // via `searchState`. Rendering `SurfaceSearchOverlay` in this SwiftUI container can hide it.
-                GhosttyTerminalView(
-                    terminalSurface: panel.surface,
-                    paneId: paneId,
-                    isActive: isFocused,
-                    isVisibleInUI: isVisibleInUI,
-                    portalZPriority: portalPriority,
-                    showsInactiveOverlay: isSplit && !isFocused,
-                    showsUnreadNotificationRing: hasUnreadNotification && notificationPaneRingEnabled,
-                    inactiveOverlayColor: appearance.unfocusedOverlayNSColor,
-                    inactiveOverlayOpacity: appearance.unfocusedOverlayOpacity,
-                    searchState: panel.searchState,
-                    reattachToken: panel.viewReattachToken,
-                    onFocus: { _ in
-                        panel.terminalDidBecomeFocused()
-                        onFocus()
-                    },
-                    onTriggerFlash: onTriggerFlash
-                )
-                // Keep the NSViewRepresentable identity stable across bonsplit structural updates.
-                // This prevents transient teardown/recreate that can momentarily detach the hosted terminal view.
-                .id(panel.id)
-                .background(Color.clear)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-#if DEBUG
-                .reportTerminalViewportGeometryForUITest(panel: panel)
-#endif
+            Group {
                 if parsedViewEnabled && panel.parsedPaneMode == .parsed {
                     ParsedPaneView(
                         viewModel: panel.parsedViewModel,
@@ -100,22 +72,35 @@ struct TerminalPanelView: View {
                             sendReturnTerminatedInput: { panel.sendParsedPaneInput($0 + "\r") }
                         )
                     )
-                    .transition(.opacity)
-                    .zIndex(1)
-                }
-
-                if parsedViewEnabled {
-                    ParsedPaneChromeToggle(
-                        selection: Binding(
-                            get: { panel.parsedPaneMode },
-                            set: { mode in
-                                panel.parsedPaneMode = mode
-                                updateParsedViewSampling()
-                            }
-                        )
+                } else {
+                    // Layering contract: terminal find UI is mounted in GhosttySurfaceScrollView (AppKit portal layer)
+                    // via `searchState`. Rendering `SurfaceSearchOverlay` in this SwiftUI container can hide it.
+                    GhosttyTerminalView(
+                        terminalSurface: panel.surface,
+                        paneId: paneId,
+                        isActive: isFocused,
+                        isVisibleInUI: isVisibleInUI,
+                        portalZPriority: portalPriority,
+                        showsInactiveOverlay: isSplit && !isFocused,
+                        showsUnreadNotificationRing: hasUnreadNotification && notificationPaneRingEnabled,
+                        inactiveOverlayColor: appearance.unfocusedOverlayNSColor,
+                        inactiveOverlayOpacity: appearance.unfocusedOverlayOpacity,
+                        searchState: panel.searchState,
+                        reattachToken: panel.viewReattachToken,
+                        onFocus: { _ in
+                            panel.terminalDidBecomeFocused()
+                            onFocus()
+                        },
+                        onTriggerFlash: onTriggerFlash
                     )
-                    .padding(.top, 6)
-                    .zIndex(2)
+                    // Keep the NSViewRepresentable identity stable across bonsplit structural updates.
+                    // This prevents transient teardown/recreate that can momentarily detach the hosted terminal view.
+                    .id(panel.id)
+                    .background(Color.clear)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+#if DEBUG
+                    .reportTerminalViewportGeometryForUITest(panel: panel)
+#endif
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)

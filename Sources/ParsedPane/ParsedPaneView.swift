@@ -12,11 +12,20 @@ struct ParsedPaneView: View {
                 .opacity(0.92)
             if let snapshot = viewModel.snapshot {
                 ParsedPaneSnapshotView(snapshot: snapshot, actions: actions)
-            } else {
+            } else if viewModel.isParsing {
                 VStack(spacing: 10) {
                     ProgressView()
                         .controlSize(.small)
                     Text(String(localized: "parsedView.loading", defaultValue: "Parsing terminal output..."))
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            } else {
+                VStack(spacing: 10) {
+                    Image(systemName: "text.page")
+                        .font(.system(size: 26, weight: .regular))
+                        .foregroundStyle(.secondary)
+                    Text(String(localized: "parsedView.empty", defaultValue: "No terminal output to parse yet."))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -966,30 +975,5 @@ private struct ParsedCard<Content: View>: View {
                 RoundedRectangle(cornerRadius: 8, style: .continuous)
                     .strokeBorder(Color.primary.opacity(0.08))
             )
-    }
-}
-
-struct ParsedPaneChromeToggle: View {
-    @Binding var selection: ParsedPaneMode
-
-    var body: some View {
-        Picker(String(localized: "parsedView.toggle.accessibility", defaultValue: "Pane view"), selection: $selection) {
-            Text(String(localized: "parsedView.toggle.terminal", defaultValue: "Terminal"))
-                .tag(ParsedPaneMode.terminal)
-            Text(String(localized: "parsedView.toggle.parsed", defaultValue: "Parsed"))
-                .tag(ParsedPaneMode.parsed)
-        }
-        .pickerStyle(.segmented)
-        .controlSize(.mini)
-        .labelsHidden()
-        .frame(width: 148)
-        .padding(3)
-        .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 9, style: .continuous))
-        .overlay(
-            RoundedRectangle(cornerRadius: 9, style: .continuous)
-                .strokeBorder(Color.primary.opacity(0.12))
-        )
-        .shadow(color: Color.black.opacity(0.12), radius: 8, y: 2)
-        .accessibilityIdentifier("ParsedPaneModeToggle")
     }
 }

@@ -6,12 +6,17 @@ import SwiftUI
 final class WindowToolbarController: NSObject, NSToolbarDelegate {
     private let commandItemIdentifier = NSToolbarItem.Identifier("cmux.focusedCommand")
     private let layoutModeItemIdentifier = NSToolbarItem.Identifier("cmux.layoutMode")
+    private let parsedPaneAccessoryIdentifier = NSUserInterfaceItemIdentifier("cmux.parsedPaneMode")
 
     private weak var tabManager: TabManager?
 
     private var commandLabels: [ObjectIdentifier: NSTextField] = [:]
     private var layoutModeControls: [ObjectIdentifier: NSSegmentedControl] = [:]
+    private var parsedPaneAccessories: [ObjectIdentifier: NSTitlebarAccessoryViewController] = [:]
+    private var parsedPaneControls: [ObjectIdentifier: NSSegmentedControl] = [:]
     private var observers: [NSObjectProtocol] = []
+    private var cancellables = Set<AnyCancellable>()
+    private var didStart = false
     private let focusedCommandUpdateCoalescer = NotificationBurstCoalescer(delay: 1.0 / 30.0)
     private var lastKnownPresentationMode: WorkspacePresentationModeSettings.Mode = WorkspacePresentationModeSettings.mode()
 
@@ -27,9 +32,25 @@ final class WindowToolbarController: NSObject, NSToolbarDelegate {
 
     func start(tabManager: TabManager) {
         self.tabManager = tabManager
+        guard !didStart else {
+            refreshParsedPaneAccessories()
+            scheduleFocusedCommandTextUpdate()
+            updateLayoutModeSelection()
+            return
+        }
+        didStart = true
         attachToExistingWindows()
         installObservers()
+        SharedLiveAgentIndex.shared.objectWillChange
+            .sink { [weak self] _ in
+                Task { @MainActor [weak self] in
+                    self?.refreshParsedPaneAccessories()
+                }
+            }
+            .store(in: &cancellables)
         scheduleFocusedCommandTextUpdate()
+        updateLayoutModeSelection()
+        refreshParsedPaneAccessories()
     }
 
     private func installObservers() {
@@ -52,6 +73,19 @@ final class WindowToolbarController: NSObject, NSToolbarDelegate {
             Task { @MainActor [weak self] in
                 self?.scheduleFocusedCommandTextUpdate()
                 self?.updateLayoutModeSelection()
+                self?.refreshParsedPaneAccessories()
+            }
+        })
+
+        observers.append(center.addObserver(
+            forName: .ghosttyDidFocusSurface,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            Task { @MainActor [weak self] in
+                self?.scheduleFocusedCommandTextUpdate()
+                self?.updateLayoutModeSelection()
+                self?.refreshParsedPaneAccessories()
             }
         })
 
@@ -62,6 +96,7 @@ final class WindowToolbarController: NSObject, NSToolbarDelegate {
         ) { [weak self] _ in
             Task { @MainActor [weak self] in
                 self?.updateLayoutModeSelection()
+                self?.refreshParsedPaneAccessories()
             }
         })
 
@@ -87,6 +122,19 @@ final class WindowToolbarController: NSObject, NSToolbarDelegate {
             guard let window = notification.object as? NSWindow else { return }
             Task { @MainActor in
                 self?.attach(to: window)
+                self?.refreshParsedPaneAccessories()
+            }
+        })
+
+        observers.append(center.addObserver(
+            forName: NSWindow.didBecomeKeyNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] notification in
+            guard let window = notification.object as? NSWindow else { return }
+            Task { @MainActor in
+                self?.attach(to: window)
+                self?.refreshParsedPaneAccessories()
             }
         })
 
@@ -97,6 +145,7 @@ final class WindowToolbarController: NSObject, NSToolbarDelegate {
         ) { [weak self] _ in
             Task { @MainActor [weak self] in
                 self?.updateToolbarVisibilityIfNeeded()
+                self?.refreshParsedPaneAccessories()
             }
         })
     }
@@ -113,6 +162,7 @@ final class WindowToolbarController: NSObject, NSToolbarDelegate {
                 attach(to: window)
             }
         }
+        refreshParsedPaneAccessories()
         // After toolbar changes, force titlebar accessories to recalculate.
         // Toolbar removal/re-addition changes the titlebar geometry, and
         // accessories hidden via isHidden need a layout pass to reappear.
@@ -139,9 +189,11 @@ final class WindowToolbarController: NSObject, NSToolbarDelegate {
         }
     }
 
-    private func attach(to window: NSWindow) {
-        guard window.toolbar == nil else { return }
+    func attach(to window: NSWindow) {
+        guard AppDelegate.shared?.contextForMainWindow(window) != nil else { return }
         guard !WorkspacePresentationModeSettings.isMinimal() else { return }
+        installParsedPaneAccessory(on: window)
+        guard window.toolbar == nil else { return }
         let toolbar = NSToolbar(identifier: NSToolbar.Identifier("cmux.toolbar"))
         toolbar.delegate = self
         toolbar.displayMode = .iconOnly
@@ -152,6 +204,57 @@ final class WindowToolbarController: NSObject, NSToolbarDelegate {
         window.toolbar = toolbar
         window.toolbarStyle = .unifiedCompact
         window.titleVisibility = .hidden
+    }
+
+    private func installParsedPaneAccessory(on window: NSWindow) {
+        if window.titlebarAccessoryViewControllers.contains(where: { $0.view.identifier == parsedPaneAccessoryIdentifier }) {
+            return
+        }
+
+        let segmented = NSSegmentedControl()
+        segmented.segmentStyle = .texturedRounded
+        segmented.trackingMode = .selectOne
+        segmented.segmentCount = 2
+        segmented.controlSize = .small
+        segmented.setLabel(
+            String(localized: "parsedView.toggle.terminal", defaultValue: "Terminal"),
+            forSegment: ParsedPaneSegment.terminal.rawValue
+        )
+        segmented.setLabel(
+            String(localized: "parsedView.toggle.parsed", defaultValue: "Parsed"),
+            forSegment: ParsedPaneSegment.parsed.rawValue
+        )
+        segmented.setWidth(76, forSegment: ParsedPaneSegment.terminal.rawValue)
+        segmented.setWidth(68, forSegment: ParsedPaneSegment.parsed.rawValue)
+        segmented.setToolTip(
+            String(localized: "parsedView.toggle.terminal", defaultValue: "Terminal"),
+            forSegment: ParsedPaneSegment.terminal.rawValue
+        )
+        segmented.setToolTip(
+            String(localized: "parsedView.toggle.parsed", defaultValue: "Parsed"),
+            forSegment: ParsedPaneSegment.parsed.rawValue
+        )
+        segmented.target = self
+        segmented.action = #selector(parsedPaneSegmentChanged(_:))
+        segmented.setAccessibilityIdentifier("ParsedPaneModeTitlebarToggle")
+        segmented.setAccessibilityLabel(String(localized: "parsedView.toggle.accessibility", defaultValue: "Pane view"))
+
+        let container = NSStackView(views: [segmented])
+        container.orientation = .horizontal
+        container.alignment = .centerY
+        container.distribution = .gravityAreas
+        container.edgeInsets = NSEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        container.identifier = parsedPaneAccessoryIdentifier
+
+        let accessory = NSTitlebarAccessoryViewController()
+        accessory.layoutAttribute = .centerX
+        accessory.view = container
+        accessory.isHidden = true
+        window.addTitlebarAccessoryViewController(accessory)
+
+        let key = ObjectIdentifier(window)
+        parsedPaneAccessories[key] = accessory
+        parsedPaneControls[key] = segmented
     }
 
     private func scheduleFocusedCommandTextUpdate() {
@@ -237,6 +340,95 @@ final class WindowToolbarController: NSObject, NSToolbarDelegate {
         }
 
         return nil
+    }
+
+    // MARK: - Parsed pane toggle
+
+    private enum ParsedPaneSegment: Int {
+        case terminal = 0
+        case parsed = 1
+    }
+
+    @objc private func parsedPaneSegmentChanged(_ sender: NSSegmentedControl) {
+        guard let context = activeParsedPaneContext(for: sender.window) else {
+            sender.selectedSegment = ParsedPaneSegment.terminal.rawValue
+            refreshParsedPaneAccessories()
+            return
+        }
+        let nextMode: ParsedPaneMode = sender.selectedSegment == ParsedPaneSegment.parsed.rawValue
+            ? .parsed
+            : .terminal
+        context.panel.parsedPaneMode = nextMode
+        refreshParsedPaneAccessories()
+    }
+
+    private func refreshParsedPaneAccessories() {
+        for window in NSApp.windows {
+            installParsedPaneAccessoryIfPossible(on: window)
+        }
+
+        for (key, accessory) in parsedPaneAccessories {
+            guard let window = accessory.view.window else { continue }
+            let parsedContext = activeParsedPaneContext(for: window)
+            let shouldShow = parsedContext != nil
+            accessory.isHidden = !shouldShow
+            accessory.view.isHidden = !shouldShow
+            accessory.view.alphaValue = shouldShow ? 1 : 0
+
+            guard let control = parsedPaneControls[key] else { continue }
+            let mode = parsedContext?.panel.parsedPaneMode ?? .terminal
+            let selectedSegment = mode == .parsed
+                ? ParsedPaneSegment.parsed.rawValue
+                : ParsedPaneSegment.terminal.rawValue
+            if control.selectedSegment != selectedSegment {
+                control.selectedSegment = selectedSegment
+            }
+        }
+    }
+
+    private func installParsedPaneAccessoryIfPossible(on window: NSWindow) {
+        guard AppDelegate.shared?.contextForMainWindow(window) != nil else { return }
+        guard !WorkspacePresentationModeSettings.isMinimal() else { return }
+        installParsedPaneAccessory(on: window)
+    }
+
+    private func activeParsedPaneContext(for window: NSWindow?) -> (workspace: Workspace, panel: TerminalPanel)? {
+        guard !WorkspacePresentationModeSettings.isMinimal() else { return nil }
+        let parsedViewEnabled = (UserDefaults.standard.object(forKey: ParsedViewSettings.enabledKey) as? Bool)
+            ?? ParsedViewSettings.defaultEnabled
+        guard parsedViewEnabled else {
+            selectedTerminalPanel(for: window)?.parsedPaneMode = .terminal
+            return nil
+        }
+
+        guard let workspace = resolvedTabManager(for: window)?.selectedWorkspace,
+              let panelId = workspace.focusedPanelId,
+              let terminalPanel = workspace.terminalPanel(for: panelId) else {
+            return nil
+        }
+
+        guard isRealSession(workspace: workspace, panelId: panelId) else {
+            terminalPanel.parsedPaneMode = .terminal
+            return nil
+        }
+
+        return (workspace, terminalPanel)
+    }
+
+    private func selectedTerminalPanel(for window: NSWindow?) -> TerminalPanel? {
+        resolvedTabManager(for: window)?.selectedTerminalPanel
+    }
+
+    private func resolvedTabManager(for window: NSWindow?) -> TabManager? {
+        AppDelegate.shared?.activeTabManagerForCommands(preferredWindow: window) ?? tabManager
+    }
+
+    private func isRealSession(workspace: Workspace, panelId: UUID) -> Bool {
+        if let binding = workspace.surfaceResumeBinding(panelId: panelId),
+           binding.isProcessDetected || binding.isAgentHookBinding {
+            return true
+        }
+        return workspace.forkableAgentSnapshot(forPanelId: panelId) != nil
     }
 
     // MARK: - Layout mode toggle

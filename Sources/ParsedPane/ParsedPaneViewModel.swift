@@ -107,7 +107,15 @@ final class ParsedPaneViewModel: ObservableObject {
     private func sampleNow() {
         guard isActive && isVisible, let panel else { return }
         lastSampledAt = Date()
-        guard let rawText = sampledText(from: panel), !rawText.isEmpty else { return }
+        guard let rawText = sampledText(from: panel),
+              !rawText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            parseTask?.cancel()
+            parseTask = nil
+            lastRawText = nil
+            snapshot = nil
+            isParsing = false
+            return
+        }
         let trimmedRawText = Self.tail(rawText)
         guard trimmedRawText != lastRawText else { return }
         lastRawText = trimmedRawText

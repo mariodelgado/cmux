@@ -261,6 +261,13 @@
         "ja": { "stringUnit": { "state": "translated", "value": "ターミナル出力を解析中..." } }
       }
     },
+    "parsedView.empty": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "No terminal output to parse yet." } },
+        "ja": { "stringUnit": { "state": "translated", "value": "解析できるターミナル出力はまだありません。" } }
+      }
+    },
     "parsedView.logs.all": {
       "extractionState": "manual",
       "localizations": {
